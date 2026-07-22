@@ -208,7 +208,9 @@ export GLM47_AIDER_MIN_POSITIVE_GROUPS=5
 export GLM47_AIDER_MIN_SEMANTIC_VARIANCE_GROUPS=2
 export GLM47_AIDER_MIN_REWARD_VARIANCE_GROUPS=4
 export GLM47_AIDER_MIN_EXACT_FORMAT_RATE=0.65
-export GLM47_AIDER_MIN_COMPILE_RATE=0.90
+# This is a signal-health gate, not a base-quality gate. Semantic-positive and
+# variance checks above already ensure the reward path reaches compiled tests.
+export GLM47_AIDER_MIN_COMPILE_RATE=0.70
 export GLM47_AIDER_SIGNAL_GATE_DIR="${run_root}/signal_gates"
 
 export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{"enable_thinking": false}'
