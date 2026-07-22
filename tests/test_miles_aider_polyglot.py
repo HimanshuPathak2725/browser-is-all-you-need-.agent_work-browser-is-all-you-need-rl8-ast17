@@ -20,6 +20,7 @@ from glm47_posttraining.aider_polyglot.harness import run_aider_tests, run_shado
 from glm47_posttraining.aider_polyglot.parser import AiderResponseError, parse_whole_file_response
 from glm47_posttraining.aider_polyglot.reward import compute_aider_reward
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
+from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
 
 def _task() -> AiderPolyglotTask:
@@ -92,9 +93,7 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
 
 def test_whole_file_parser_accepts_sft_and_public_environment_prefixes() -> None:
     direct = parse_whole_file_response(_response(), ["example.cpp", "example.h"])
-    public = parse_whole_file_response(
-        _response(prefix="///\n"), ["example.cpp", "example.h"]
-    )
+    public = parse_whole_file_response(_response(prefix="///\n"), ["example.cpp", "example.h"])
 
     assert direct.files == public.files == {"example.cpp": "int answer() { return 42; }\n"}
     assert direct.format_valid is public.format_valid is True
@@ -106,9 +105,7 @@ def test_whole_file_parser_marks_markdown_filename_as_recoverable() -> None:
     assert parsed.format_valid is False
 
 
-@pytest.mark.parametrize(
-    "marker", ["<|endoftext|>", "<|user|>", "<|observation|>"]
-)
+@pytest.mark.parametrize("marker", ["<|endoftext|>", "<|user|>", "<|observation|>"])
 @pytest.mark.parametrize("separator", ["", "\n", " \n"])
 def test_whole_file_parser_removes_only_terminal_glm_stop_markers(
     marker: str, separator: str
@@ -120,7 +117,7 @@ def test_whole_file_parser_removes_only_terminal_glm_stop_markers(
 
 
 def test_whole_file_parser_preserves_stop_marker_inside_file() -> None:
-    response = "example.cpp\n```cpp\nconst char *token = \"<|user|>\";\n```<|user|>"
+    response = 'example.cpp\n```cpp\nconst char *token = "<|user|>";\n```<|user|>'
     parsed = parse_whole_file_response(response, ["example.cpp"])
     assert parsed.files == {"example.cpp": 'const char *token = "<|user|>";\n'}
     assert parsed.format_valid is True
@@ -145,8 +142,7 @@ def test_whole_file_parser_maps_path_label_to_editable_basename(label: str) -> N
 def test_whole_file_parser_skips_stray_fences_as_recoverable() -> None:
     response = (
         "Plan:\n```\npseudo code, not a file\n```\n\n"
-        "Update example.cpp with this:\n```cpp\nint wrong() { return 0; }\n```\n\n"
-        + _response()
+        "Update example.cpp with this:\n```cpp\nint wrong() { return 0; }\n```\n\n" + _response()
     )
     parsed = parse_whole_file_response(response, ["example.cpp"])
     assert parsed.files == {"example.cpp": "int answer() { return 42; }\n"}
@@ -190,6 +186,14 @@ def test_aider_reward_rejects_test_tampering_without_execution(tmp_path: Path) -
         _task(), tmp_path, _response("example_test.cpp"), runner=runner
     )
     assert (breakdown.reward, breakdown.reason, called) == (-1.0, "forbidden_file", False)
+
+
+def test_aider_reward_propagates_reported_infrastructure_error(tmp_path: Path) -> None:
+    def infrastructure(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(status="infrastructure_error", logs={"error": "sandbox unavailable"})
+
+    with pytest.raises(SandboxInfrastructureError, match="sandbox unavailable"):
+        compute_aider_reward(_task(), tmp_path, _response(), runner=infrastructure)
 
 
 def test_harness_parses_build_triggered_catch_success(tmp_path: Path, monkeypatch) -> None:
@@ -379,6 +383,35 @@ def test_linux_local_stage_can_skip_only_the_net_unshare(tmp_path: Path, monkeyp
     assert "--clearenv" in command
 
 
+def test_run_stage_replaces_non_utf8_output_without_hiding_exit_code(
+    tmp_path: Path, monkeypatch
+) -> None:
+    monkeypatch.setenv("GLM47_CPP_SANDBOX_BACKEND", "local")
+    monkeypatch.setattr(harness_module.platform, "system", lambda: "Darwin")
+    result = harness_module._run_stage(
+        tmp_path,
+        "printf '\\377'; printf '\\376' >&2; exit 7",
+        image="unused",
+        timeout_s=5,
+    )
+    assert result.returncode == 7
+    assert result.stdout == "\ufffd"
+    assert result.stderr == "\ufffd"
+
+
+def test_run_stage_treats_outer_timeout_as_infrastructure(tmp_path: Path, monkeypatch) -> None:
+    def timeout(*_args, **_kwargs):
+        raise subprocess.TimeoutExpired(
+            cmd=["probe"], timeout=1, output=b"out:\xff", stderr=b"err:\xfe"
+        )
+
+    monkeypatch.setattr(harness_module.subprocess, "run", timeout)
+    with pytest.raises(SandboxInfrastructureError) as caught:
+        harness_module._run_stage(tmp_path, "true", image="unused", timeout_s=1)
+    assert "stdout='out:\ufffd'" in str(caught.value)
+    assert "stderr='err:\ufffd'" in str(caught.value)
+
+
 def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path: Path) -> None:
     source = _make_shadow_tree(tmp_path)
     paths = build_aider_polyglot_datasets(
@@ -431,6 +464,49 @@ def test_dataset_builder_validates_source_before_replacing_output(tmp_path: Path
     assert sentinel.read_text(encoding="utf-8") == "keep"
 
 
+def test_dataset_builder_materializes_exact_gradient_holdout_split(tmp_path: Path) -> None:
+    source = _make_shadow_tree(tmp_path)
+    train_ids = [
+        "aider-shadow-cpp/exercise-005",
+        "aider-shadow-cpp/exercise-011",
+    ]
+    monitor_ids = ["aider-shadow-cpp/exercise-017"]
+    paths = build_aider_polyglot_datasets(
+        source,
+        tmp_path / "prepared",
+        train_task_ids=train_ids,
+        monitor_task_ids=monitor_ids,
+        profile="rl-validity",
+    )
+    train_rows = [json.loads(line) for line in paths["grpo_train"].read_text().splitlines()]
+    monitor_rows = [json.loads(line) for line in paths["eval"].read_text().splitlines()]
+    manifest = json.loads(paths["manifest"].read_text())
+
+    assert [row["task_id"] for row in train_rows] == train_ids
+    assert [row["task_id"] for row in monitor_rows] == monitor_ids
+    assert {row["split"] for row in train_rows} == {"train"}
+    assert {row["split"] for row in monitor_rows} == {"validation"}
+    assert manifest["counts"] == {"available_shadow": 253, "monitor": 1, "train": 2}
+    assert manifest["selection"] == {
+        "mode": "explicit_gradient_holdout",
+        "train_task_ids": train_ids,
+        "monitor_task_ids": monitor_ids,
+    }
+    descriptor = paths["manifest"].parent / monitor_rows[0]["metadata"]["task_path"]
+    assert AiderPolyglotTask.read_json(descriptor).split == "validation"
+
+
+def test_dataset_builder_rejects_overlapping_explicit_split(tmp_path: Path) -> None:
+    source = _make_shadow_tree(tmp_path)
+    with pytest.raises(ValueError, match="overlap"):
+        build_aider_polyglot_datasets(
+            source,
+            tmp_path / "prepared",
+            train_task_ids=["exercise-001"],
+            monitor_task_ids=["aider-shadow-cpp/exercise-001"],
+        )
+
+
 def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -459,9 +535,118 @@ def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
     assert record["modified_files"] == ["example.cpp"]
 
 
-def test_miles_reward_hook_rejects_missing_task_binding() -> None:
+def test_miles_reward_hook_aborts_on_missing_task_binding() -> None:
     sample = SimpleNamespace(response=_response(), metadata={})
-    record = asyncio.run(integration_module.reward_func(SimpleNamespace(), sample))
-    assert record["score"] == 0.0
-    assert record["reason"] == "missing_task_path"
-    assert record["infrastructure_error"] is True
+    with pytest.raises(
+        integration_module.AiderRewardInfrastructureError,
+        match="missing required metadata.task_path",
+    ):
+        asyncio.run(integration_module.reward_func(SimpleNamespace(), sample))
+
+
+def test_miles_reward_hook_aborts_batch_on_sandbox_infrastructure_error(
+    tmp_path: Path, monkeypatch
+) -> None:
+    data = tmp_path / "data"
+    exercise = data / "shadow" / "example"
+    (exercise / ".grader").mkdir(parents=True)
+    task_path = _task().write_json(data / "tasks" / "train" / "example.json")
+    monkeypatch.setenv("GLM47_DATA_DIR", str(data))
+    monkeypatch.setattr(
+        integration_module,
+        "run_shadow_tests",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            SandboxInfrastructureError("docker unavailable")
+        ),
+    )
+    samples = [
+        SimpleNamespace(
+            index=index,
+            rollout_id=1,
+            response=_response(),
+            metadata={"task_path": str(task_path.relative_to(data))},
+        )
+        for index in range(2)
+    ]
+    with pytest.raises(
+        integration_module.AiderRewardInfrastructureError,
+        match="SandboxInfrastructureError: docker unavailable",
+    ):
+        asyncio.run(integration_module.reward_func(SimpleNamespace(), samples))
+
+
+def _signal_record(task_id: str, score: float, tests_passed: int) -> dict[str, object]:
+    return {
+        "score": score,
+        "reward": score,
+        "reason": "tests_failed",
+        "task_id": task_id,
+        "infrastructure_error": False,
+        "tests_passed": tests_passed,
+        "tests_total": 5,
+        "format_valid": True,
+        "modified_files": ["example.cpp"],
+        "compile_error": False,
+    }
+
+
+def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "6")
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "8")
+    monkeypatch.setenv("GLM47_AIDER_REQUIRE_SIGNAL", "1")
+    monkeypatch.setenv("GLM47_AIDER_SIGNAL_GATE_DIR", str(tmp_path / "gates"))
+    data = []
+    for group_index in range(6):
+        samples = []
+        for sample_index in range(8):
+            varied = group_index < 4 and sample_index == 7
+            tests_passed = 2 if group_index < 2 and varied else 1
+            score = 0.2 if varied else 0.1
+            samples.append(
+                SimpleNamespace(
+                    reward=_signal_record(
+                        f"aider-shadow-cpp/task-{group_index}", score, tests_passed
+                    )
+                )
+            )
+        data.append(samples)
+
+    integration_module.validate_aider_rollout_batch(
+        SimpleNamespace(rollout_batch_size=6, n_samples_per_prompt=8), data
+    )
+    receipts = list((tmp_path / "gates").glob("signal_gate_passed_*.json"))
+    assert len(receipts) == 1
+    receipt = json.loads(receipts[0].read_text())
+    assert receipt["status"] == "passed"
+    assert receipt["signal_requirements_applied"] is True
+    assert receipt["positive_groups"] == 6
+    assert receipt["semantic_variance_groups"] == 2
+    assert receipt["reward_variance_groups"] == 4
+
+    constant = [
+        [
+            SimpleNamespace(reward=_signal_record(f"aider-shadow-cpp/task-{group_index}", 0.1, 1))
+            for _ in range(8)
+        ]
+        for group_index in range(6)
+    ]
+    integration_module.validate_aider_rollout_batch(
+        SimpleNamespace(rollout_batch_size=6, n_samples_per_prompt=8), constant
+    )
+    receipts = sorted((tmp_path / "gates").glob("signal_gate_passed_*.json"))
+    assert len(receipts) == 2
+    assert any(
+        json.loads(path.read_text())["signal_requirements_applied"] is False for path in receipts
+    )
+
+
+def test_pre_optimizer_signal_gate_rejects_infrastructure_reward(monkeypatch) -> None:
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "1")
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "1")
+    bad = _signal_record("aider-shadow-cpp/task", 0.0, 0)
+    bad["infrastructure_error"] = True
+    with pytest.raises(integration_module.AiderRewardInfrastructureError, match="invalid reward"):
+        integration_module.validate_aider_rollout_batch(
+            SimpleNamespace(rollout_batch_size=1, n_samples_per_prompt=1),
+            [[SimpleNamespace(reward=bad)]],
+        )

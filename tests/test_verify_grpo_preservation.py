@@ -28,7 +28,17 @@ def _write_rollout(path: Path, sample_count: int) -> None:
         json.dumps(
             {
                 "samples": [
-                    {"index": index, "response": f"response-{index}"}
+                    {
+                        "index": index,
+                        "response": f"response-{index}",
+                        "reward": {
+                            "score": 0.25,
+                            "reward": 0.25,
+                            "reason": "tests_failed",
+                            "task_id": f"aider-shadow-cpp/task-{index % 8}",
+                            "infrastructure_error": False,
+                        },
+                    }
                     for index in range(sample_count)
                 ]
             }
@@ -222,6 +232,18 @@ def test_preservation_accepts_complete_tp4_ep8_native_sets(tmp_path: Path) -> No
         for name in names:
             (adapter / name).write_bytes(f"native-{adapter.parent.name}-{name}".encode())
     _refresh_gate_native_inventory(run_root, tensor_parallel_size=4, expert_parallel_size=8)
+    gate_path = run_root / "grpo_lora_r16" / "grpo_training_gate.json"
+    gate = json.loads(gate_path.read_text(encoding="utf-8"))
+    gate["native_reconstruction_manifest"] = {
+        "sha256": "a" * 64,
+        "status": "passed",
+        "source_hf_roundtrip_status": "passed",
+        "native_shard_count": 8,
+    }
+    gate_path.write_text(json.dumps(gate) + "\n", encoding="utf-8")
+    receipt_path = run_root / "grpo_lora_r16" / "run_receipt.txt"
+    with receipt_path.open("a", encoding="utf-8") as handle:
+        handle.write("expected_native_reconstruction_manifest_sha256=" + "a" * 64 + "\n")
 
     manifest = verify_preservation(
         run_root,
@@ -252,6 +274,45 @@ def test_preservation_rejects_wrong_rollout_sample_count(tmp_path: Path) -> None
     _write_rollout(run_root / "rollout_dumps" / "grpo_eval_4.pt", 21)
 
     with pytest.raises(RuntimeError, match="sample count mismatch"):
+        verify_preservation(run_root, tmp_path / "preserved")
+
+
+@pytest.mark.parametrize(
+    ("record", "message"),
+    [
+        (0.0, "non-mapping reward"),
+        (
+            {
+                "score": float("nan"),
+                "reward": float("nan"),
+                "reason": "tests_failed",
+                "task_id": "aider-shadow-cpp/task",
+                "infrastructure_error": False,
+            },
+            "invalid numeric reward",
+        ),
+        (
+            {
+                "score": 0.0,
+                "reward": 0.0,
+                "reason": "reward_exception",
+                "task_id": "aider-shadow-cpp/task",
+                "infrastructure_error": True,
+            },
+            "infrastructure reward record",
+        ),
+    ],
+)
+def test_preservation_rejects_untrainable_reward_records(
+    tmp_path: Path, record: object, message: str
+) -> None:
+    run_root = _build_run(tmp_path)
+    path = run_root / "rollout_dumps" / "grpo_0.pt"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["samples"][3]["reward"] = record
+    path.write_text(json.dumps(payload, allow_nan=True), encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match=message):
         verify_preservation(run_root, tmp_path / "preserved")
 
 
@@ -329,9 +390,29 @@ def test_preservation_rejects_continuation_without_reconstruction_proof(
     receipt_path = run_root / "grpo_lora_r16" / "run_receipt.txt"
     with receipt_path.open("a", encoding="utf-8") as handle:
         handle.write("grpo_continuation_mode=weights_only_fresh_optimizer\n")
-        handle.write(
-            "expected_native_reconstruction_manifest_sha256=" + "0" * 64 + "\n"
-        )
+        handle.write("expected_native_reconstruction_manifest_sha256=" + "0" * 64 + "\n")
 
     with pytest.raises(RuntimeError, match="native reconstruction proof"):
         verify_preservation(run_root, tmp_path / "preserved")
+
+
+def test_preservation_rejects_fresh_ep_run_without_reconstruction_proof(
+    tmp_path: Path,
+) -> None:
+    run_root = _build_run(tmp_path)
+    names = expected_native_shard_names(8, tensor_parallel_size=4, expert_parallel_size=8)
+    for adapter in (run_root / "checkpoints" / "grpo_lora_r16").glob("iter_*/adapter"):
+        for path in adapter.glob("adapter_megatron_*.pt"):
+            path.unlink()
+        for name in names:
+            (adapter / name).write_bytes(f"native-{adapter.parent.name}-{name}".encode())
+    _refresh_gate_native_inventory(run_root, tensor_parallel_size=4, expert_parallel_size=8)
+
+    with pytest.raises(RuntimeError, match="native reconstruction proof"):
+        verify_preservation(
+            run_root,
+            tmp_path / "preserved",
+            expected_native_shards=8,
+            tensor_parallel_size=4,
+            expert_parallel_size=8,
+        )

@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import json
+import math
 import os
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -27,6 +30,10 @@ SANDBOX_IMAGE_ENV = "GLM47_CPP_SANDBOX_IMAGE"
 REWARD_WORKERS_ENV = "GLM47_CPP_REWARD_WORKERS"
 INCLUDE_LOGS_ENV = "MILES_CPP_INCLUDE_LOGS"
 DEFAULT_REWARD_WORKERS = 8
+
+
+class AiderRewardInfrastructureError(RuntimeError):
+    """Abort the rollout when a verifier result cannot be trusted."""
 
 
 def run_response_contract_preflight() -> None:
@@ -61,8 +68,8 @@ def _score_sample(sample: Any) -> dict[str, Any]:
     metadata = _sample_metadata(sample)
     task_path_value = metadata.get("task_path")
     if not task_path_value:
-        return _exception_record(
-            sample, metadata, "missing_task_path", "metadata.task_path is required"
+        raise AiderRewardInfrastructureError(
+            "Aider reward sample is missing required metadata.task_path"
         )
     try:
         task_path = _resolve_task_path(str(task_path_value), metadata)
@@ -85,8 +92,13 @@ def _score_sample(sample: Any) -> dict[str, Any]:
             task, exercise_dir, _sample_response(sample), runner=runner
         )
         return reward_record(sample, task, breakdown)
-    except Exception as exc:  # pragma: no cover - protects remote rollout workers
-        return _exception_record(sample, metadata, "reward_exception", str(exc))
+    except AiderRewardInfrastructureError:
+        raise
+    except Exception as exc:
+        task_id = metadata.get("task_id") or metadata.get("problem_id") or task_path_value
+        raise AiderRewardInfrastructureError(
+            f"Aider reward verification failed for {task_id}: {type(exc).__name__}: {exc}"
+        ) from exc
 
 
 def reward_record(
@@ -96,6 +108,18 @@ def reward_record(
 ) -> dict[str, Any]:
     harness = breakdown.harness
     parsed = breakdown.parsed
+    if breakdown.infrastructure_error or (harness and harness.status == "infrastructure_error"):
+        raise AiderRewardInfrastructureError(
+            f"refusing numeric reward for verifier infrastructure failure: {task.task_id}"
+        )
+    if not math.isfinite(breakdown.reward):
+        raise AiderRewardInfrastructureError(
+            f"refusing non-finite Aider reward for {task.task_id}: {breakdown.reward}"
+        )
+    if breakdown.reason in {"reward_exception", "infrastructure_error", "missing_task_path"}:
+        raise AiderRewardInfrastructureError(
+            f"refusing infrastructure reason as an Aider reward: {breakdown.reason}"
+        )
     record = {
         "score": breakdown.reward,
         "reward": breakdown.reward,
@@ -123,31 +147,6 @@ def reward_record(
     elif harness:
         record["log_keys"] = sorted(harness.logs)
     return record
-
-
-def _exception_record(
-    sample: Any, metadata: dict[str, Any], reason: str, exception: str
-) -> dict[str, Any]:
-    return {
-        "score": 0.0,
-        "reward": 0.0,
-        "reason": reason,
-        "task_id": metadata.get("task_id"),
-        "problem_id": metadata.get("problem_id"),
-        "split": metadata.get("split"),
-        "sample_index": _sample_index(sample),
-        "rollout_id": getattr(sample, "rollout_id", None),
-        "response": _sample_response(sample),
-        "format_valid": False,
-        "modified_files": [],
-        "tests_passed": 0,
-        "tests_total": 0,
-        "all_tests_pass": False,
-        "compile_error": False,
-        "timeout": False,
-        "infrastructure_error": True,
-        "exception": exception,
-    }
 
 
 def _sample_metadata(sample: Any) -> dict[str, Any]:
@@ -198,6 +197,208 @@ def _include_logs() -> bool:
     return os.environ.get(INCLUDE_LOGS_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _write_signal_gate_receipt(
+    output_dir_value: str | None, receipt: dict[str, Any], *, status: str
+) -> Path | None:
+    if not output_dir_value:
+        return None
+    output_dir = Path(output_dir_value)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    canonical = json.dumps(receipt, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    receipt["batch_sha256"] = hashlib.sha256(canonical.encode()).hexdigest()
+    output = output_dir / f"signal_gate_{status}_{receipt['batch_sha256'][:16]}.json"
+    temporary = output.with_suffix(".json.tmp")
+    temporary.write_text(
+        json.dumps(receipt, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    temporary.replace(output)
+    return output
+
+
+def validate_aider_rollout_batch(args: Any, data: list[list[Any]]) -> None:
+    """Fail before log-prob recomputation or optimization when a rollout is untrustworthy."""
+
+    expected_groups = int(
+        os.environ.get("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", getattr(args, "rollout_batch_size", 0))
+    )
+    expected_samples = int(
+        os.environ.get(
+            "GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", getattr(args, "n_samples_per_prompt", 0)
+        )
+    )
+    if len(data) != expected_groups:
+        raise AiderRewardInfrastructureError(
+            f"Aider rollout group count mismatch: {len(data)} != {expected_groups}"
+        )
+
+    group_records: list[dict[str, Any]] = []
+    all_records: list[Mapping[str, Any]] = []
+    sample_evidence: list[dict[str, Any]] = []
+    for group_index, group in enumerate(data):
+        if not isinstance(group, list) or len(group) != expected_samples:
+            raise AiderRewardInfrastructureError(
+                f"Aider rollout group {group_index} sample count mismatch"
+            )
+        records = [getattr(sample, "reward", None) for sample in group]
+        if not all(isinstance(record, Mapping) for record in records):
+            raise AiderRewardInfrastructureError(
+                f"Aider rollout group {group_index} contains a non-mapping reward"
+            )
+        typed_records = [record for record in records if isinstance(record, Mapping)]
+        task_ids = {record.get("task_id") for record in typed_records}
+        if len(task_ids) != 1 or not all(isinstance(task_id, str) for task_id in task_ids):
+            raise AiderRewardInfrastructureError(
+                f"Aider rollout group {group_index} does not bind exactly one task"
+            )
+        scores: list[float] = []
+        executed_test_counts: list[int] = []
+        positive_semantic_reward = False
+        for record in typed_records:
+            score = record.get("score")
+            reason = record.get("reason")
+            if (
+                isinstance(score, bool)
+                or not isinstance(score, (int, float))
+                or not math.isfinite(float(score))
+                or record.get("infrastructure_error") is not False
+                or reason in {"reward_exception", "infrastructure_error", "missing_task_path"}
+            ):
+                raise AiderRewardInfrastructureError(
+                    f"Aider rollout group {group_index} contains an invalid reward: {record}"
+                )
+            tests_passed = record.get("tests_passed")
+            tests_total = record.get("tests_total")
+            if (
+                isinstance(tests_passed, bool)
+                or not isinstance(tests_passed, int)
+                or isinstance(tests_total, bool)
+                or not isinstance(tests_total, int)
+            ):
+                raise AiderRewardInfrastructureError(
+                    f"Aider rollout group {group_index} lacks integer test counts"
+                )
+            scores.append(float(score))
+            if tests_total > 0:
+                executed_test_counts.append(tests_passed)
+                positive_semantic_reward = positive_semantic_reward or tests_passed > 0
+        group_records.append(
+            {
+                "task_id": next(iter(task_ids)),
+                "sample_count": len(typed_records),
+                "positive_semantic_reward": positive_semantic_reward,
+                "reward_values": sorted(set(scores)),
+                "executed_tests_passed_values": sorted(set(executed_test_counts)),
+            }
+        )
+        sample_evidence.extend(
+            {
+                "group_index": getattr(sample, "group_index", group_index),
+                "sample_index": getattr(sample, "index", None),
+                "task_id": record.get("task_id"),
+                "response": str(getattr(sample, "response", "") or ""),
+                "reward": dict(record),
+            }
+            for sample, record in zip(group, typed_records, strict=True)
+        )
+        all_records.extend(typed_records)
+
+    if len({record["task_id"] for record in group_records}) != expected_groups:
+        raise AiderRewardInfrastructureError("Aider rollout contains duplicate task groups")
+
+    require_signal = os.environ.get("GLM47_AIDER_REQUIRE_SIGNAL", "0") == "1"
+    semantic_variance_groups = sum(
+        len(record["executed_tests_passed_values"]) > 1 for record in group_records
+    )
+    reward_variance_groups = sum(len(record["reward_values"]) > 1 for record in group_records)
+    positive_groups = sum(record["positive_semantic_reward"] for record in group_records)
+    format_valid = sum(record.get("format_valid") is True for record in all_records)
+    parsed = [record for record in all_records if record.get("modified_files")]
+    compiled = sum(
+        isinstance(record.get("tests_total"), int) and record.get("tests_total", 0) > 0
+        for record in parsed
+    )
+    exact_format_rate = format_valid / len(all_records)
+    compile_rate = compiled / len(parsed) if parsed else 0.0
+    output_dir_value = os.environ.get("GLM47_AIDER_SIGNAL_GATE_DIR")
+    existing_receipts = (
+        sorted(Path(output_dir_value).glob("signal_gate_passed_*.json"))
+        if output_dir_value and Path(output_dir_value).is_dir()
+        else []
+    )
+    apply_signal_requirements = require_signal and not existing_receipts
+    if apply_signal_requirements:
+        minimum_positive_groups = int(
+            os.environ.get("GLM47_AIDER_MIN_POSITIVE_GROUPS", str(expected_groups))
+        )
+        minimum_semantic_variance = int(
+            os.environ.get("GLM47_AIDER_MIN_SEMANTIC_VARIANCE_GROUPS", "2")
+        )
+        minimum_reward_variance = int(os.environ.get("GLM47_AIDER_MIN_REWARD_VARIANCE_GROUPS", "4"))
+        minimum_format_rate = float(os.environ.get("GLM47_AIDER_MIN_EXACT_FORMAT_RATE", "0.75"))
+        minimum_compile_rate = float(os.environ.get("GLM47_AIDER_MIN_COMPILE_RATE", "0.90"))
+        failures = []
+        if positive_groups < minimum_positive_groups:
+            failures.append(f"positive_groups={positive_groups}<{minimum_positive_groups}")
+        if semantic_variance_groups < minimum_semantic_variance:
+            failures.append(
+                f"semantic_variance_groups={semantic_variance_groups}<{minimum_semantic_variance}"
+            )
+        if reward_variance_groups < minimum_reward_variance:
+            failures.append(
+                f"reward_variance_groups={reward_variance_groups}<{minimum_reward_variance}"
+            )
+        if exact_format_rate < minimum_format_rate:
+            failures.append(f"exact_format_rate={exact_format_rate:.6f}<{minimum_format_rate}")
+        if compile_rate < minimum_compile_rate:
+            failures.append(f"compile_rate={compile_rate:.6f}<{minimum_compile_rate}")
+        if failures:
+            evidence_text = json.dumps(
+                sample_evidence, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+            )
+            _write_signal_gate_receipt(
+                output_dir_value,
+                {
+                    "schema_version": 1,
+                    "kind": "glm47-aider-pre-optimizer-signal-gate",
+                    "status": "failed",
+                    "sequence": len(existing_receipts),
+                    "signal_requirements_applied": True,
+                    "failures": failures,
+                    "group_count": len(group_records),
+                    "samples_per_group": expected_samples,
+                    "sample_evidence_sha256": hashlib.sha256(evidence_text.encode()).hexdigest(),
+                    "groups": sorted(group_records, key=lambda record: str(record["task_id"])),
+                    "samples": sample_evidence,
+                },
+                status="failed",
+            )
+            raise AiderRewardInfrastructureError(
+                "Aider rollout failed the pre-optimizer signal gate: " + ", ".join(failures)
+            )
+
+    evidence_text = json.dumps(
+        sample_evidence, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+    receipt = {
+        "schema_version": 1,
+        "kind": "glm47-aider-pre-optimizer-signal-gate",
+        "status": "passed",
+        "sequence": len(existing_receipts),
+        "signal_requirements_applied": apply_signal_requirements,
+        "group_count": len(group_records),
+        "samples_per_group": expected_samples,
+        "positive_groups": positive_groups,
+        "semantic_variance_groups": semantic_variance_groups,
+        "reward_variance_groups": reward_variance_groups,
+        "exact_format_rate": exact_format_rate,
+        "compile_rate": compile_rate,
+        "sample_evidence_sha256": hashlib.sha256(evidence_text.encode()).hexdigest(),
+        "groups": sorted(group_records, key=lambda record: str(record["task_id"])),
+    }
+    _write_signal_gate_receipt(output_dir_value, receipt, status="passed")
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -206,6 +407,10 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--out", required=True)
     build.add_argument("--train-limit", type=int)
     build.add_argument("--eval-limit", type=int, help="training-task monitor size")
+    build.add_argument(
+        "--task-split-file",
+        help="JSON file with exact train_task_ids and monitor_task_ids arrays",
+    )
     build.add_argument("--eval-splits", default="validation,test")
     build.add_argument("--profile", default="aider-polyglot-cpp")
     build.add_argument("--run-id")
@@ -233,12 +438,32 @@ def main(argv: Sequence[str] | None = None) -> None:
         print("AIDER_REWARD_SANDBOX_READY")
         return
     if args.filter_train_oracle_full_marks:
-        raise ValueError("the packaged shadow corpus is already restricted to terminal oracle passes")
+        raise ValueError(
+            "the packaged shadow corpus is already restricted to terminal oracle passes"
+        )
+    train_task_ids = None
+    monitor_task_ids = None
+    if args.task_split_file:
+        split = json.loads(Path(args.task_split_file).read_text(encoding="utf-8"))
+        if not isinstance(split, dict):
+            raise ValueError("task split file must contain a JSON object")
+        train_task_ids = split.get("train_task_ids")
+        monitor_task_ids = split.get("monitor_task_ids")
+        if not isinstance(train_task_ids, list) or not all(
+            isinstance(value, str) for value in train_task_ids
+        ):
+            raise ValueError("task split train_task_ids must be an array of strings")
+        if not isinstance(monitor_task_ids, list) or not all(
+            isinstance(value, str) for value in monitor_task_ids
+        ):
+            raise ValueError("task split monitor_task_ids must be an array of strings")
     paths = build_aider_polyglot_datasets(
         args.tasks_dir,
         args.out,
         train_limit=args.train_limit,
         monitor_limit=args.eval_limit or 32,
+        train_task_ids=train_task_ids,
+        monitor_task_ids=monitor_task_ids,
         profile=args.profile,
         run_id=args.run_id,
         sort_by_size=args.sort_by_size,

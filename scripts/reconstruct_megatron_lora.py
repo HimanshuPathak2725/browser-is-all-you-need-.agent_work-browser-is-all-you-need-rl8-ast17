@@ -23,6 +23,13 @@ Legacy four-file output remains fail-closed when independently trained expert
 state cannot be represented.  ``--expert-parallel-size 8`` emits the verified
 TP4/EP8 rank topology instead and inverts the resulting eight native shards,
 requiring exact recovery of every source HF tensor before publishing output.
+
+``--source-native-template`` handles a complete, unmerged Miles checkpoint
+whose HF adapter and four legacy TP shards belong to the same training state.
+It treats the single LoRA-rank block as TP-major, first requires byte-exact
+reconstruction of all four legacy shards, and then applies the same EP-aware
+round-trip gate.  This mode is explicit so an arbitrary directory without a
+merge manifest can never be accepted by accident.
 """
 
 from __future__ import annotations
@@ -149,9 +156,7 @@ def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with TemporaryDirectory(prefix=f".{path.name}-writing-", dir=path.parent) as tmp:
         temporary = Path(tmp) / path.name
-        temporary.write_text(
-            json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-        )
+        temporary.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         os.replace(temporary, path)
 
 
@@ -186,6 +191,40 @@ def _validate_template_bundle(template_dir: Path, native_paths: list[Path]) -> d
     if sha256_path(template_dir / ADAPTER_CONFIG) != expected_config:
         raise ValueError("template adapter config hash does not match merge manifest")
     return manifest
+
+
+def _validate_source_native_template_bundle(
+    template_dir: Path,
+    native_paths: list[Path],
+) -> dict[str, Any]:
+    """Bind a complete unmerged HF + TP-native checkpoint without a fake merge."""
+    required = [template_dir / ADAPTER_MODEL, template_dir / ADAPTER_CONFIG, *native_paths]
+    for path in required:
+        if not path.is_file():
+            raise FileNotFoundError(f"incomplete source-native template adapter: {path}")
+    if (template_dir / MERGE_MANIFEST).exists():
+        raise ValueError(
+            f"source-native template mode requires an unmerged checkpoint without {MERGE_MANIFEST}"
+        )
+    config = _load_json(template_dir / ADAPTER_CONFIG)
+    rank = config.get("r")
+    if isinstance(rank, bool) or not isinstance(rank, int) or rank <= 0:
+        raise ValueError("source-native template adapter has an invalid LoRA rank")
+    tp_size = len(native_paths)
+    if rank % tp_size:
+        raise ValueError(f"source-native LoRA rank {rank} is not divisible by TP={tp_size}")
+    return {
+        "kind": "complete-source-native-checkpoint",
+        "rank": rank,
+        "rank_block_size": rank,
+        "files": {
+            path.name: {
+                "sha256": sha256_path(path),
+                "size_bytes": path.stat().st_size,
+            }
+            for path in required
+        },
+    }
 
 
 def _tp_chunk(tensor: Any, *, tp_rank: int, tp_size: int, dim: int) -> Any:
@@ -309,7 +348,9 @@ def classify_source_rank_layout(
         raise ValueError("no rank-sharded A tensors were available for layout classification")
     rmse = {layout: math.sqrt(value / elements) for layout, value in squared.items()}
     winner = min(rmse, key=rmse.get)
-    loser = RANK_LAYOUT_TP_MAJOR if winner == RANK_LAYOUT_MERGE_BLOCKED else RANK_LAYOUT_MERGE_BLOCKED
+    loser = (
+        RANK_LAYOUT_TP_MAJOR if winner == RANK_LAYOUT_MERGE_BLOCKED else RANK_LAYOUT_MERGE_BLOCKED
+    )
     ratio = math.inf if rmse[winner] == 0.0 else rmse[loser] / rmse[winner]
     if ratio < minimum_rmse_ratio:
         raise ValueError(
@@ -380,9 +421,7 @@ def audit_expert_coverage(
     for name, match in sorted(uncovered, key=lambda item: item[0]):
         expert = int(match.group("expert"))
         counterpart = expert % represented_expert_count
-        counterpart_name = (
-            f'{match.group("prefix")}{counterpart}.{match.group("factor")}.weight'
-        )
+        counterpart_name = f"{match.group('prefix')}{counterpart}.{match.group('factor')}.weight"
         if counterpart_name not in hf_state:
             raise ValueError(f"missing represented expert counterpart: {counterpart_name}")
         upper = hf_state[name].detach()
@@ -417,9 +456,7 @@ def audit_expert_coverage(
             )
             target["element_count"] += upper.numel()
             target["tensor_count"] += 1
-            count_key = (
-                "exact_duplicate_tensor_count" if is_equal else "mismatched_tensor_count"
-            )
+            count_key = "exact_duplicate_tensor_count" if is_equal else "mismatched_tensor_count"
             target[count_key] += 1
         uncovered_expert_indices.add(expert)
         layers.add(int(match.group("layer")))
@@ -543,13 +580,9 @@ def native_tensor_from_hf(
                 raise ValueError(f"layer {layer}: expert gate/up shared A factors differ")
             return gate.contiguous()
         if projection == "linear_fc2" and factor == "linear_out":
-            return _hf_tensor(
-                hf_state, f"{prefix}.down_proj.lora_B.weight"
-            ).squeeze(0).contiguous()
+            return _hf_tensor(hf_state, f"{prefix}.down_proj.lora_B.weight").squeeze(0).contiguous()
         expert_start = (
-            tp_rank * experts_per_shard
-            if expert_index_start is None
-            else expert_index_start
+            tp_rank * experts_per_shard if expert_index_start is None else expert_index_start
         )
         expert_indices = range(expert_start, expert_start + experts_per_shard)
         if projection == "linear_fc1":
@@ -725,10 +758,7 @@ def _join_rank_shards(
     return torch.cat(
         [
             torch.cat(
-                [
-                    piece.narrow(0, block * local_block_size, local_block_size)
-                    for piece in pieces
-                ],
+                [piece.narrow(0, block * local_block_size, local_block_size) for piece in pieces],
                 dim=0,
             )
             for block in range(block_count)
@@ -803,9 +833,7 @@ def prove_ep_hf_roundtrip(
             if not torch.equal(state[name], reference[name]) or not _tensors_byte_exact(
                 state[name], reference[name]
             ):
-                raise ValueError(
-                    f"EP alias changed a TP/shared tensor at ep={ep_rank}: {name}"
-                )
+                raise ValueError(f"EP alias changed a TP/shared tensor at ep={ep_rank}: {name}")
             replicated_comparisons += 1
 
     by_tp = [native_states_by_ep[tp_rank] for tp_rank in range(tp_size)]
@@ -869,12 +897,9 @@ def prove_ep_hf_roundtrip(
                 for ep_rank, state in native_states_by_ep.items():
                     if not torch.equal(
                         state[native_name], first_state[native_name]
-                    ) or not _tensors_byte_exact(
-                        state[native_name], first_state[native_name]
-                    ):
+                    ) or not _tensors_byte_exact(state[native_name], first_state[native_name]):
                         raise ValueError(
-                            "replicated expert A factor differs at "
-                            f"ep={ep_rank}: {native_name}"
+                            f"replicated expert A factor differs at ep={ep_rank}: {native_name}"
                         )
                 recovered = first_state[native_name].unsqueeze(0).contiguous()
                 verify(f"{prefix}.gate_proj.lora_A.weight", recovered)
@@ -884,12 +909,9 @@ def prove_ep_hf_roundtrip(
                 for ep_rank, state in native_states_by_ep.items():
                     if not torch.equal(
                         state[native_name], first_state[native_name]
-                    ) or not _tensors_byte_exact(
-                        state[native_name], first_state[native_name]
-                    ):
+                    ) or not _tensors_byte_exact(state[native_name], first_state[native_name]):
                         raise ValueError(
-                            "replicated expert B factor differs at "
-                            f"ep={ep_rank}: {native_name}"
+                            f"replicated expert B factor differs at ep={ep_rank}: {native_name}"
                         )
                 verify(
                     f"{prefix}.down_proj.lora_B.weight",
@@ -899,9 +921,7 @@ def prove_ep_hf_roundtrip(
             for ep_rank in range(expert_parallel_size):
                 packed = native_states_by_ep[ep_rank][native_name]
                 if packed.shape[0] != experts_per_shard:
-                    raise ValueError(
-                        f"EP shard ep={ep_rank} has wrong expert count: {native_name}"
-                    )
+                    raise ValueError(f"EP shard ep={ep_rank} has wrong expert count: {native_name}")
                 for local_expert in range(experts_per_shard):
                     global_expert = ep_rank * experts_per_shard + local_expert
                     tensor = packed[local_expert]
@@ -909,14 +929,10 @@ def prove_ep_hf_roundtrip(
                         if tensor.shape[0] % 2:
                             raise ValueError(f"fused expert fc1 rows are odd: {native_name}")
                         gate, up = tensor.chunk(2, dim=0)
-                        verify(
-                            f"{prefix}.{global_expert}.gate_proj.lora_B.weight", gate
-                        )
+                        verify(f"{prefix}.{global_expert}.gate_proj.lora_B.weight", gate)
                         verify(f"{prefix}.{global_expert}.up_proj.lora_B.weight", up)
                     else:
-                        verify(
-                            f"{prefix}.{global_expert}.down_proj.lora_A.weight", tensor
-                        )
+                        verify(f"{prefix}.{global_expert}.down_proj.lora_A.weight", tensor)
             continue
 
         mlp = re.search(
@@ -1005,6 +1021,7 @@ def reconstruct_adapter(
     expected_source_sha256: str | None = None,
     audit_report_path: Path | None = None,
     expert_parallel_size: int | None = None,
+    source_native_template: bool = False,
 ) -> dict[str, Any]:
     """Prove the template mapping, then atomically emit a complete adapter."""
     import torch
@@ -1014,8 +1031,15 @@ def reconstruct_adapter(
     output_dir = output_dir.resolve()
     if audit_report_path is not None:
         audit_report_path = audit_report_path.resolve()
-    if len({source_dir, template_dir, output_dir}) != 3:
-        raise ValueError("source, template, and output adapter directories must differ")
+    if output_dir in {source_dir, template_dir}:
+        raise ValueError("output adapter directory must differ from all input directories")
+    if source_native_template:
+        if source_dir != template_dir:
+            raise ValueError(
+                "source-native template mode requires source and template to be the same directory"
+            )
+    elif source_dir == template_dir:
+        raise ValueError("source and template adapter directories must differ")
     if output_dir.exists() and any(output_dir.iterdir()):
         raise FileExistsError(f"refusing to replace nonempty destination: {output_dir}")
     for name in (ADAPTER_MODEL, ADAPTER_CONFIG):
@@ -1025,18 +1049,27 @@ def reconstruct_adapter(
     source_sha256 = sha256_path(source_dir / ADAPTER_MODEL)
     if expected_source_sha256 and source_sha256 != expected_source_sha256.lower():
         raise ValueError(
-            f"source adapter SHA-256 mismatch: {source_sha256} != "
-            f"{expected_source_sha256.lower()}"
+            f"source adapter SHA-256 mismatch: {source_sha256} != {expected_source_sha256.lower()}"
         )
 
     native_paths = _native_paths(template_dir)
-    merge_manifest = _validate_template_bundle(template_dir, native_paths)
     tp_size = len(native_paths)
-    output_rank = int(merge_manifest["output_rank"])
-    rank_block_size = int(merge_manifest["input_rank"])
+    template_config = _load_json(template_dir / ADAPTER_CONFIG)
+    source_native_bundle: dict[str, Any] | None = None
+    merge_manifest: dict[str, Any] | None = None
+    if source_native_template:
+        source_native_bundle = _validate_source_native_template_bundle(
+            template_dir,
+            native_paths,
+        )
+        output_rank = int(source_native_bundle["rank"])
+        rank_block_size = int(source_native_bundle["rank_block_size"])
+    else:
+        merge_manifest = _validate_template_bundle(template_dir, native_paths)
+        output_rank = int(merge_manifest["output_rank"])
+        rank_block_size = int(merge_manifest["input_rank"])
     if output_rank % rank_block_size:
         raise ValueError("template output rank is not composed of complete input-rank blocks")
-    template_config = _load_json(template_dir / ADAPTER_CONFIG)
     source_config = _load_json(source_dir / ADAPTER_CONFIG)
     if source_config != template_config:
         differing = sorted(
@@ -1069,6 +1102,9 @@ def reconstruct_adapter(
             tp_size=tp_size,
             rank_block_size=rank_block_size,
             experts_per_shard=experts_per_shard,
+            rank_layout=(
+                RANK_LAYOUT_TP_MAJOR if source_native_template else RANK_LAYOUT_MERGE_BLOCKED
+            ),
         )
         tensor_count, tensor_bytes = _states_exact(template_native, reconstructed)
         expected_digest = tensor_content_sha256(template_native)
@@ -1114,7 +1150,9 @@ def reconstruct_adapter(
         blocked_reference[name] = blocked
         tp_major_reference[name] = tp_major
 
-    source_hf = _load_torch_state(source_dir / ADAPTER_MODEL)
+    source_hf = (
+        template_hf if source_native_template else _load_torch_state(source_dir / ADAPTER_MODEL)
+    )
     if _state_signature(source_hf) != template_signature:
         missing = sorted(set(template_signature) - set(source_hf))[:5]
         unexpected = sorted(set(source_hf) - set(template_signature))[:5]
@@ -1128,11 +1166,35 @@ def reconstruct_adapter(
             f"missing={missing}, unexpected={unexpected}, changed={changed}"
         )
 
-    source_rank_layout, rank_layout_evidence = classify_source_rank_layout(
-        source_hf,
-        blocked_reference,
-        tp_major_reference,
-    )
+    if source_native_template:
+        if output_rank != rank_block_size:
+            raise ValueError("source-native template must contain exactly one LoRA-rank block")
+        element_count = 0
+        for name in sorted(blocked_reference):
+            blocked = blocked_reference[name]
+            tp_major = tp_major_reference[name]
+            source = _hf_tensor(source_hf, name)
+            if not _tensors_byte_exact(blocked, tp_major) or not _tensors_byte_exact(
+                source, tp_major
+            ):
+                raise ValueError(f"source-native single-block rank layout mismatch: {name}")
+            element_count += source.numel()
+        source_rank_layout = RANK_LAYOUT_TP_MAJOR
+        rank_layout_evidence = {
+            "status": "passed",
+            "selected": source_rank_layout,
+            "selection_basis": "single-rank-block-byte-exact-native-proof",
+            "rank_layouts_equivalent": True,
+            "tensor_count": len(blocked_reference),
+            "element_count": element_count,
+            "all_reference_tensor_bytes_exact": True,
+        }
+    else:
+        source_rank_layout, rank_layout_evidence = classify_source_rank_layout(
+            source_hf,
+            blocked_reference,
+            tp_major_reference,
+        )
     source_expert_coverage = audit_expert_coverage(
         source_hf,
         represented_expert_count=represented_expert_count,
@@ -1146,7 +1208,7 @@ def reconstruct_adapter(
         if source_expert_coverage["source_expert_count"] != expected_expert_count:
             raise ValueError(
                 "source expert count does not match EP-aware topology: "
-                f'{source_expert_coverage["source_expert_count"]} != '
+                f"{source_expert_coverage['source_expert_count']} != "
                 f"{expert_parallel_size} * {experts_per_shard}"
             )
     topology = (
@@ -1157,9 +1219,7 @@ def reconstruct_adapter(
                 "ep_rank": ep_rank,
                 "expert_index_start": ep_rank * experts_per_shard,
                 "expert_index_stop": (ep_rank + 1) * experts_per_shard,
-                "filename": (
-                    f"adapter_megatron_tp{ep_rank % tp_size}_pp0_ep{ep_rank}.pt"
-                ),
+                "filename": (f"adapter_megatron_tp{ep_rank % tp_size}_pp0_ep{ep_rank}.pt"),
             }
             for ep_rank in range(expert_parallel_size)
         ]
@@ -1178,7 +1238,11 @@ def reconstruct_adapter(
         "path": str(template_dir),
         "adapter_model_sha256": sha256_path(template_dir / ADAPTER_MODEL),
         "adapter_config_sha256": sha256_path(template_dir / ADAPTER_CONFIG),
-        "merge_manifest_sha256": sha256_path(template_dir / MERGE_MANIFEST),
+        "bundle_kind": (
+            source_native_bundle["kind"]
+            if source_native_bundle is not None
+            else "exact-weighted-lora-delta-merge"
+        ),
         "expert_coverage": template_expert_coverage,
         "proof": {
             "status": "passed",
@@ -1187,6 +1251,11 @@ def reconstruct_adapter(
             "shards": proof_shards,
         },
     }
+    if source_native_bundle is not None:
+        template_receipt["source_native_bundle"] = source_native_bundle
+    else:
+        assert merge_manifest is not None
+        template_receipt["merge_manifest_sha256"] = sha256_path(template_dir / MERGE_MANIFEST)
     source_receipt = {
         "path": str(source_dir),
         "adapter_model_sha256": source_sha256,
@@ -1195,9 +1264,7 @@ def reconstruct_adapter(
         "tensor_count": len(source_hf),
     }
     mapping_receipt = {
-        "mode": (
-            "expert-parallel-aware" if expert_parallel_size is not None else "legacy-tp-only"
-        ),
+        "mode": ("expert-parallel-aware" if expert_parallel_size is not None else "legacy-tp-only"),
         "tp_size": tp_size,
         "expert_parallel_size": expert_parallel_size,
         "rank": output_rank,
@@ -1244,14 +1311,16 @@ def reconstruct_adapter(
             _write_json_atomic(audit_report_path, blocked_manifest)
         raise ReconstructionBlockedError(
             "source cannot be represented by TP-only native template: "
-            f'{uncovered["mismatched_tensor_count"]} of '
-            f'{uncovered["tensor_count"]} uncovered expert tensors differ',
+            f"{uncovered['mismatched_tensor_count']} of "
+            f"{uncovered['tensor_count']} uncovered expert tensors differ",
             blocked_manifest,
         )
 
     del template_hf, blocked_reference, tp_major_reference, rank_layout_pieces
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    with TemporaryDirectory(prefix=f".{output_dir.name}-reconstructing-", dir=output_dir.parent) as tmp:
+    with TemporaryDirectory(
+        prefix=f".{output_dir.name}-reconstructing-", dir=output_dir.parent
+    ) as tmp:
         staging = Path(tmp)
         shutil.copy2(source_dir / ADAPTER_MODEL, staging / ADAPTER_MODEL)
         shutil.copy2(source_dir / ADAPTER_CONFIG, staging / ADAPTER_CONFIG)
@@ -1283,9 +1352,7 @@ def reconstruct_adapter(
                 rank_block_size=rank_block_size,
                 experts_per_shard=experts_per_shard,
                 rank_layout=source_rank_layout,
-                expert_index_start=(
-                    ep_rank * experts_per_shard if ep_rank is not None else None
-                ),
+                expert_index_start=(ep_rank * experts_per_shard if ep_rank is not None else None),
             )
             destination = staging / destination_name
             torch.save(reconstructed, destination)
@@ -1321,13 +1388,10 @@ def reconstruct_adapter(
                 rank_block_size=rank_block_size,
                 rank_layout=source_rank_layout,
                 native_filenames_by_ep={
-                    ep_rank: path.name
-                    for ep_rank, path in output_state_paths_by_ep.items()
+                    ep_rank: path.name for ep_rank, path in output_state_paths_by_ep.items()
                 },
             )
-            roundtrip["source_tensor_content_sha256"] = source_receipt[
-                "tensor_content_sha256"
-            ]
+            roundtrip["source_tensor_content_sha256"] = source_receipt["tensor_content_sha256"]
             mapping_receipt["source_hf_roundtrip"] = roundtrip
             del output_states_by_ep
 
@@ -1366,11 +1430,17 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("output", help="new complete adapter directory")
     parser.add_argument("--expected-source-sha256")
     parser.add_argument(
+        "--source-native-template",
+        action="store_true",
+        help=(
+            "use the source checkpoint's own complete legacy TP shards as the "
+            "byte-exact mapping template (source and template paths must match)"
+        ),
+    )
+    parser.add_argument(
         "--expert-parallel-size",
         type=int,
-        help=(
-            "emit lossless TP4/EP8 shards named adapter_megatron_tp{tp}_pp0_ep{ep}.pt"
-        ),
+        help=("emit lossless TP4/EP8 shards named adapter_megatron_tp{tp}_pp0_ep{ep}.pt"),
     )
     parser.add_argument(
         "--audit-report",
@@ -1387,6 +1457,7 @@ def main(argv: list[str] | None = None) -> None:
             expected_source_sha256=args.expected_source_sha256,
             audit_report_path=args.audit_report,
             expert_parallel_size=args.expert_parallel_size,
+            source_native_template=args.source_native_template,
         )
     except ReconstructionBlockedError as error:
         print(json.dumps(error.audit, indent=2, sort_keys=True))

@@ -14,12 +14,15 @@ to describe or hash itself.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
 import tempfile
+from collections import Counter
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -116,7 +119,7 @@ class _FileInventory:
         return dict(self._records[path])
 
 
-def _load_rollout_samples(path: Path) -> int:
+def _load_rollout_samples(path: Path) -> list[Mapping[str, Any]]:
     try:
         import torch
     except ImportError as exc:  # pragma: no cover - the training runtime includes torch
@@ -131,7 +134,66 @@ def _load_rollout_samples(path: Path) -> int:
     samples = payload.get("samples")
     if not isinstance(samples, list):
         raise TypeError(f"rollout dump has no sample list: {path}")
-    return len(samples)
+    if not all(isinstance(sample, Mapping) for sample in samples):
+        raise TypeError(f"rollout dump contains a non-mapping sample: {path}")
+    return samples
+
+
+def _audit_reward_records(samples: list[Mapping[str, Any]], *, path: Path) -> dict[str, Any]:
+    forbidden_reasons = {"reward_exception", "infrastructure_error", "missing_task_path"}
+    rewards: list[float] = []
+    reasons: Counter[str] = Counter()
+    task_ids: Counter[str] = Counter()
+    sample_evidence: list[dict[str, Any]] = []
+    for index, sample in enumerate(samples):
+        record = sample.get("reward")
+        if not isinstance(record, Mapping):
+            raise RuntimeError(f"non-mapping reward in {path.name} sample {index}")
+        score = record.get("score")
+        reward = record.get("reward")
+        reason = record.get("reason")
+        task_id = record.get("task_id")
+        if (
+            isinstance(score, bool)
+            or not isinstance(score, (int, float))
+            or not math.isfinite(float(score))
+            or isinstance(reward, bool)
+            or not isinstance(reward, (int, float))
+            or not math.isfinite(float(reward))
+            or float(score) != float(reward)
+        ):
+            raise RuntimeError(f"invalid numeric reward in {path.name} sample {index}")
+        if record.get("infrastructure_error") is not False:
+            raise RuntimeError(f"infrastructure reward record in {path.name} sample {index}")
+        if not isinstance(reason, str) or reason in forbidden_reasons:
+            raise RuntimeError(f"forbidden reward reason in {path.name} sample {index}: {reason!r}")
+        if not isinstance(task_id, str) or not task_id:
+            raise RuntimeError(f"missing reward task ID in {path.name} sample {index}")
+        rewards.append(float(score))
+        reasons[reason] += 1
+        task_ids[task_id] += 1
+        sample_evidence.append(
+            {
+                "group_index": sample.get("group_index"),
+                "sample_index": sample.get("index"),
+                "task_id": task_id,
+                "response": str(sample.get("response") or ""),
+                "reward": dict(record),
+            }
+        )
+    evidence_text = json.dumps(
+        sample_evidence, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+    return {
+        "valid_reward_records": len(rewards),
+        "infrastructure_error_records": 0,
+        "reward_min": min(rewards),
+        "reward_max": max(rewards),
+        "reward_mean": sum(rewards) / len(rewards),
+        "reasons": dict(sorted(reasons.items())),
+        "task_sample_counts": dict(sorted(task_ids.items())),
+        "sample_evidence_sha256": hashlib.sha256(evidence_text.encode()).hexdigest(),
+    }
 
 
 def _slot_difference(actual: set[str], expected: set[str]) -> str:
@@ -173,12 +235,19 @@ def _verify_rollouts(
         for name in sorted(names, key=lambda value: int(value.rsplit("_", 1)[-1][:-3])):
             path = dump_root / name
             _require_regular(path, label=f"{stage} rollout dump")
-            sample_count = _load_rollout_samples(path)
+            samples = _load_rollout_samples(path)
+            sample_count = len(samples)
             if sample_count != expected_per_dump:
                 raise RuntimeError(
                     f"{name} sample count mismatch: {sample_count} != {expected_per_dump}"
                 )
-            result[stage].append({**inventory.record(path), "sample_count": sample_count})
+            result[stage].append(
+                {
+                    **inventory.record(path),
+                    "sample_count": sample_count,
+                    "reward_audit": _audit_reward_records(samples, path=path),
+                }
+            )
 
     train_total = sum(row["sample_count"] for row in result["train"])
     eval_total = sum(row["sample_count"] for row in result["eval"])
@@ -191,6 +260,123 @@ def _verify_rollouts(
     result["train_sample_total"] = train_total
     result["eval_sample_total"] = eval_total
     return result
+
+
+def _verify_validity_inputs_and_signal_gates(
+    run_root: Path,
+    inventory: _FileInventory,
+    rollouts: dict[str, Any],
+    *,
+    expected_rollouts: int,
+) -> dict[str, Any]:
+    input_receipt_path = run_root / "input_receipt.json"
+    task_split_path = run_root / "task_split.json"
+    data_manifest_path = run_root / "data" / "manifest.json"
+    train_path = run_root / "data" / "grpo" / "train.jsonl"
+    monitor_path = run_root / "data" / "eval" / "train_monitor.jsonl"
+    runtime_receipt_path = run_root / "runtime_receipt.json"
+    for path, label in (
+        (input_receipt_path, "validity input receipt"),
+        (task_split_path, "validity task split"),
+        (data_manifest_path, "validity data manifest"),
+        (train_path, "validity train JSONL"),
+        (monitor_path, "validity monitor JSONL"),
+        (runtime_receipt_path, "validity runtime receipt"),
+    ):
+        _require_regular(path, label=label)
+
+    input_receipt = json.loads(input_receipt_path.read_text(encoding="utf-8"))
+    task_split = json.loads(task_split_path.read_text(encoding="utf-8"))
+    data_manifest = json.loads(data_manifest_path.read_text(encoding="utf-8"))
+    runtime_receipt = json.loads(runtime_receipt_path.read_text(encoding="utf-8"))
+    train_ids = task_split.get("train_task_ids")
+    monitor_ids = task_split.get("monitor_task_ids")
+    if (
+        input_receipt.get("kind") != "glm47-aider-rl8-input-receipt"
+        or input_receipt.get("status") != "passed"
+        or not isinstance(train_ids, list)
+        or not isinstance(monitor_ids, list)
+        or len(train_ids) != len(set(train_ids))
+        or len(monitor_ids) != len(set(monitor_ids))
+        or set(train_ids) & set(monitor_ids)
+        or data_manifest.get("selection", {}).get("train_task_ids") != train_ids
+        or data_manifest.get("selection", {}).get("monitor_task_ids") != monitor_ids
+        or input_receipt.get("selection") != data_manifest.get("selection")
+        or input_receipt.get("task_split_sha256") != sha256_path(task_split_path)
+        or input_receipt.get("data_manifest_sha256") != sha256_path(data_manifest_path)
+        or input_receipt.get("train_jsonl_sha256") != sha256_path(train_path)
+        or input_receipt.get("monitor_jsonl_sha256") != sha256_path(monitor_path)
+    ):
+        raise RuntimeError("validity input receipt, task split, and data manifest are not bound")
+    if (
+        runtime_receipt.get("kind") != "glm47-aider-rl8-runtime-receipt"
+        or runtime_receipt.get("status") != "passed"
+        or runtime_receipt.get("run_id") != run_root.name
+        or runtime_receipt.get("gpu_count") != 8
+        or not str(runtime_receipt.get("runtime_image_id", "")).startswith("sha256:")
+    ):
+        raise RuntimeError("validity runtime receipt is incomplete")
+
+    signal_root = run_root / "signal_gates"
+    failed = sorted(signal_root.glob("signal_gate_failed_*.json"))
+    passed = sorted(signal_root.glob("signal_gate_passed_*.json"))
+    if failed or len(passed) != expected_rollouts:
+        raise RuntimeError(
+            f"signal gate receipt inventory mismatch: passed={len(passed)} failed={len(failed)}"
+        )
+    by_sequence: dict[int, tuple[Path, dict[str, Any]]] = {}
+    for path in passed:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        sequence = payload.get("sequence")
+        if (
+            payload.get("kind") != "glm47-aider-pre-optimizer-signal-gate"
+            or payload.get("status") != "passed"
+            or not isinstance(sequence, int)
+            or sequence in by_sequence
+        ):
+            raise RuntimeError(f"invalid signal gate receipt: {path}")
+        by_sequence[sequence] = (path, payload)
+    if set(by_sequence) != set(range(expected_rollouts)):
+        raise RuntimeError("signal gate receipt sequences are incomplete")
+
+    gate_records = []
+    for sequence in range(expected_rollouts):
+        path, payload = by_sequence[sequence]
+        rollout_audit = rollouts["train"][sequence]["reward_audit"]
+        task_counts = rollout_audit["task_sample_counts"]
+        groups = payload.get("groups")
+        group_counts = (
+            {group.get("task_id"): group.get("sample_count") for group in groups}
+            if isinstance(groups, list) and all(isinstance(group, Mapping) for group in groups)
+            else {}
+        )
+        if (
+            payload.get("sample_evidence_sha256") != rollout_audit.get("sample_evidence_sha256")
+            or set(task_counts) != set(train_ids)
+            or group_counts != task_counts
+            or payload.get("group_count") != len(train_ids)
+            or payload.get("signal_requirements_applied") is not (sequence == 0)
+        ):
+            raise RuntimeError(f"signal gate receipt does not bind train rollout {sequence}")
+        gate_records.append(inventory.record(path))
+
+    for record in rollouts["eval"]:
+        counts = record["reward_audit"]["task_sample_counts"]
+        if set(counts) != set(monitor_ids) or len(set(counts.values())) != 1:
+            raise RuntimeError("eval rollout does not bind the gradient-held-out monitor split")
+
+    return {
+        "input_receipt": inventory.record(input_receipt_path),
+        "task_split": inventory.record(task_split_path),
+        "data_manifest": inventory.record(data_manifest_path),
+        "train_jsonl": inventory.record(train_path),
+        "monitor_jsonl": inventory.record(monitor_path),
+        "runtime_receipt": inventory.record(runtime_receipt_path),
+        "signal_gates": gate_records,
+        "train_task_ids": train_ids,
+        "monitor_task_ids": monitor_ids,
+        "runtime": runtime_receipt,
+    }
 
 
 def _verify_checkpoints(
@@ -297,6 +483,8 @@ def _verify_evidence(
     expected_training_states: int,
     tensor_parallel_size: int,
     expert_parallel_size: int,
+    validity_inputs: Mapping[str, Any] | None = None,
+    require_gpu_activity: bool = False,
 ) -> dict[str, Any]:
     stage_root = run_root / "grpo_lora_r16"
     run_log = stage_root / "run.log"
@@ -338,6 +526,12 @@ def _verify_evidence(
             "training gate is not bound to this preservation contract: "
             f"field_mismatches={gate_mismatches}, run_root_matches={gate_run_root_matches}"
         )
+    if validity_inputs is not None:
+        runtime = validity_inputs.get("runtime")
+        if not isinstance(runtime, Mapping) or runtime.get("source_commit") != gate.get(
+            "source_commit"
+        ):
+            raise RuntimeError("runtime receipt and training gate source commits disagree")
 
     gate_checkpoints = gate.get("checkpoints")
     if not isinstance(gate_checkpoints, list) or len(gate_checkpoints) != expected_rollouts:
@@ -394,12 +588,11 @@ def _verify_evidence(
             f"field_mismatches={receipt_mismatches}"
         )
     continuation_mode = receipt.get("grpo_continuation_mode", "none")
-    reconstruction_sha256 = receipt.get(
-        "expected_native_reconstruction_manifest_sha256", "none"
-    )
+    reconstruction_sha256 = receipt.get("expected_native_reconstruction_manifest_sha256", "none")
     gate_reconstruction = gate.get("native_reconstruction_manifest")
-    if continuation_mode != "none" and (
-        continuation_mode != "weights_only_fresh_optimizer"
+    requires_reconstruction = expert_parallel_size > 1 or continuation_mode != "none"
+    if requires_reconstruction and (
+        continuation_mode not in {"none", "weights_only_fresh_optimizer"}
         or not re.fullmatch(r"[0-9a-f]{64}", reconstruction_sha256)
         or not isinstance(gate_reconstruction, Mapping)
         or gate_reconstruction.get("sha256") != reconstruction_sha256
@@ -407,9 +600,7 @@ def _verify_evidence(
         or gate_reconstruction.get("source_hf_roundtrip_status") != "passed"
         or gate_reconstruction.get("native_shard_count") != expected_native_shards
     ):
-        raise RuntimeError(
-            "continuation receipt and gate do not bind a passed native reconstruction proof"
-        )
+        raise RuntimeError("receipt and gate do not bind a passed native reconstruction proof")
 
     wandb_root = run_root / "wandb"
     sync_root = run_root / "sync_metrics"
@@ -430,6 +621,31 @@ def _verify_evidence(
     )
     if run_log not in logs:
         raise RuntimeError("canonical training log is absent from the log inventory")
+    gpu_activity = None
+    if require_gpu_activity:
+        vram_path = stage_root / "vram_usage.csv"
+        _require_regular(vram_path, label="GPU activity log")
+        maxima: dict[int, dict[str, float]] = {}
+        with vram_path.open(encoding="utf-8", newline="") as handle:
+            for row in csv.DictReader(handle):
+                try:
+                    index = int(str(row["index"]).strip())
+                    memory = float(str(row["memory.used"]).strip())
+                    utilization = float(str(row["utilization.gpu"]).strip())
+                except (KeyError, TypeError, ValueError) as exc:
+                    raise RuntimeError("GPU activity log contains an invalid row") from exc
+                record = maxima.setdefault(index, {"memory_used_mib": 0.0, "utilization_gpu": 0.0})
+                record["memory_used_mib"] = max(record["memory_used_mib"], memory)
+                record["utilization_gpu"] = max(record["utilization_gpu"], utilization)
+        expected_indices = set(range(expected_training_states))
+        if set(maxima) != expected_indices or any(
+            record["memory_used_mib"] < 10_000 for record in maxima.values()
+        ):
+            raise RuntimeError(f"all-GPU activity contract failed: {maxima}")
+        gpu_activity = {
+            "vram_log": inventory.record(vram_path),
+            "per_gpu_maxima": {str(key): value for key, value in sorted(maxima.items())},
+        }
     return {
         "logs": [inventory.record(path) for path in logs],
         "wandb": {
@@ -442,6 +658,7 @@ def _verify_evidence(
         },
         "training_gate": inventory.record(gate_path),
         "run_receipt": inventory.record(receipt_path),
+        "gpu_activity": gpu_activity,
     }
 
 
@@ -483,6 +700,8 @@ def verify_preservation(
     expected_training_states: int = DEFAULT_TRAINING_STATES,
     tensor_parallel_size: int | None = None,
     expert_parallel_size: int = 1,
+    require_signal_gates: bool = False,
+    require_gpu_activity: bool = False,
 ) -> dict[str, Any]:
     run_root = run_root.resolve()
     output_dir = output_dir.resolve()
@@ -527,6 +746,16 @@ def verify_preservation(
         expected_train_samples=expected_train_samples,
         expected_eval_samples=expected_eval_samples,
     )
+    validity_inputs = (
+        _verify_validity_inputs_and_signal_gates(
+            run_root,
+            inventory,
+            rollouts,
+            expected_rollouts=expected_rollouts,
+        )
+        if require_signal_gates
+        else None
+    )
     checkpoints = _verify_checkpoints(
         run_root,
         inventory,
@@ -548,6 +777,8 @@ def verify_preservation(
         expected_training_states=expected_training_states,
         tensor_parallel_size=effective_tensor_parallel_size,
         expert_parallel_size=expert_parallel_size,
+        validity_inputs=validity_inputs,
+        require_gpu_activity=require_gpu_activity,
     )
     retained_files, symlinks = _inventory_all(run_root, inventory)
     confirmed_files, confirmed_symlinks = _inventory_all(run_root, inventory)
@@ -572,8 +803,11 @@ def verify_preservation(
                 expected_native_shards if tensor_parallel_size is None else tensor_parallel_size
             ),
             "expert_parallel_size": expert_parallel_size,
+            "signal_gates_required": require_signal_gates,
+            "gpu_activity_required": require_gpu_activity,
         },
         "rollout_evidence": rollouts,
+        "validity_evidence": validity_inputs,
         "checkpoints": checkpoints,
         "operational_evidence": evidence,
         "retained_file_count": len(retained_files),
@@ -616,6 +850,8 @@ def main() -> None:
     parser.add_argument("--expected-training-states", type=int, default=DEFAULT_TRAINING_STATES)
     parser.add_argument("--tensor-parallel-size", type=int)
     parser.add_argument("--expert-parallel-size", type=int, default=1)
+    parser.add_argument("--require-signal-gates", action="store_true")
+    parser.add_argument("--require-gpu-activity", action="store_true")
     args = parser.parse_args()
     manifest = verify_preservation(
         args.run_root,
@@ -629,6 +865,8 @@ def main() -> None:
         expected_training_states=args.expected_training_states,
         tensor_parallel_size=args.tensor_parallel_size,
         expert_parallel_size=args.expert_parallel_size,
+        require_signal_gates=args.require_signal_gates,
+        require_gpu_activity=args.require_gpu_activity,
     )
     print(
         json.dumps(

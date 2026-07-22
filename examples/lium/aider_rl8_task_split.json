@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "purpose": "RL mechanics canary; monitor tasks are gradient-held-out, not a generalization benchmark",
+  "train_task_ids": [
+    "aider-shadow-cpp/broadcast-break-stab-v2",
+    "aider-shadow-cpp/defect-threshold-index",
+    "aider-shadow-cpp/room-stay-calendar",
+    "aider-shadow-cpp/crc-byte-register",
+    "aider-shadow-cpp/deque-window-extrema",
+    "aider-shadow-cpp/score-sparse-table-queries"
+  ],
+  "monitor_task_ids": [
+    "aider-shadow-cpp/copy-loan-ledger",
+    "aider-shadow-cpp/station-chunk-carry"
+  ]
+}

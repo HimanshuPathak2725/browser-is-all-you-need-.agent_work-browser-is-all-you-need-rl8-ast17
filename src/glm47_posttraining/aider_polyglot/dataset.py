@@ -7,9 +7,10 @@ import json
 import os
 import shutil
 from collections import Counter
+from collections.abc import Sequence
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Iterable
+from typing import Iterable, Literal
 
 from .schema import AiderPolyglotTask, AiderShadowRubric
 
@@ -17,6 +18,7 @@ from .schema import AiderPolyglotTask, AiderShadowRubric
 EXPECTED_SHADOW_TASKS = 253
 DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"
 SOURCE_MANIFEST_KIND = "aider-polyglot-cpp-shadow-rubrics"
+TASK_ID_PREFIX = "aider-shadow-cpp/"
 
 
 def sha256_path(path: Path) -> str:
@@ -200,11 +202,7 @@ def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
     if sha256_path(hidden_test) != rubric.hidden_test_sha256:
         raise ValueError(f"hidden-test hash mismatch: {exercise.name}")
     instructions = exercise / ".docs" / "instructions.md"
-    if (
-        not instructions.is_file()
-        or instructions.is_symlink()
-        or (exercise / ".docs").is_symlink()
-    ):
+    if not instructions.is_file() or instructions.is_symlink() or (exercise / ".docs").is_symlink():
         raise ValueError(f"missing instructions: {exercise.name}")
     _assert_regular_file(exercise / "CMakeLists.txt", exercise)
 
@@ -253,6 +251,8 @@ def _materialize_task(
     exercise: Path,
     rubric: AiderShadowRubric,
     output: Path,
+    *,
+    split: Literal["train", "validation"] = "train",
 ) -> tuple[AiderPolyglotTask, Path]:
     destination = output / "shadow" / exercise.name
     grader = destination / ".grader"
@@ -267,7 +267,7 @@ def _materialize_task(
     task = AiderPolyglotTask(
         task_id=f"aider-shadow-cpp/{exercise.name}",
         exercise=exercise.name,
-        split="train",
+        split=split,
         harness_kind="shadow_cpp17",
         exercise_dir=f"shadow/{exercise.name}",
         editable_files=rubric.editable_files,
@@ -280,7 +280,7 @@ def _materialize_task(
         source_prompt_sha256=rubric.source_prompt_sha256,
         verification_gate=rubric.verification_gate,
     )
-    descriptor = task.write_json(output / "tasks" / "train" / f"{exercise.name}.json")
+    descriptor = task.write_json(output / "tasks" / split / f"{exercise.name}.json")
     return task, descriptor
 
 
@@ -336,12 +336,39 @@ def _safe_output(tasks_root: Path, output: Path) -> None:
         raise ValueError("data output must not contain or be contained by the source task tree")
 
 
+def _normalize_requested_task_ids(values: Sequence[str], *, role: str) -> list[str]:
+    normalized = [str(value).removeprefix(TASK_ID_PREFIX) for value in values]
+    if not normalized:
+        raise ValueError(f"explicit {role} task IDs must not be empty")
+    if any(not value for value in normalized):
+        raise ValueError(f"explicit {role} task IDs contain an empty value")
+    if len(normalized) != len(set(normalized)):
+        raise ValueError(f"explicit {role} task IDs must be unique")
+    return normalized
+
+
+def _select_requested_rubrics(
+    rubrics: list[tuple[Path, AiderShadowRubric]],
+    requested: Sequence[str],
+    *,
+    role: str,
+) -> list[tuple[Path, AiderShadowRubric]]:
+    normalized = _normalize_requested_task_ids(requested, role=role)
+    by_id = {rubric.task_id: (exercise, rubric) for exercise, rubric in rubrics}
+    missing = sorted(set(normalized) - set(by_id))
+    if missing:
+        raise ValueError(f"unknown explicit {role} task IDs: {missing}")
+    return [by_id[task_id] for task_id in normalized]
+
+
 def build_aider_polyglot_datasets(
     tasks_root: str | Path,
     output_dir: str | Path,
     *,
     train_limit: int | None = None,
     monitor_limit: int = 32,
+    train_task_ids: Sequence[str] | None = None,
+    monitor_task_ids: Sequence[str] | None = None,
     profile: str = "aider-polyglot-cpp-shadow",
     run_id: str | None = None,
     sort_by_size: bool = False,
@@ -362,29 +389,57 @@ def build_aider_polyglot_datasets(
         raise ValueError("shadow task IDs must be unique")
     if len(hidden_hashes) != len(set(hidden_hashes)):
         raise ValueError("shadow hidden-test hashes must be unique")
+    explicit_split = train_task_ids is not None or monitor_task_ids is not None
+    if explicit_split and (train_task_ids is None or monitor_task_ids is None):
+        raise ValueError("explicit task selection requires both train and monitor task IDs")
+    if explicit_split and train_limit is not None:
+        raise ValueError("train_limit cannot be combined with explicit task selection")
     if train_limit is not None and not 1 <= train_limit <= len(rubrics):
         raise ValueError(f"train_limit must be within 1..{len(rubrics)}")
     if monitor_limit < 1:
         raise ValueError("monitor_limit must be positive")
-    selected = rubrics[:train_limit] if train_limit is not None else rubrics
+    if explicit_split:
+        assert train_task_ids is not None and monitor_task_ids is not None
+        selected = _select_requested_rubrics(rubrics, train_task_ids, role="train")
+        selected_monitor = _select_requested_rubrics(rubrics, monitor_task_ids, role="monitor")
+        overlap = {rubric.task_id for _, rubric in selected} & {
+            rubric.task_id for _, rubric in selected_monitor
+        }
+        if overlap:
+            raise ValueError(f"explicit train and monitor task IDs overlap: {sorted(overlap)}")
+    else:
+        selected = rubrics[:train_limit] if train_limit is not None else rubrics
+        selected_monitor = []
 
     output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists() and any(output.iterdir()) and not force:
-        raise FileExistsError(f"{output} already exists and is not empty; pass force=True to replace it")
+        raise FileExistsError(
+            f"{output} already exists and is not empty; pass force=True to replace it"
+        )
 
     with TemporaryDirectory(prefix=f".{output.name}-preparing-", dir=output.parent) as temporary:
         staging = Path(temporary)
         train_rows: list[dict[str, object]] = []
+        monitor_rows: list[dict[str, object]] = []
         prompt_hashes: list[str] = []
+        monitor_prompt_hashes: list[str] = []
         for exercise, rubric in selected:
             task, descriptor = _materialize_task(exercise, rubric, staging)
             row = _prompt_row(task, descriptor.relative_to(staging).as_posix())
             train_rows.append(row)
             canonical_prompt = json.dumps(row["prompt"], sort_keys=True, ensure_ascii=False)
             prompt_hashes.append(hashlib.sha256(canonical_prompt.encode()).hexdigest())
+        for exercise, rubric in selected_monitor:
+            task, descriptor = _materialize_task(exercise, rubric, staging, split="validation")
+            monitor_rows.append(_prompt_row(task, descriptor.relative_to(staging).as_posix()))
+            canonical_prompt = json.dumps(
+                monitor_rows[-1]["prompt"], sort_keys=True, ensure_ascii=False
+            )
+            monitor_prompt_hashes.append(hashlib.sha256(canonical_prompt.encode()).hexdigest())
         if sort_by_size:
             train_rows.sort(key=lambda row: (len(str(row["prompt"])), str(row["problem_id"])))
-        monitor_rows = _monitor_rows(train_rows, min(monitor_limit, len(train_rows)))
+        if not explicit_split:
+            monitor_rows = _monitor_rows(train_rows, min(monitor_limit, len(train_rows)))
 
         write_jsonl(staging / "grpo" / "train.jsonl", train_rows)
         write_jsonl(staging / "eval" / "train_monitor.jsonl", monitor_rows)
@@ -399,8 +454,16 @@ def build_aider_polyglot_datasets(
             "source_manifest_sha256": source_manifest_sha256,
             "source_tree_sha256": _source_tree_sha256(exercises),
             "split_contract": {
-                "train": "253 independently authored executable shadow tasks",
-                "monitor": "training-task trend monitor only",
+                "train": (
+                    "explicit independently authored executable shadow-task optimization split"
+                    if explicit_split
+                    else "253 independently authored executable shadow tasks"
+                ),
+                "monitor": (
+                    "explicit gradient-held-out monitor; not a generalization benchmark"
+                    if explicit_split
+                    else "training-task trend monitor only"
+                ),
                 "official_26": "external fixed evaluation only",
                 "official_task_id_overlap": [],
                 "reference_answers_packaged": False,
@@ -416,7 +479,13 @@ def build_aider_polyglot_datasets(
                     sorted(Counter(rubric.category for _, rubric in selected).items())
                 ),
             },
+            "selection": {
+                "mode": "explicit_gradient_holdout" if explicit_split else "prefix",
+                "train_task_ids": [f"{TASK_ID_PREFIX}{rubric.task_id}" for _, rubric in selected],
+                "monitor_task_ids": [str(row["task_id"]) for row in monitor_rows],
+            },
             "prompt_sha256": sorted(prompt_hashes),
+            "monitor_prompt_sha256": sorted(monitor_prompt_hashes),
             "files": {
                 "grpo_train": "grpo/train.jsonl",
                 "train_monitor": "eval/train_monitor.jsonl",

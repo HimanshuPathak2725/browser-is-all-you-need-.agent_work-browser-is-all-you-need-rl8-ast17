@@ -48,19 +48,15 @@ def compute_aider_reward(
             reason="forbidden_runtime_primitive",
             parsed=parsed,
         )
-    except SandboxInfrastructureError as exc:
-        return AiderRewardBreakdown(
-            reward=0.0,
-            reason="infrastructure_error",
-            parsed=parsed,
-            harness=AiderTestResult(status="infrastructure_error", logs={"error": str(exc)}),
-            infrastructure_error=True,
+
+    if harness.status == "infrastructure_error":
+        raise SandboxInfrastructureError(
+            harness.logs.get("error", "Aider verifier reported an infrastructure error")
         )
 
     semantic = {
         "compile_failed": -0.5,
         "candidate_timeout": -0.5,
-        "infrastructure_error": 0.0,
     }.get(harness.status)
     if semantic is None:
         semantic = 1.0 if harness.all_tests_pass else 0.6 * harness.fraction_tests_passed

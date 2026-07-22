@@ -113,9 +113,7 @@ def test_mtp_and_packed_expert_mapping() -> None:
             dim=0,
         ),
     )
-    assert torch.equal(
-        native_fc2[1], hf["model.layers.47.mlp.experts.3.down_proj.lora_A.weight"]
-    )
+    assert torch.equal(native_fc2[1], hf["model.layers.47.mlp.experts.3.down_proj.lora_A.weight"])
 
 
 def _write_adapter(path: Path, state: dict[str, object], rank: int = 8) -> None:
@@ -155,19 +153,22 @@ def _synthetic_bundle(
     # A normal Miles save gathers TP-local rank rows in TP-major order.  The
     # template HF file instead preserves its two merged rank-4 blocks.
     local_block_size = 4 // tp_size
-    source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"] = torch.cat(
-        [
-            torch.cat(
-                [
-                    rank_a.narrow(0, block * 4 + tp_rank * local_block_size, local_block_size)
-                    for block in range(2)
-                ],
-                dim=0,
-            )
-            for tp_rank in range(tp_size)
-        ],
-        dim=0,
-    ) + 0.01
+    source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"] = (
+        torch.cat(
+            [
+                torch.cat(
+                    [
+                        rank_a.narrow(0, block * 4 + tp_rank * local_block_size, local_block_size)
+                        for block in range(2)
+                    ],
+                    dim=0,
+                )
+                for tp_rank in range(tp_size)
+            ],
+            dim=0,
+        )
+        + 0.01
+    )
     source_hf["model.layers.1.mlp.experts.up_proj.lora_A.weight"] = source_hf[
         "model.layers.1.mlp.experts.gate_proj.lora_A.weight"
     ].clone()
@@ -180,14 +181,14 @@ def _synthetic_bundle(
     )
     for expert in range(expert_count):
         counterpart = expert % tp_size
-        template_hf[f"model.layers.1.mlp.experts.{expert}.gate_proj.lora_B.weight"] = (
-            _values((2, 8), counterpart * 100)
+        template_hf[f"model.layers.1.mlp.experts.{expert}.gate_proj.lora_B.weight"] = _values(
+            (2, 8), counterpart * 100
         )
-        template_hf[f"model.layers.1.mlp.experts.{expert}.up_proj.lora_B.weight"] = (
-            _values((2, 8), counterpart * 100 + 20)
+        template_hf[f"model.layers.1.mlp.experts.{expert}.up_proj.lora_B.weight"] = _values(
+            (2, 8), counterpart * 100 + 20
         )
-        template_hf[f"model.layers.1.mlp.experts.{expert}.down_proj.lora_A.weight"] = (
-            _values((8, 2), counterpart * 100 + 40)
+        template_hf[f"model.layers.1.mlp.experts.{expert}.down_proj.lora_A.weight"] = _values(
+            (8, 2), counterpart * 100 + 40
         )
         for factor in ("gate_proj.lora_B", "up_proj.lora_B", "down_proj.lora_A"):
             name = f"model.layers.1.mlp.experts.{expert}.{factor}.weight"
@@ -197,9 +198,7 @@ def _synthetic_bundle(
             else:
                 source_hf[name] = source_hf[lower_name].clone()
     if mismatched_surplus_expert:
-        source_hf[
-            f"model.layers.1.mlp.experts.{tp_size}.gate_proj.lora_B.weight"
-        ] += 1
+        source_hf[f"model.layers.1.mlp.experts.{tp_size}.gate_proj.lora_B.weight"] += 1
     if source_expert_parallel_size is not None:
         for expert in range(tp_size, expert_count):
             for factor_index, factor in enumerate(
@@ -211,17 +210,12 @@ def _synthetic_bundle(
     _write_adapter(source, source_hf)
 
     native_names = [
-        "module.module.decoder.layers.0.self_attention.linear_q_down_proj."
-        "adapter.linear_in.weight",
+        "module.module.decoder.layers.0.self_attention.linear_q_down_proj.adapter.linear_in.weight",
         "module.module.decoder.layers.1.mlp.experts.linear_fc1.adapter.linear_in.weight",
         "module.module.decoder.layers.1.mlp.experts.linear_fc1.adapter.linear_out.weight",
         "module.module.decoder.layers.1.mlp.experts.linear_fc2.adapter.linear_in.weight",
     ]
-    receipts = {
-        "adapter_model.bin": {
-            "output_sha256": sha256_path(template / "adapter_model.bin")
-        }
-    }
+    receipts = {"adapter_model.bin": {"output_sha256": sha256_path(template / "adapter_model.bin")}}
     for tp_rank in range(tp_size):
         native = {
             name: native_tensor_from_hf(
@@ -250,6 +244,54 @@ def _synthetic_bundle(
     return source, template
 
 
+def _synthetic_rank16_source_native_bundle(tmp_path: Path) -> Path:
+    source = tmp_path / "rank16-source-native"
+    rank = 16
+    tp_size = 4
+    expert_parallel_size = 8
+    experts_per_shard = 1
+    rank_a = _values((rank, 3))
+    shared_expert_a = _values((1, rank, 3), 100)
+    hf = {
+        "model.layers.0.self_attn.q_a_proj.lora_A.weight": rank_a,
+        "model.layers.1.mlp.experts.gate_proj.lora_A.weight": shared_expert_a,
+        "model.layers.1.mlp.experts.up_proj.lora_A.weight": shared_expert_a.clone(),
+    }
+    for expert in range(expert_parallel_size):
+        hf[f"model.layers.1.mlp.experts.{expert}.gate_proj.lora_B.weight"] = _values(
+            (2, rank), 1000 * expert
+        )
+        hf[f"model.layers.1.mlp.experts.{expert}.up_proj.lora_B.weight"] = _values(
+            (2, rank), 1000 * expert + 100
+        )
+        hf[f"model.layers.1.mlp.experts.{expert}.down_proj.lora_A.weight"] = _values(
+            (rank, 2), 1000 * expert + 200
+        )
+    _write_adapter(source, hf, rank=rank)
+
+    native_names = [
+        "module.module.decoder.layers.0.self_attention.linear_q_down_proj.adapter.linear_in.weight",
+        "module.module.decoder.layers.1.mlp.experts.linear_fc1.adapter.linear_in.weight",
+        "module.module.decoder.layers.1.mlp.experts.linear_fc1.adapter.linear_out.weight",
+        "module.module.decoder.layers.1.mlp.experts.linear_fc2.adapter.linear_in.weight",
+    ]
+    for tp_rank in range(tp_size):
+        native = {
+            name: native_tensor_from_hf(
+                name,
+                hf,
+                tp_rank=tp_rank,
+                tp_size=tp_size,
+                rank_block_size=rank,
+                experts_per_shard=experts_per_shard,
+                rank_layout=RANK_LAYOUT_TP_MAJOR,
+            )
+            for name in native_names
+        }
+        torch.save(native, source / f"adapter_megatron_tp{tp_rank}_pp0.pt")
+    return source
+
+
 def test_reconstruction_is_proof_gated_and_deterministic(tmp_path) -> None:
     source, template = _synthetic_bundle(tmp_path)
     output_a = tmp_path / "output-a"
@@ -259,13 +301,9 @@ def test_reconstruction_is_proof_gated_and_deterministic(tmp_path) -> None:
     reconstruct_adapter(source, template, output_b)
 
     assert manifest_a["template"]["proof"]["status"] == "passed"
-    assert manifest_a["template"]["proof"][
-        "all_template_native_tensor_bytes_exact"
-    ]
+    assert manifest_a["template"]["proof"]["all_template_native_tensor_bytes_exact"]
     assert manifest_a["mapping"]["source_rank_layout"]["selected"] == "tp-major"
-    source_hf = torch.load(
-        source / "adapter_model.bin", map_location="cpu", weights_only=True
-    )
+    source_hf = torch.load(source / "adapter_model.bin", map_location="cpu", weights_only=True)
     for tp_rank in range(2):
         name = f"adapter_megatron_tp{tp_rank}_pp0.pt"
         assert sha256_path(output_a / name) == sha256_path(output_b / name)
@@ -276,9 +314,7 @@ def test_reconstruction_is_proof_gated_and_deterministic(tmp_path) -> None:
         )
         assert torch.equal(
             native[q_name],
-            source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"].chunk(2)[
-                tp_rank
-            ],
+            source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"].chunk(2)[tp_rank],
         )
 
     broken = torch.load(
@@ -351,10 +387,7 @@ def test_ep8_reconstruction_roundtrips_every_hf_tensor(tmp_path) -> None:
         expert_parallel_size=8,
     )
 
-    topology = [
-        (item["tp_rank"], item["ep_rank"])
-        for item in manifest["mapping"]["rank_topology"]
-    ]
+    topology = [(item["tp_rank"], item["ep_rank"]) for item in manifest["mapping"]["rank_topology"]]
     assert topology == [
         (0, 0),
         (1, 1),
@@ -371,17 +404,11 @@ def test_ep8_reconstruction_roundtrips_every_hf_tensor(tmp_path) -> None:
     assert roundtrip["source_hf_tensor_count"] == roundtrip["recovered_hf_tensor_count"]
     assert roundtrip["all_source_hf_tensor_bytes_exact"] is True
 
-    source_hf = torch.load(
-        source / "adapter_model.bin", map_location="cpu", weights_only=True
-    )
+    source_hf = torch.load(source / "adapter_model.bin", map_location="cpu", weights_only=True)
     q_name = (
-        "module.module.decoder.layers.0.self_attention.linear_q_down_proj."
-        "adapter.linear_in.weight"
+        "module.module.decoder.layers.0.self_attention.linear_q_down_proj.adapter.linear_in.weight"
     )
-    fc1_name = (
-        "module.module.decoder.layers.1.mlp.experts.linear_fc1."
-        "adapter.linear_out.weight"
-    )
+    fc1_name = "module.module.decoder.layers.1.mlp.experts.linear_fc1.adapter.linear_out.weight"
     for ep_rank in range(8):
         tp_rank = ep_rank % 4
         filename = f"adapter_megatron_tp{tp_rank}_pp0_ep{ep_rank}.pt"
@@ -389,20 +416,89 @@ def test_ep8_reconstruction_roundtrips_every_hf_tensor(tmp_path) -> None:
         native = torch.load(output / filename, map_location="cpu", weights_only=True)
         assert torch.equal(
             native[q_name],
-            source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"].chunk(4)[
-                tp_rank
-            ],
+            source_hf["model.layers.0.self_attn.q_a_proj.lora_A.weight"].chunk(4)[tp_rank],
         )
         gate, up = native[fc1_name][0].chunk(2, dim=0)
         assert torch.equal(
             gate,
-            source_hf[
-                f"model.layers.1.mlp.experts.{ep_rank}.gate_proj.lora_B.weight"
-            ],
+            source_hf[f"model.layers.1.mlp.experts.{ep_rank}.gate_proj.lora_B.weight"],
         )
         assert torch.equal(
             up,
-            source_hf[
-                f"model.layers.1.mlp.experts.{ep_rank}.up_proj.lora_B.weight"
-            ],
+            source_hf[f"model.layers.1.mlp.experts.{ep_rank}.up_proj.lora_B.weight"],
         )
+
+
+def test_rank16_source_native_template_roundtrips_every_hf_tensor(tmp_path) -> None:
+    source = _synthetic_rank16_source_native_bundle(tmp_path)
+    output = tmp_path / "rank16-ep8-output"
+    output_b = tmp_path / "rank16-ep8-output-b"
+    expected_source_sha256 = sha256_path(source / "adapter_model.bin")
+
+    manifest = reconstruct_adapter(
+        source,
+        source,
+        output,
+        expected_source_sha256=expected_source_sha256,
+        expert_parallel_size=8,
+        source_native_template=True,
+    )
+    reconstruct_adapter(
+        source,
+        source,
+        output_b,
+        expected_source_sha256=expected_source_sha256,
+        expert_parallel_size=8,
+        source_native_template=True,
+    )
+
+    assert manifest["template"]["bundle_kind"] == "complete-source-native-checkpoint"
+    assert "merge_manifest_sha256" not in manifest["template"]
+    assert manifest["template"]["proof"]["status"] == "passed"
+    assert manifest["template"]["proof"]["all_template_native_tensor_bytes_exact"]
+    assert manifest["mapping"]["rank"] == 16
+    assert manifest["mapping"]["template_rank_block_size"] == 16
+    assert manifest["mapping"]["template_rank_block_count"] == 1
+    rank_layout = manifest["mapping"]["source_rank_layout"]
+    assert rank_layout["selected"] == "tp-major"
+    assert rank_layout["rank_layouts_equivalent"] is True
+    assert rank_layout["all_reference_tensor_bytes_exact"] is True
+    roundtrip = manifest["mapping"]["source_hf_roundtrip"]
+    assert roundtrip["status"] == "passed"
+    assert roundtrip["coverage_fraction"] == 1.0
+    assert roundtrip["source_hf_tensor_count"] == roundtrip["recovered_hf_tensor_count"]
+    assert roundtrip["all_source_hf_tensor_bytes_exact"] is True
+
+    output_names = set(manifest["outputs"]["native_shards"])
+    assert output_names == {
+        f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt" for ep_rank in range(8)
+    }
+    for name in output_names:
+        assert sha256_path(output / name) == sha256_path(output_b / name)
+
+
+def test_source_native_template_is_explicit_and_fails_closed(tmp_path) -> None:
+    source = _synthetic_rank16_source_native_bundle(tmp_path)
+    with pytest.raises(ValueError, match="source and template adapter directories must differ"):
+        reconstruct_adapter(source, source, tmp_path / "implicit-output")
+
+    corrupted = torch.load(
+        source / "adapter_megatron_tp0_pp0.pt",
+        map_location="cpu",
+        weights_only=True,
+    )
+    first = next(iter(corrupted))
+    corrupted[first] = corrupted[first] + 1
+    torch.save(corrupted, source / "adapter_megatron_tp0_pp0.pt")
+
+    rejected_output = tmp_path / "rejected-rank16-output"
+    with pytest.raises(ValueError, match="template reconstruction mismatch"):
+        reconstruct_adapter(
+            source,
+            source,
+            rejected_output,
+            expected_source_sha256=sha256_path(source / "adapter_model.bin"),
+            expert_parallel_size=8,
+            source_native_template=True,
+        )
+    assert not rejected_output.exists()

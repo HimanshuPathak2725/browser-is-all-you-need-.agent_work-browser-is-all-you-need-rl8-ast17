@@ -199,9 +199,7 @@ def run_shadow_tests(
                 raise ValueError(f"candidate path escapes shadow task root: {name}")
             target.write_text(contents, encoding="utf-8")
 
-        sources = sorted(
-            path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"}
-        )
+        sources = sorted(path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"})
         quoted_sources = " ".join(shlex_quote(name) for name in sources)
         success_marker = f"GLM47_AIDER_PASS_{secrets.token_hex(16)}"
         driver = scratch / ".grader" / "driver.cpp"
@@ -309,13 +307,22 @@ def _run_stage(
     else:
         command = docker_base_args(scratch, image=image, memory="4g") + ["bash", "-lc", script]
     try:
-        return subprocess.run(
-            command, check=False, capture_output=True, text=True, timeout=timeout_s
+        completed = subprocess.run(
+            command, check=False, capture_output=True, text=False, timeout=timeout_s
+        )
+        return subprocess.CompletedProcess(
+            completed.args,
+            completed.returncode,
+            stdout=_text(completed.stdout),
+            stderr=_text(completed.stderr),
         )
     except subprocess.TimeoutExpired as exc:
         stdout = _text(exc.stdout)
         stderr = _text(exc.stderr)
-        return subprocess.CompletedProcess(command, 124, stdout=stdout, stderr=stderr)
+        raise SandboxInfrastructureError(
+            "outer sandbox watchdog expired before the sandbox command returned; "
+            f"stdout={stdout!r} stderr={stderr!r}"
+        ) from exc
 
 
 def _local_sandbox_command(scratch: Path, script: str) -> list[str]:
@@ -431,7 +438,7 @@ def _combined_logs(result: subprocess.CompletedProcess[str]) -> str:
 def _text(value: str | bytes | None) -> str:
     if value is None:
         return ""
-    return value.decode(errors="replace") if isinstance(value, bytes) else value
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value
 
 
 def _is_infrastructure_error(logs: str) -> bool:
