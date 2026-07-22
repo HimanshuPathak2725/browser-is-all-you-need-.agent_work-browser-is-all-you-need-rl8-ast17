@@ -49,8 +49,6 @@ container_id="$(docker run -d \
   --gpus all \
   --ipc host \
   --network host \
-  --ulimit memlock=-1 \
-  --ulimit stack=67108864 \
   -v /workspace:/workspace \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v "${docker_cli}:/usr/bin/docker:ro" \
