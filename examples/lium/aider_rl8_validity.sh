@@ -146,7 +146,7 @@ def package_version(name: str) -> str:
         return "unavailable"
 
 container_id = output(["hostname"])
-runtime_image_id = output(
+runtime_image_id = os.environ.get("GLM47_RUNTIME_IMAGE_ID") or output(
     ["docker", "inspect", "-f", "{{.Image}}", container_id]
 )
 gpu_rows = [

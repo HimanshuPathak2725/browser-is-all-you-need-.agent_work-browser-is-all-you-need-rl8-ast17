@@ -62,6 +62,7 @@ container_id="$(docker run -d \
   -e GLM47_REPRO_MODEL_PATH="${base_model}" \
   -e GLM47_REPRO_REF_LOAD_DIR="${reference_checkpoint}" \
   -e GLM47_REPRO_SOURCE_ADAPTER="${source_adapter}" \
+  -e GLM47_RUNTIME_IMAGE_ID="${runtime_image_id}" \
   -e WANDB_MODE=offline \
   "${runtime_image}" \
   bash -lc "cd '${repo_root}' && exec bash examples/lium/aider_rl8_validity.sh")"
