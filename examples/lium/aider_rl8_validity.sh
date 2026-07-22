@@ -177,6 +177,7 @@ if not runtime_image_id.startswith("sha256:") or len(gpu_rows) != 8:
 PY
 
 runtime_state="${run_root}/runtime_state"
+ray_tmp="/workspace/tmp/ray-$(printf '%s' "${run_id}" | sha256sum | cut -c1-12)"
 mkdir -p \
   "${run_root}/wandb" \
   "${run_root}/sync_metrics" \
@@ -186,7 +187,8 @@ mkdir -p \
   "${runtime_state}/wandb-artifacts" \
   "${runtime_state}/xdg-cache" \
   "${runtime_state}/hf-home" \
-  "${runtime_state}/tmp"
+  "${runtime_state}/tmp" \
+  "${ray_tmp}"
 
 export GLM47_CPP_REWARD_WORKERS=32
 export GLM47_CPP_SANDBOX_BACKEND=docker
@@ -303,7 +305,7 @@ export WANDB_DATA_DIR="${runtime_state}/wandb-data"
 export WANDB_ARTIFACT_DIR="${runtime_state}/wandb-artifacts"
 export XDG_CACHE_HOME="${runtime_state}/xdg-cache"
 export HF_HOME="${runtime_state}/hf-home"
-export TMPDIR="${runtime_state}/tmp"
+export TMPDIR="${ray_tmp}"
 
 cd "${repo_root}"
 bash examples/grpo.sh
