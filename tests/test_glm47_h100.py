@@ -99,10 +99,8 @@ def test_glm47_h100_wrappers_select_fast_8x_h100_defaults() -> None:
     assert 'MILES_SGLANG_CUDA_GRAPH_MAX_BS="${MILES_SGLANG_CUDA_GRAPH_MAX_BS:-64}"' in grpo_text
     assert 'MILES_SGLANG_MAX_RUNNING_REQUESTS="${MILES_SGLANG_MAX_RUNNING_REQUESTS:-256}"' in grpo_text
     assert 'GLM47_CPP_REWARD_WORKERS="${GLM47_CPP_REWARD_WORKERS:-32}"' in grpo_text
-    assert (
-        'MILES_APPLY_CHAT_TEMPLATE_KWARGS="${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-{\\"enable_thinking\\": false}}"'
-        in grpo_text
-    )
+    assert "if [ -z \"${MILES_APPLY_CHAT_TEMPLATE_KWARGS:-}\" ]; then" in grpo_text
+    assert "export MILES_APPLY_CHAT_TEMPLATE_KWARGS='{\"enable_thinking\": false}'" in grpo_text
 
     sft_text = GLM47_H100_SFT_RUNNER.read_text(encoding="utf-8")
     assert 'MILES_ROLLOUT_BATCH_SIZE="${MILES_ROLLOUT_BATCH_SIZE:-32}"' in sft_text
