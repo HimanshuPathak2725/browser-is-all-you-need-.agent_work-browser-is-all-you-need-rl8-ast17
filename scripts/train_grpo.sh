@@ -36,6 +36,44 @@ PP_SIZE="${MILES_PIPELINE_MODEL_PARALLEL_SIZE:-1}"
 CP_SIZE="${MILES_CONTEXT_PARALLEL_SIZE:-1}"
 EP_SIZE="${MILES_EXPERT_MODEL_PARALLEL_SIZE:-8}"
 ETP_SIZE="${MILES_EXPERT_TENSOR_PARALLEL_SIZE:-1}"
+
+native_owner_count() {
+  local tp="$1"
+  local ep="$2"
+  local world="$3"
+  local a b remainder period value
+  for value in "${tp}" "${ep}" "${world}"; do
+    if ! [[ "${value}" =~ ^[1-9][0-9]*$ ]]; then
+      echo "parallel sizes must be positive integers, got: ${value}" >&2
+      return 2
+    fi
+  done
+  if [ "${ep}" -eq 1 ]; then
+    echo "${tp}"
+    return
+  fi
+  a="${tp}"
+  b="${ep}"
+  while [ "${b}" -ne 0 ]; do
+    remainder=$((a % b))
+    a="${b}"
+    b="${remainder}"
+  done
+  period=$((tp / a * ep))
+  if [ "${world}" -lt "${period}" ]; then
+    echo "${world}"
+  else
+    echo "${period}"
+  fi
+}
+
+COMPUTED_NATIVE_SHARDS="$(native_owner_count "${TP_SIZE}" "${EP_SIZE}" "${GPUS_PER_NODE}")"
+if [ -n "${MILES_EXPECTED_NATIVE_SHARDS:-}" ] && \
+   [ "${MILES_EXPECTED_NATIVE_SHARDS}" != "${COMPUTED_NATIVE_SHARDS}" ]; then
+  echo "MILES_EXPECTED_NATIVE_SHARDS does not match the configured TP/EP owners" >&2
+  exit 2
+fi
+EXPECTED_NATIVE_SHARDS="${COMPUTED_NATIVE_SHARDS}"
 MOE_TOKEN_DISPATCHER_TYPE="${MILES_MOE_TOKEN_DISPATCHER_TYPE:-}"
 MOE_ENABLE_DEEPEP="${MILES_MOE_ENABLE_DEEPEP:-0}"
 RECOMPUTE_GRANULARITY="${MILES_RECOMPUTE_GRANULARITY:-selective}"
@@ -94,6 +132,45 @@ WANDB_GROUP="${MILES_WANDB_GROUP:-glm47-h100-pie-cpp-lora-r16}"
 WANDB_RUN_ID="${MILES_WANDB_RUN_ID:-${RUN_ID}}"
 WANDB_JOB_TYPE="${MILES_WANDB_JOB_TYPE:-${WANDB_JOB_TYPE:-grpo}}"
 EXPERIMENT_ID="${GLM47_EXPERIMENT_ID:-${WANDB_GROUP}}"
+GRPO_CONTINUATION_MODE="${MILES_GRPO_CONTINUATION_MODE:-none}"
+GRPO_PARENT_RUN_ID="${MILES_GRPO_PARENT_RUN_ID:-none}"
+GRPO_PARENT_ITERATION="${MILES_GRPO_PARENT_ITERATION:-none}"
+GRPO_PARENT_ADAPTER_SHA256="${MILES_GRPO_PARENT_ADAPTER_SHA256:-none}"
+NATIVE_RECONSTRUCTION_MANIFEST_PATH="${MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH:-none}"
+EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256="${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-none}"
+
+case "${GRPO_CONTINUATION_MODE}" in
+  none)
+    if [ "${GRPO_PARENT_RUN_ID}" != "none" ] || \
+       [ "${GRPO_PARENT_ITERATION}" != "none" ] || \
+       [ "${GRPO_PARENT_ADAPTER_SHA256}" != "none" ]; then
+      echo "GRPO parent provenance requires a non-none continuation mode" >&2
+      exit 2
+    fi
+    ;;
+  weights_only_fresh_optimizer)
+    if [ -z "${MILES_LORA_ADAPTER_PATH:-}" ] || \
+       [ "${GRPO_PARENT_RUN_ID}" = "none" ] || \
+       ! [[ "${GRPO_PARENT_ITERATION}" =~ ^[0-9]+$ ]] || \
+       ! [[ "${GRPO_PARENT_ADAPTER_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      echo "weights-only continuation requires an adapter, parent run, iteration, and SHA-256" >&2
+      exit 2
+    fi
+    if [ "${GRPO_PARENT_ADAPTER_SHA256}" != "${MILES_EXPECTED_SOURCE_ADAPTER_SHA256:-}" ]; then
+      echo "continuation parent SHA-256 must equal the bound source-adapter SHA-256" >&2
+      exit 2
+    fi
+    if [ "${NATIVE_RECONSTRUCTION_MANIFEST_PATH}" = "none" ] || \
+       ! [[ "${EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256}" =~ ^[[:xdigit:]]{64}$ ]]; then
+      echo "weights-only continuation requires a pinned native reconstruction manifest" >&2
+      exit 2
+    fi
+    ;;
+  *)
+    echo "Unsupported MILES_GRPO_CONTINUATION_MODE: ${GRPO_CONTINUATION_MODE}" >&2
+    exit 2
+    ;;
+esac
 
 STAGE_ROOT="${RUN_ROOT}/grpo_lora_r16"
 LOG_FILE="${STAGE_ROOT}/run.log"
@@ -263,6 +340,12 @@ save_dir=${SAVE_DIR}
 lora_source_adapter_path=${MILES_LORA_SOURCE_ADAPTER_PATH:-}
 lora_adapter_path=${MILES_LORA_ADAPTER_PATH:-}
 expected_source_adapter_sha256=${MILES_EXPECTED_SOURCE_ADAPTER_SHA256:-}
+grpo_continuation_mode=${GRPO_CONTINUATION_MODE}
+grpo_parent_run_id=${GRPO_PARENT_RUN_ID}
+grpo_parent_iteration=${GRPO_PARENT_ITERATION}
+grpo_parent_adapter_sha256=${GRPO_PARENT_ADAPTER_SHA256}
+native_reconstruction_manifest_path=${NATIVE_RECONSTRUCTION_MANIFEST_PATH}
+expected_native_reconstruction_manifest_sha256=${EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256}
 seq_length=${SEQ_LENGTH}
 gpus_per_node=${GPUS_PER_NODE}
 tensor_model_parallel_size=${TP_SIZE}
@@ -665,7 +748,11 @@ if [ "${RAY_STATUS}" -eq 0 ] && [ "${EXPECTED_DATASET_KIND}" = "aider-polyglot-c
     --phase "${GLM47_TIMING_STATUS:-full}" \
     --num-rollout "${NUM_ROLLOUT}" \
     --gpus-per-node "${GPUS_PER_NODE}" \
-    --expected-native-shards "${MILES_EXPECTED_NATIVE_SHARDS:-${TP_SIZE}}" \
+    --expected-native-shards "${EXPECTED_NATIVE_SHARDS}" \
+    --tensor-parallel-size "${TP_SIZE}" \
+    --expert-parallel-size "${EP_SIZE}" \
+    --expected-native-reconstruction-manifest-sha256 \
+      "${MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256:-}" \
     --expected-train-count "${MILES_EXPECTED_TRAIN_COUNT:-253}" \
     --output "${TRAINING_GATE}"
   GATE_STATUS=$?

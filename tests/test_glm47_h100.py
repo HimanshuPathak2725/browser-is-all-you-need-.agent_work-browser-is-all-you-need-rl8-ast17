@@ -445,6 +445,8 @@ def test_h100_grpo_prepares_hybrid_adapter() -> None:
     assert 'scripts/prepare_grpo_adapter.py' in text
     assert "--include-native" in text
     assert "--include-training-state" not in text
+    assert "native_owner_count" in text
+    assert '--expected-world-size "${MILES_GPUS_PER_NODE}"' in text
 
 
 def test_h100_runtime_aligns_all_flashinfer_packages() -> None:
@@ -532,13 +534,20 @@ def test_lium_aider_reproduction_pins_inputs_and_fixed_schedule() -> None:
         "a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157",
         "b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2",
         "dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91",
-        "MILES_NUM_ROLLOUT=11",
+        'MILES_NUM_ROLLOUT="${MILES_NUM_ROLLOUT:-11}"',
         "MILES_LORA_RANK=32",
         "MILES_LR=5e-7",
         "MILES_KL_LOSS_COEF=0.02",
         "MILES_ROLLOUT_SKIP_SPECIAL_TOKENS=1",
         "MILES_ROLLOUT_STOP_TOKEN_IDS='154820 154827 154829'",
-        "WANDB_MODE=offline",
+        'WANDB_MODE="${WANDB_MODE:-offline}"',
+        "GLM47_REPRO_PARENT_ADAPTER_ROOT",
+        "GLM47_REPRO_PARENT_ADAPTER_SHA256",
+        "MILES_GRPO_PARENT_ADAPTER_SHA256",
+        "5839772926ea3a58f9182783242731cc168bc6d5da1867375efa4c19e81b9005",
+        "GLM47_REPRO_PARENT_NATIVE_MANIFEST_PATH",
+        "MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256",
+        "the pinned RL iter10 adapter requires explicit continuation provenance",
         "002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00",
         "aider-shadow/tasks/aider_polyglot_cpp_shadow",
     ):
@@ -686,6 +695,18 @@ def test_strip_mtp_adapter_filters_served_layers_and_copies_native_state(tmp_pat
     clear_generated_outputs = module["clear_generated_outputs"]
     copy_native_state = module["copy_native_state"]
     filter_served_layers = module["filter_served_layers"]
+    expected_native_shard_names = module["expected_native_shard_names"]
+
+    assert expected_native_shard_names(
+        8, tensor_parallel_size=4, expert_parallel_size=8
+    ) == {
+        f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt"
+        for ep_rank in range(8)
+    }
+    with pytest.raises(ValueError, match="positive"):
+        expected_native_shard_names(
+            8, tensor_parallel_size=0, expert_parallel_size=8, world_size=8
+        )
 
     kept, dropped = filter_served_layers(
         {

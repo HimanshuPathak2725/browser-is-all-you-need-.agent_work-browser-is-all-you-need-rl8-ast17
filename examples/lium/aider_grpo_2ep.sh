@@ -9,10 +9,12 @@ run_root="${runs_root}/${run_id}"
 
 expected_manifest_sha256="a7e54c0245b97ae78f9b2fa57ff5278844585cf03004254137b6cfc8e91ef157"
 expected_train_sha256="b72394ab603b4b6faf22370ea70605446f112ab50c883eb61e308e2dd9ab4dd2"
-expected_adapter_sha256="dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91"
+expected_adapter_sha256="${GLM47_REPRO_PARENT_ADAPTER_SHA256:-dbea7d3e2d6603f278b94c6be134bca83bb5f0ebdc4840eb53898ec5b3affb91}"
+iter10_adapter_sha256="046a1018b605aa29f8b8c4f2677f47ce55489105f6766155f4c009798f48abe2"
+iter10_native_manifest_sha256="5839772926ea3a58f9182783242731cc168bc6d5da1867375efa4c19e81b9005"
 expected_shadow_manifest_sha256="002993b94ddf85e23863e22484459df4b724d91204e5e48c37904a1f34748f00"
 data_root="${assets_root}/prepared-aider-169"
-adapter_root="${assets_root}/merged-1211-530-r32"
+adapter_root="${GLM47_REPRO_PARENT_ADAPTER_ROOT:-${assets_root}/merged-1211-530-r32}"
 aider_tasks_root="${GLM47_AIDER_TASKS_DIR:-${assets_root}/aider-shadow/tasks/aider_polyglot_cpp_shadow}"
 
 verify_sha256() {
@@ -38,6 +40,32 @@ verify_sha256 "${expected_manifest_sha256}" "${data_root}/manifest.json"
 verify_sha256 "${expected_train_sha256}" "${data_root}/grpo/train.jsonl"
 verify_sha256 "${expected_adapter_sha256}" "${adapter_root}/adapter_model.bin"
 verify_sha256 "${expected_shadow_manifest_sha256}" "${aider_tasks_root}/manifest.json"
+
+native_manifest_path="${GLM47_REPRO_PARENT_NATIVE_MANIFEST_PATH:-}"
+native_manifest_sha256="${GLM47_REPRO_PARENT_NATIVE_MANIFEST_SHA256:-}"
+if [[ "${expected_adapter_sha256}" = "${iter10_adapter_sha256}" && \
+      "${MILES_GRPO_CONTINUATION_MODE:-none}" = "none" ]]; then
+  echo "the pinned RL iter10 adapter requires explicit continuation provenance" >&2
+  exit 2
+fi
+if [[ "${MILES_GRPO_CONTINUATION_MODE:-none}" != "none" ]]; then
+  if [[ "${expected_adapter_sha256}" = "${iter10_adapter_sha256}" ]]; then
+    native_manifest_path="${native_manifest_path:-${adapter_root}/native_reconstruction_manifest.json}"
+    native_manifest_sha256="${native_manifest_sha256:-${iter10_native_manifest_sha256}}"
+  elif [[ -z "${native_manifest_path}" || -z "${native_manifest_sha256}" ]]; then
+    echo "continuation adapters require an explicitly pinned native reconstruction manifest" >&2
+    exit 2
+  fi
+fi
+if [[ -n "${native_manifest_path}" || -n "${native_manifest_sha256}" ]]; then
+  if [[ -z "${native_manifest_path}" || -z "${native_manifest_sha256}" ]]; then
+    echo "native reconstruction manifest path and SHA-256 are required together" >&2
+    exit 2
+  fi
+  verify_sha256 "${native_manifest_sha256}" "${native_manifest_path}"
+  export MILES_NATIVE_RECONSTRUCTION_MANIFEST_PATH="${native_manifest_path}"
+  export MILES_EXPECTED_NATIVE_RECONSTRUCTION_MANIFEST_SHA256="${native_manifest_sha256}"
+fi
 
 source_commit="$(git -C "${repo_root}" rev-parse HEAD)"
 
@@ -68,10 +96,10 @@ export MILES_EVAL_NAME=aider_shadow_train_monitor
 export MILES_EVAL_N_SAMPLES_PER_PROMPT=1
 export MILES_EVAL_PROMPT_DATA="${data_root}/eval/train_monitor.jsonl"
 export MILES_EXPECTED_DATASET_KIND=aider-polyglot-cpp-shadow-grpo
-export MILES_EXPECTED_NATIVE_SHARDS=4
+export MILES_EXPECTED_NATIVE_SHARDS="${MILES_EXPECTED_NATIVE_SHARDS:-8}"
 export MILES_EXPECTED_SOURCE_ADAPTER_SHA256="${expected_adapter_sha256}"
-export MILES_EXPECTED_SOURCE_TENSORS=9741
-export MILES_EXPECTED_STRIPPED_TENSORS=207
+export MILES_EXPECTED_SOURCE_TENSORS="${MILES_EXPECTED_SOURCE_TENSORS:-9741}"
+export MILES_EXPECTED_STRIPPED_TENSORS="${MILES_EXPECTED_STRIPPED_TENSORS:-207}"
 export MILES_EXPECTED_TRAIN_COUNT=169
 export MILES_EXPERTS_SHARED_OUTER_LORAS=1
 export MILES_EXPERT_MODEL_PARALLEL_SIZE=8
@@ -94,7 +122,7 @@ export MILES_MOE_ENABLE_DEEPEP=1
 export MILES_MOE_TOKEN_DISPATCHER_TYPE=flex
 export MILES_NO_GRADIENT_ACCUMULATION_FUSION=1
 export MILES_NO_REF=0
-export MILES_NUM_ROLLOUT=11
+export MILES_NUM_ROLLOUT="${MILES_NUM_ROLLOUT:-11}"
 export MILES_N_SAMPLES_PER_PROMPT=8
 export MILES_PIPELINE_MODEL_PARALLEL_SIZE=1
 export MILES_RECOMPUTE_GRANULARITY=full
@@ -128,13 +156,16 @@ export MILES_USE_DYNAMIC_BATCH_SIZE=1
 export MILES_USE_KL_LOSS=1
 export MILES_WANDB_GROUP="${run_id}"
 export MILES_WANDB_JOB_TYPE=grpo
-export MILES_WANDB_PROJECT=glm47-aider-polyglot-cpp-grpo
+export MILES_WANDB_PROJECT="${MILES_WANDB_PROJECT:-glm47-aider-polyglot-cpp-grpo}"
 export MILES_WANDB_RUN_ID="${run_id}"
+if [[ "${MILES_GRPO_CONTINUATION_MODE:-none}" != "none" ]]; then
+  export MILES_GRPO_PARENT_ADAPTER_SHA256="${MILES_GRPO_PARENT_ADAPTER_SHA256:-${expected_adapter_sha256}}"
+fi
 
 export NCCL_DEBUG=WARN
 export NVSHMEM_DISABLE_NCCL=1
-export WANDB_MODE=offline
-export WANDB_TAGS=canonical,aider-polyglot-cpp,grpo,2epoch,8xh100,lium,parser-fixed
+export WANDB_MODE="${WANDB_MODE:-offline}"
+export WANDB_TAGS="${WANDB_TAGS:-canonical,aider-polyglot-cpp,grpo,2epoch,8xh100,lium,parser-fixed}"
 
 mkdir -p "${run_root}"
 cd "${repo_root}"
