@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Download the canonical dataset and adapters from Hugging Face."""
+"""Download canonical datasets, evaluation evidence, and adapters from Hugging Face."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import json
 import os
 import shutil
 import tarfile
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from huggingface_hub import HfApi, snapshot_download
 
@@ -55,6 +55,24 @@ ASSETS = {
         "destination": "aider-shadow",
         "verify_checksums": True,
     },
+    "aider-data": {
+        "repo_id": "TokenBender/glm47-aider-posttraining-data",
+        "repo_type": "dataset",
+        "revision_env": "GLM47_AIDER_DATA_REVISION",
+        "default_revision": "0f0f69346eaeeb13401e57863efd33cc501e0922",
+        "destination": "aider-data",
+        "verify_checksums": False,
+        "verify_upload_manifest": True,
+    },
+    "aider-responses": {
+        "repo_id": "TokenBender/glm47-aider-fixed26-responses",
+        "repo_type": "dataset",
+        "revision_env": "GLM47_AIDER_RESPONSES_REVISION",
+        "default_revision": "d817c418b29eae23a97a83c70c896b56296b330c",
+        "destination": "aider-responses",
+        "verify_checksums": False,
+        "verify_upload_manifest": True,
+    },
 }
 
 DEFAULT_ASSETS = ("data", "sft", "grpo")
@@ -75,6 +93,78 @@ def _verify_checksums(root: Path) -> None:
         actual = digest.hexdigest()
         if actual != expected:
             raise RuntimeError(f"Checksum mismatch for {path}: {actual} != {expected}")
+
+
+def _verify_upload_manifest(root: Path) -> None:
+    manifest_path = root / "UPLOAD_MANIFEST.json"
+    if not manifest_path.is_file():
+        raise FileNotFoundError(f"Missing upload manifest: {manifest_path}")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if (
+        manifest.get("kind") != "gated-hf-upload-manifest"
+        or manifest.get("status") != "ready"
+    ):
+        raise RuntimeError(f"Unexpected upload manifest: {manifest_path}")
+    files = manifest.get("files")
+    if not isinstance(files, dict) or not files:
+        raise RuntimeError(f"Upload manifest has no files: {manifest_path}")
+    for relative_path, record in sorted(files.items()):
+        relative = PurePosixPath(relative_path)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(f"Unsafe upload-manifest path: {relative_path}")
+        path = root.joinpath(*relative.parts)
+        if path.is_symlink() or not path.is_file():
+            raise FileNotFoundError(f"Missing regular file: {path}")
+        if path.stat().st_size != record.get("size_bytes"):
+            raise RuntimeError(f"Size mismatch for {path}")
+        digest = hashlib.sha256()
+        with path.open("rb") as handle:
+            for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+                digest.update(chunk)
+        actual = digest.hexdigest()
+        if actual != record.get("sha256"):
+            raise RuntimeError(f"Checksum mismatch for {path}")
+    actual_paths = {
+        path.relative_to(root).as_posix()
+        for path in root.rglob("*")
+        if (path.is_file() or path.is_symlink())
+        and path.relative_to(root).parts[0] != ".cache"
+    }
+    unexpected_paths = actual_paths - set(files) - {
+        ".gitattributes",
+        "UPLOAD_MANIFEST.json",
+    }
+    if unexpected_paths:
+        raise RuntimeError(
+            f"Files absent from upload manifest: {sorted(unexpected_paths)}"
+        )
+
+
+def _verify_aider_catalog(root: Path, name: str) -> None:
+    catalog_path = root / "CATALOG.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    if name == "aider-data":
+        datasets = catalog.get("datasets")
+        if (
+            catalog.get("kind") != "glm47-aider-posttraining-data-catalog"
+            or not isinstance(datasets, list)
+            or len(datasets) != 19
+        ):
+            raise RuntimeError("Aider data catalog does not bind exactly 19 entries")
+        trainable = {
+            entry["dataset_id"] for entry in datasets if entry.get("trainable") is True
+        }
+        if trainable != {"sft-v3-complement-530", "rl-v2-shadow-169"}:
+            raise RuntimeError(f"Unexpected trainable Aider datasets: {trainable}")
+    elif name == "aider-responses":
+        evaluations = catalog.get("evals")
+        if (
+            catalog.get("kind") != "glm47-aider-fixed26-response-catalog"
+            or not isinstance(evaluations, list)
+            or len(evaluations) != 13
+            or catalog.get("policy", {}).get("training_use_prohibited") is not True
+        ):
+            raise RuntimeError("Aider response catalog policy or entry count mismatch")
 
 
 def _extract_task_archive(root: Path) -> Path:
@@ -167,10 +257,10 @@ def _download(name: str, output_root: Path, verify: bool) -> Path:
     asset = ASSETS[name]
     destination = output_root / asset["destination"]
     revision = os.environ.get(asset["revision_env"], asset["default_revision"])
-    if name == "aider-shadow":
+    if name in {"aider-shadow", "aider-data", "aider-responses"}:
         resolved = HfApi().dataset_info(asset["repo_id"], revision=revision).sha
         if resolved != revision:
-            raise RuntimeError(f"Aider shadow revision mismatch: {resolved} != {revision}")
+            raise RuntimeError(f"{name} revision mismatch: {resolved} != {revision}")
     snapshot_download(
         repo_id=asset["repo_id"],
         repo_type=asset["repo_type"],
@@ -179,10 +269,14 @@ def _download(name: str, output_root: Path, verify: bool) -> Path:
     )
     if verify and asset["verify_checksums"]:
         _verify_checksums(destination)
+    if verify and asset.get("verify_upload_manifest"):
+        _verify_upload_manifest(destination)
     if name == "data":
         _extract_task_archive(destination)
     elif name == "aider-shadow":
         _extract_aider_shadow_archive(destination)
+    elif name in {"aider-data", "aider-responses"}:
+        _verify_aider_catalog(destination, name)
     print(f"{name}: {destination}")
     return destination
 

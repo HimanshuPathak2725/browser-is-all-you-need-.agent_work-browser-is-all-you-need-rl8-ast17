@@ -587,6 +587,56 @@ def test_asset_downloader_pins_the_aider_shadow_revision() -> None:
     assert shadow["verify_checksums"] is True
 
 
+def test_asset_downloader_pins_the_aider_catalog_revisions() -> None:
+    module = runpy.run_path("scripts/download_assets.py")
+    data = module["ASSETS"]["aider-data"]
+    responses = module["ASSETS"]["aider-responses"]
+
+    assert data["repo_id"] == "TokenBender/glm47-aider-posttraining-data"
+    assert data["default_revision"] == "0f0f69346eaeeb13401e57863efd33cc501e0922"
+    assert data["verify_upload_manifest"] is True
+    assert responses["repo_id"] == "TokenBender/glm47-aider-fixed26-responses"
+    assert (
+        responses["default_revision"]
+        == "d817c418b29eae23a97a83c70c896b56296b330c"
+    )
+    assert responses["verify_upload_manifest"] is True
+
+
+def test_asset_downloader_verifies_gated_upload_manifest(tmp_path) -> None:
+    import hashlib
+    import json
+
+    module = runpy.run_path("scripts/download_assets.py")
+    verify = module["_verify_upload_manifest"]
+    payload = b"preserved\n"
+    (tmp_path / "payload.txt").write_bytes(payload)
+    manifest = {
+        "kind": "gated-hf-upload-manifest",
+        "status": "ready",
+        "files": {
+            "payload.txt": {
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "size_bytes": len(payload),
+            }
+        },
+    }
+    (tmp_path / "UPLOAD_MANIFEST.json").write_text(json.dumps(manifest))
+
+    verify(tmp_path)
+    (tmp_path / "stale.txt").write_text("stale\n")
+    with pytest.raises(RuntimeError, match="Files absent from upload manifest"):
+        verify(tmp_path)
+    (tmp_path / "stale.txt").unlink()
+    (tmp_path / "stale-link").symlink_to(tmp_path / "payload.txt")
+    with pytest.raises(RuntimeError, match="Files absent from upload manifest"):
+        verify(tmp_path)
+    (tmp_path / "stale-link").unlink()
+    (tmp_path / "payload.txt").write_bytes(b"tampered\n")
+    with pytest.raises(RuntimeError, match="Size mismatch|Checksum mismatch"):
+        verify(tmp_path)
+
+
 def test_h100_runtime_preflight_accepts_aligned_versions() -> None:
     module = runpy.run_path("scripts/check_runtime.py")
     validate = module["validate_miles_h100_runtime"]
