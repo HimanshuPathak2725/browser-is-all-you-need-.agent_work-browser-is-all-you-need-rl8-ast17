@@ -30,3 +30,14 @@ RUN python3 -m pip install --no-cache-dir --no-deps --force-reinstall \
     && python3 -c 'from importlib.metadata import version; expected = {"sglang-kernel": "0.4.4", "torch-memory-saver": "0.0.9.post1"}; actual = {name: version(name).split("+")[0] for name in expected}; assert actual == expected, actual; print(actual)'
 
 LABEL org.opencontainers.image.description="Miles GLM-4.7 H100 runtime with aligned FlashInfer packages"
+
+# Aider production reward uses libclang-backed C++17 AST checks.  Prefer the
+# clang-18 packages required by the production spec, but keep a distro fallback
+# so development images can still build on bases whose apt sources do not expose
+# versioned LLVM 18 packages.
+RUN apt-get update \
+    && (DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          clang-18 libclang-18-dev python3-clang \
+        || DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+          clang libclang-dev python3-clang) \
+    && rm -rf /var/lib/apt/lists/*

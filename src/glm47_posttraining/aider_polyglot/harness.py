@@ -19,6 +19,7 @@ from glm47_posttraining.cpp_perf.sandbox import (
     sandbox_backend,
 )
 
+from .ast_evaluator import validate_libclang_runtime
 from .schema import AiderTestResult
 
 
@@ -53,6 +54,15 @@ FORBIDDEN_CANDIDATE_PATTERNS = (
 
 class CandidatePolicyError(ValueError):
     """Generated source attempts to bypass or inspect the hidden verifier."""
+
+
+def ensure_ast17_tooling(*, raise_on_error: bool = True, require_clang18: bool = False) -> bool:
+    """Verify libclang C++17 AST tooling before training or evaluation starts."""
+
+    return validate_libclang_runtime(
+        raise_on_error=raise_on_error,
+        require_clang18=require_clang18,
+    )
 
 
 def _shadow_ordinal_total(grader_source: str) -> int | None:
@@ -410,6 +420,7 @@ def assert_local_sandbox_ready() -> None:
 def run_sandbox_preflight() -> None:
     """Compile and execute a harmless probe through the selected isolation path."""
 
+    ensure_ast17_tooling()
     assert_local_sandbox_ready()
     with TemporaryDirectory(prefix="aider_sandbox_preflight_") as scratch_value:
         scratch = Path(scratch_value)

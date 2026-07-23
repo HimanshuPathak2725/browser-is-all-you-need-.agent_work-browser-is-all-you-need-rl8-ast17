@@ -90,6 +90,7 @@ export MILES_CPP_DATA_DIR="${data_root}"
 export MILES_CPP_TASKS_DIR="${aider_tasks_root}"
 export MILES_CUSTOM_RM_PATH=glm47_posttraining.integrations.miles_aider_polyglot.reward_func
 export MILES_DATA_BUILD_MODULE=glm47_posttraining.integrations.miles_aider_polyglot
+export MILES_AIDER_REWARD_MODE="${MILES_AIDER_REWARD_MODE:-production_ast17}"
 export MILES_EVAL_INTERVAL=1
 export MILES_EVAL_MAX_RESPONSE_LEN=4096
 export MILES_EVAL_NAME=aider_shadow_train_monitor

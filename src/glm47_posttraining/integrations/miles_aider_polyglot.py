@@ -21,7 +21,11 @@ from glm47_posttraining.aider_polyglot.harness import (
     run_shadow_tests,
 )
 from glm47_posttraining.aider_polyglot.parser import parse_whole_file_response
-from glm47_posttraining.aider_polyglot.reward import AiderRewardBreakdown, compute_aider_reward
+from glm47_posttraining.aider_polyglot.reward import (
+    AiderRewardBreakdown,
+    compute_aider_reward,
+    compute_production_aider_reward,
+)
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask
 
 
@@ -29,6 +33,7 @@ DEFAULT_DATA_ROOT_ENV = "GLM47_DATA_DIR"
 SANDBOX_IMAGE_ENV = "GLM47_CPP_SANDBOX_IMAGE"
 REWARD_WORKERS_ENV = "GLM47_CPP_REWARD_WORKERS"
 INCLUDE_LOGS_ENV = "MILES_CPP_INCLUDE_LOGS"
+REWARD_MODE_ENV = "MILES_AIDER_REWARD_MODE"
 DEFAULT_REWARD_WORKERS = 8
 
 
@@ -88,9 +93,14 @@ def _score_sample(sample: Any) -> dict[str, Any]:
                 kwargs["expected_test_sha256"] = task.hidden_test_sha256
             return harness_runner(path, files, **kwargs)
 
-        breakdown = compute_aider_reward(
-            task, exercise_dir, _sample_response(sample), runner=runner
-        )
+        if _reward_mode() in {"production", "production_ast17"}:
+            breakdown = compute_production_aider_reward(
+                task, exercise_dir, _sample_response(sample), runner=runner
+            )
+        else:
+            breakdown = compute_aider_reward(
+                task, exercise_dir, _sample_response(sample), runner=runner
+            )
         return reward_record(sample, task, breakdown)
     except AiderRewardInfrastructureError:
         raise
@@ -123,6 +133,7 @@ def reward_record(
     record = {
         "score": breakdown.reward,
         "reward": breakdown.reward,
+        "reward_mode": _reward_mode(),
         "reason": breakdown.reason,
         "task_id": task.task_id,
         "problem_id": task.exercise,
@@ -142,6 +153,13 @@ def reward_record(
         "hidden_test_sha256": task.hidden_test_sha256,
         "verification_gate": task.verification_gate,
     }
+    for name in ("s_aider", "s_ast17", "s_style", "anti_bloat", "line_count"):
+        value = getattr(breakdown, name, None)
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            record[name] = value
+    ast17_checks = getattr(breakdown, "ast17_checks", None)
+    if isinstance(ast17_checks, dict):
+        record["ast17_checks"] = ast17_checks
     if harness and _include_logs():
         record["logs"] = harness.logs
     elif harness:
@@ -191,6 +209,10 @@ def _reward_workers() -> int:
         return max(1, int(os.environ.get(REWARD_WORKERS_ENV, DEFAULT_REWARD_WORKERS)))
     except ValueError:
         return DEFAULT_REWARD_WORKERS
+
+
+def _reward_mode() -> str:
+    return os.environ.get(REWARD_MODE_ENV, "textbook").strip().lower()
 
 
 def _include_logs() -> bool:

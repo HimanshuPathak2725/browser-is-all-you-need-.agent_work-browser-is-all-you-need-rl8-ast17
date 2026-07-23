@@ -48,7 +48,6 @@ hf_secret = modal.Secret.from_name("huggingface-token")
 
 source_ignore = [
     ".git",
-    ".glm47-posttraining",
     ".pytest_cache",
     ".ruff_cache",
     ".venv",
@@ -309,6 +308,7 @@ def _stage_env(
                 "MILES_REWARD_PREFLIGHT_MODULE": (
                     "glm47_posttraining.integrations.miles_aider_polyglot"
                 ),
+                "MILES_AIDER_REWARD_MODE": "production_ast17",
                 "MILES_EXPECTED_DATASET_KIND": AIDER_DATASET_KIND,
                 "MILES_EVAL_NAME": "aider_shadow_train_monitor",
                 "MILES_EVAL_PROMPT_DATA": (
@@ -368,7 +368,9 @@ def _stage_env(
             # filtered count, and the training gate verifies against it.
             env["MILES_CPP_DATA_DIR"] = aider_data_dir
             env["MILES_EVAL_PROMPT_DATA"] = f"{aider_data_dir}/eval/train_monitor.jsonl"
-            env["MILES_EXPECTED_TRAIN_COUNT"] = "169"
+            expected_train_count = os.environ.get("MILES_EXPECTED_TRAIN_COUNT", "")
+            if expected_train_count:
+                env["MILES_EXPECTED_TRAIN_COUNT"] = expected_train_count
         if lora_rank:
             env["MILES_LORA_RANK"] = lora_rank
         if lora_alpha:
