@@ -10,11 +10,18 @@ from glm47_posttraining.aider_polyglot.ast_evaluator import (
     compute_ast17_score,
 )
 from glm47_posttraining.aider_polyglot.reward import (
+    CLARIFICATION_OR_NO_FILE_REASON,
     COMPILATION_FAILURE_REASON,
+    COMPILATION_FAILURE_MISSING_INCLUDE_OR_TYPE_REASON,
+    COMPILATION_FAILURE_SYNTAX_REASON,
+    COMPILATION_FAILURE_WARNING_REASON,
+    DUPLICATE_FILE_REASON,
     FATAL_PARSE_REASON,
     FORBIDDEN_VIOLATION_REASON,
     PARTIAL_TEST_PASS_REASON,
+    RUNTIME_ZERO_PASS_REASON,
     SANITIZER_ERROR_REASON,
+    WRONG_FILE_LABEL_REASON,
     compute_production_aider_reward,
 )
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
@@ -95,7 +102,40 @@ def test_production_reward_rejects_forbidden_file_without_runner(tmp_path: Path)
 
 def test_production_reward_parse_failure_is_negative(tmp_path: Path) -> None:
     result = compute_production_aider_reward(_task(), tmp_path, "no file block", runner=None)
-    assert (result.reward, result.reason) == (-0.8, FATAL_PARSE_REASON)
+    assert (result.reward, result.reason) == (-0.92, CLARIFICATION_OR_NO_FILE_REASON)
+
+
+def test_production_reward_fatal_parse_with_code_fence_is_negative(tmp_path: Path) -> None:
+    result = compute_production_aider_reward(
+        _task(), tmp_path, "```cpp\nint answer(){return 42;}\n```", runner=None
+    )
+    assert (result.reward, result.reason) == (-0.85, FATAL_PARSE_REASON)
+
+
+def test_production_reward_wrong_file_label_is_recoverable_negative(tmp_path: Path) -> None:
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42;}", "solution.cpp"), runner=None
+    )
+    assert (result.reward, result.reason) == (-0.75, WRONG_FILE_LABEL_REASON)
+
+
+def test_production_reward_nested_wrong_file_label_is_not_security_floor(
+    tmp_path: Path,
+) -> None:
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42;}", "src/solution.cpp"), runner=None
+    )
+    assert (result.reward, result.reason) == (-0.75, WRONG_FILE_LABEL_REASON)
+
+
+def test_production_reward_duplicate_file_is_recoverable_negative(tmp_path: Path) -> None:
+    result = compute_production_aider_reward(
+        _task(),
+        tmp_path,
+        _response("int answer(){return 42;}") + "\n" + _response("int answer(){return 43;}"),
+        runner=None,
+    )
+    assert (result.reward, result.reason) == (-0.70, DUPLICATE_FILE_REASON)
 
 
 def test_production_reward_compile_failure_is_hard_negative(tmp_path: Path) -> None:
@@ -105,7 +145,67 @@ def test_production_reward_compile_failure_is_hard_negative(tmp_path: Path) -> N
     result = compute_production_aider_reward(
         _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
     )
-    assert (result.reward, result.reason) == (-0.5, COMPILATION_FAILURE_REASON)
+    assert (result.reward, result.reason) == (pytest.approx(-0.42), COMPILATION_FAILURE_REASON)
+
+
+def test_production_reward_recoverable_format_prefixes_compile_bucket(
+    tmp_path: Path,
+) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(status="compile_failed")
+
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42;}", "src/example.cpp"), runner=runner
+    )
+    assert result.reward == pytest.approx(-0.50)
+    assert result.reason == "recoverable_format_compilation_failure"
+    assert result.parsed is not None
+    assert result.parsed.format_valid is False
+
+
+def test_production_reward_compile_failure_syntax_stays_low(tmp_path: Path) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(
+            status="compile_failed",
+            logs={"compile": "example.cpp:1:12: error: expected ';' before '}' token"},
+        )
+
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42}"), runner=runner
+    )
+    assert (result.reward, result.reason) == (-0.55, COMPILATION_FAILURE_SYNTAX_REASON)
+
+
+def test_production_reward_compile_failure_missing_include_is_shaped(tmp_path: Path) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(
+            status="compile_failed",
+            logs={"compile": "fatal error: missing.hpp: No such file or directory"},
+        )
+
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
+    )
+    assert (result.reward, result.reason) == (
+        pytest.approx(-0.37),
+        COMPILATION_FAILURE_MISSING_INCLUDE_OR_TYPE_REASON,
+    )
+
+
+def test_production_reward_compile_failure_warning_is_near_compile(tmp_path: Path) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(
+            status="compile_failed",
+            logs={"compile": "error: unused variable 'x' [-Werror=unused-variable]"},
+        )
+
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){int x=0; return 42;}"), runner=runner
+    )
+    assert (result.reward, result.reason) == (
+        pytest.approx(-0.30),
+        COMPILATION_FAILURE_WARNING_REASON,
+    )
 
 
 def test_production_reward_sanitizer_marker_is_hard_negative(tmp_path: Path) -> None:
@@ -131,10 +231,20 @@ def test_production_reward_partial_pass_is_scaled_fraction(tmp_path: Path) -> No
         _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
     )
     assert (result.reward, result.reason, result.s_aider) == (
-        pytest.approx(0.36),
+        pytest.approx(0.65),
         PARTIAL_TEST_PASS_REASON,
         pytest.approx(0.6),
     )
+
+
+def test_production_reward_runtime_zero_pass_is_positive_but_capped(tmp_path: Path) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(status="tests_failed", tests_passed=0, tests_total=5)
+
+    result = compute_production_aider_reward(
+        _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
+    )
+    assert (result.reward, result.reason) == (pytest.approx(0.12), RUNTIME_ZERO_PASS_REASON)
 
 
 def test_production_reward_full_pass_includes_ast17_style_and_bloat(tmp_path: Path) -> None:
@@ -152,5 +262,5 @@ def test_production_reward_full_pass_includes_ast17_style_and_bloat(tmp_path: Pa
     assert result.reason == "correct"
     assert result.s_aider == 1.0
     assert -1.0 <= result.s_ast17 <= 1.0
-    assert 0.0 <= result.reward <= 1.0
+    assert 0.85 <= result.reward <= 1.0
     assert result.anti_bloat == 0.0

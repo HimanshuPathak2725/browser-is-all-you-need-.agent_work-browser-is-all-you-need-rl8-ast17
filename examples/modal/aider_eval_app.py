@@ -74,8 +74,12 @@ results = modal.Volume.from_name("w8-aider-polyglot-cpp-results", create_if_miss
 
 def validate_adapter_path(adapter_path: str) -> Path:
     path = PurePosixPath(adapter_path)
+    if path.parts[:3] == ("/", "workspace", "runs"):
+        path = PurePosixPath("/runs", *path.parts[3:])
     if not path.is_absolute() or len(path.parts) < 4 or path.parts[1] != "runs" or ".." in path.parts:
-        raise ValueError("adapter_path must be an absolute checkpoint path beneath /runs")
+        raise ValueError(
+            "adapter_path must be an absolute checkpoint path beneath /runs or /workspace/runs"
+        )
     return Path(str(path))
 
 

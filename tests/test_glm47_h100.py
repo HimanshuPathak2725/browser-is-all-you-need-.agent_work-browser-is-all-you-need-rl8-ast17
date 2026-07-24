@@ -499,7 +499,9 @@ def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     assert '"MILES_ROLLOUT_SKIP_SPECIAL_TOKENS": "1"' in text
     assert '"MILES_KL_LOSS_COEF": "0.02"' in text
     assert '"MILES_NO_REF": "0"' in text
+    assert '"TMPDIR": "/tmp/"' in text
     assert '"MILES_NUM_ROLLOUT": num_rollout or (' in text
+    assert '"--sglang-disable-cuda-graph"' in text
     assert "def aider_preflight(" in text
     assert "def merge_aider(" in text
     assert "def aider_profile(" in text
@@ -521,6 +523,8 @@ def test_aider_fixed_26_eval_requires_grpo_gate() -> None:
     assert 'EXPECTED_LAYER_47_TENSORS = 207' in text
     assert 'AIDER_COMMIT = "5dc9490bb35f9729ef2c95d00a19ccd30c26339c"' in text
     assert 'POLYGLOT_COMMIT = "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"' in text
+    assert 'path.parts[:3] == ("/", "workspace", "runs")' in text
+    assert 'PurePosixPath("/runs", *path.parts[3:])' in text
     assert "def evaluate_shard(" in text
     assert "def merge_shards(" in text
     assert "elif parallel:" in text

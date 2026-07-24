@@ -219,6 +219,15 @@ def _include_logs() -> bool:
     return os.environ.get(INCLUDE_LOGS_ENV, "").strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _int_env_or_default(name: str, default: Any) -> int:
+    value = os.environ.get(name, "")
+    raw = default if value.strip() == "" else value
+    try:
+        return int(raw)
+    except (TypeError, ValueError) as exc:
+        raise AiderRewardInfrastructureError(f"{name} must be an integer, got {raw!r}") from exc
+
+
 def _write_signal_gate_receipt(
     output_dir_value: str | None, receipt: dict[str, Any], *, status: str
 ) -> Path | None:
@@ -241,13 +250,11 @@ def _write_signal_gate_receipt(
 def validate_aider_rollout_batch(args: Any, data: list[list[Any]]) -> None:
     """Fail before log-prob recomputation or optimization when a rollout is untrustworthy."""
 
-    expected_groups = int(
-        os.environ.get("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", getattr(args, "rollout_batch_size", 0))
+    expected_groups = _int_env_or_default(
+        "GLM47_AIDER_EXPECTED_TRAIN_GROUPS", getattr(args, "rollout_batch_size", 0)
     )
-    expected_samples = int(
-        os.environ.get(
-            "GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", getattr(args, "n_samples_per_prompt", 0)
-        )
+    expected_samples = _int_env_or_default(
+        "GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", getattr(args, "n_samples_per_prompt", 0)
     )
     if len(data) != expected_groups:
         raise AiderRewardInfrastructureError(
@@ -325,7 +332,13 @@ def validate_aider_rollout_batch(args: Any, data: list[list[Any]]) -> None:
         )
         all_records.extend(typed_records)
 
-    if len({record["task_id"] for record in group_records}) != expected_groups:
+    require_unique_task_groups = os.environ.get(
+        "GLM47_AIDER_REQUIRE_UNIQUE_TASK_GROUPS", "0"
+    ).strip().lower() in {"1", "true", "yes", "on"}
+    if (
+        require_unique_task_groups
+        and len({record["task_id"] for record in group_records}) != expected_groups
+    ):
         raise AiderRewardInfrastructureError("Aider rollout contains duplicate task groups")
 
     require_signal = os.environ.get("GLM47_AIDER_REQUIRE_SIGNAL", "0") == "1"

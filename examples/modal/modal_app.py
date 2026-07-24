@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import time
@@ -74,7 +75,14 @@ training_image = (
         build_args={"MILES_BASE_IMAGE": MILES_IMAGE},
     )
     .apt_install(
-        "software-properties-common", "rsync", "gawk", "util-linux", "git", "bubblewrap"
+        "software-properties-common",
+        "rsync",
+        "gawk",
+        "util-linux",
+        "git",
+        "bubblewrap",
+        "cmake",
+        "make",
     )
     .run_commands(
         "add-apt-repository -y ppa:ubuntu-toolchain-r/test "
@@ -109,6 +117,27 @@ def _run(command: str, *, env: dict[str, str] | None = None) -> None:
         env=merged,
         check=True,
     )
+
+
+def _aider_manifest(data_dir: str) -> dict[str, object]:
+    if not data_dir:
+        return {}
+    manifest_path = Path(data_dir) / "manifest.json"
+    if not manifest_path.is_file():
+        return {}
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else {}
+
+
+def _aider_train_count(manifest: dict[str, object]) -> int | None:
+    counts = manifest.get("counts")
+    if not isinstance(counts, dict):
+        return None
+    for key in ("train", "grpo_train"):
+        value = counts.get(key)
+        if isinstance(value, int) and value > 0:
+            return value
+    return None
 
 
 @app.function(
@@ -277,6 +306,9 @@ def _stage_env(
         "WANDB_JOB_TYPE": stage,
         "WANDB_TAGS": f"canonical,modal,8xh100,pie-cpp,{stage}",
         "GLM47_SOURCE_COMMIT": source_commit or "unbound",
+        "TMPDIR": "/tmp/",
+        "TMP": "/tmp/",
+        "TEMP": "/tmp/",
     }
     if stage == "sft":
         # Data max is 2270 tokens (600-set token audit), so 3072 removes ~25% of
@@ -295,6 +327,27 @@ def _stage_env(
     elif stage == "grpo":
         env["MILES_LORA_ADAPTER_PATH"] = adapter_path
     elif stage in {"aider_profile", "aider_grpo"}:
+        data_manifest = _aider_manifest(aider_data_dir)
+        dataset_kind = str(data_manifest.get("kind") or AIDER_DATASET_KIND)
+        train_count = _aider_train_count(data_manifest)
+        is_shadow_dataset = dataset_kind == AIDER_DATASET_KIND
+        rollout_batch_size = train_count if train_count and train_count < 32 else 32
+        global_batch_size = rollout_batch_size * 8
+        eval_name = (
+            "aider_shadow_train_monitor"
+            if is_shadow_dataset
+            else "local_aider_smoke_train_monitor"
+        )
+        wandb_tags = (
+            f"aider-shadow,modal,8xh100,grpo,{stage.removeprefix('aider_')}"
+            if is_shadow_dataset
+            else f"local-aider-smoke,modal,8xh100,grpo,{stage.removeprefix('aider_')}"
+        )
+        extra_args = os.environ.get("MILES_EXTRA_ARGS", "").strip()
+        if not is_shadow_dataset:
+            extra_args = " ".join(
+                part for part in (extra_args, "--sglang-disable-cuda-graph") if part
+            )
         env.update(
             {
                 "MILES_CPP_TASKS_DIR": AIDER_TASKS_DIR,
@@ -309,8 +362,8 @@ def _stage_env(
                     "glm47_posttraining.integrations.miles_aider_polyglot"
                 ),
                 "MILES_AIDER_REWARD_MODE": "production_ast17",
-                "MILES_EXPECTED_DATASET_KIND": AIDER_DATASET_KIND,
-                "MILES_EVAL_NAME": "aider_shadow_train_monitor",
+                "MILES_EXPECTED_DATASET_KIND": dataset_kind,
+                "MILES_EVAL_NAME": eval_name,
                 "MILES_EVAL_PROMPT_DATA": (
                     f"{RUNS_DIR}/{run_id}/data/eval/train_monitor.jsonl"
                 ),
@@ -320,7 +373,7 @@ def _stage_env(
                 ),
                 "MILES_EXPECTED_SOURCE_TENSORS": "9741",
                 "MILES_EXPECTED_STRIPPED_TENSORS": "207",
-                "MILES_EXPECTED_NATIVE_SHARDS": "4",
+                "MILES_EXPECTED_NATIVE_SHARDS": "8",
                 "GLM47_SYNC_METRICS_DIR": f"{RUNS_DIR}/{run_id}/sync_metrics",
                 "MILES_SEQ_LENGTH": "6144",
                 "MILES_ROLLOUT_MAX_RESPONSE_LEN": "4096",
@@ -340,6 +393,12 @@ def _stage_env(
                 "MILES_NO_REF": "0",
                 "MILES_KL_LOSS_COEF": "0.02",
                 "MILES_USE_KL_LOSS": "1",
+                "MILES_ROLLOUT_BATCH_SIZE": str(rollout_batch_size),
+                "MILES_GLOBAL_BATCH_SIZE": str(global_batch_size),
+                "MILES_ROLLOUT_SAMPLE_FILTER_PATH": (
+                    "glm47_posttraining.integrations.miles_aider_polyglot."
+                    "validate_aider_rollout_batch"
+                ),
                 "MILES_SAVE_INTERVAL": "1",
                 "MILES_EVAL_INTERVAL": "1",
                 # ~5 epochs over the 169-task difficulty-filtered set:
@@ -353,14 +412,12 @@ def _stage_env(
                 "MILES_WANDB_JOB_TYPE": "grpo-profile" if stage == "aider_profile" else "grpo",
                 "WANDB_RUN_GROUP": run_id,
                 "WANDB_JOB_TYPE": "grpo-profile" if stage == "aider_profile" else "grpo",
-                "WANDB_TAGS": (
-                    "aider-shadow,modal,8xh100,grpo,profile"
-                    if stage == "aider_profile"
-                    else "aider-shadow,modal,8xh100,grpo,full"
-                ),
+                "WANDB_TAGS": wandb_tags,
                 "GLM47_TIMING_STATUS": "profile" if stage == "aider_profile" else "full",
             }
         )
+        if extra_args:
+            env["MILES_EXTRA_ARGS"] = extra_args
         if aider_data_dir:
             # Pre-built (and difficulty-filtered) dataset staged on the assets
             # volume; train_grpo.sh skips its in-container 253-task build when

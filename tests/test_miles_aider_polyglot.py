@@ -529,7 +529,7 @@ def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
         metadata={"task_path": str(task_path.relative_to(data))},
     )
     record = asyncio.run(integration_module.reward_func(SimpleNamespace(), sample))
-    assert record["score"] == 1.0
+    assert 0.85 <= record["score"] <= 1.0
     assert record["all_tests_pass"] is True
     assert record["candidate_returncode"] == 0
     assert record["modified_files"] == ["example.cpp"]
@@ -638,6 +638,43 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
     assert any(
         json.loads(path.read_text())["signal_requirements_applied"] is False for path in receipts
     )
+
+
+def test_rollout_validator_falls_back_when_expected_count_env_is_blank(monkeypatch) -> None:
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "")
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "")
+    data = [
+        [
+            SimpleNamespace(reward=_signal_record(f"aider-shadow-cpp/task-{group_index}", 0.1, 1))
+            for _ in range(3)
+        ]
+        for group_index in range(2)
+    ]
+
+    integration_module.validate_aider_rollout_batch(
+        SimpleNamespace(rollout_batch_size=2, n_samples_per_prompt=3), data
+    )
+
+
+def test_rollout_validator_allows_duplicate_task_groups_unless_strict(monkeypatch) -> None:
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "2")
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "2")
+    data = [
+        [SimpleNamespace(reward=_signal_record("aider-shadow-cpp/task-a", 0.1, 1))],
+        [SimpleNamespace(reward=_signal_record("aider-shadow-cpp/task-a", 0.2, 2))],
+    ]
+    for group in data:
+        group.append(SimpleNamespace(reward=dict(group[0].reward)))
+
+    integration_module.validate_aider_rollout_batch(
+        SimpleNamespace(rollout_batch_size=2, n_samples_per_prompt=2), data
+    )
+
+    monkeypatch.setenv("GLM47_AIDER_REQUIRE_UNIQUE_TASK_GROUPS", "1")
+    with pytest.raises(integration_module.AiderRewardInfrastructureError, match="duplicate"):
+        integration_module.validate_aider_rollout_batch(
+            SimpleNamespace(rollout_batch_size=2, n_samples_per_prompt=2), data
+        )
 
 
 def test_pre_optimizer_signal_gate_rejects_infrastructure_reward(monkeypatch) -> None:
