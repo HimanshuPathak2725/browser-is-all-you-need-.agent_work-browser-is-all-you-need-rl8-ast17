@@ -1,5 +1,10 @@
 # GLM-4.7 Aider AST17 GRPO Reward Policy V2
 
+> **Superseded:** The active rubric specification is
+> [GLM-4.7 Aider Weighted 45-Check Reward Rubric](./glm47-aider-continuous-five-test-reward-policy.md).
+> This V2 document is retained as historical design context and must not be used
+> as the reward formula for a new run.
+
 ## Verdict
 
 Use a hybrid Aider-GRPO reward policy. The existing multi-rubric architecture is useful, but it must be adapted to Aider whole-file editing. The main goal is to create rankable rewards before full correctness, while keeping full hidden-test pass as the dominant outcome.
