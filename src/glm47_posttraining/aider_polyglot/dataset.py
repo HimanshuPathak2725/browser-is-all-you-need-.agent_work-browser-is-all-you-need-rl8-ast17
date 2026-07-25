@@ -12,6 +12,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Iterable, Literal
 
+from .harness import WEIGHTED45_SUITE_COUNT, _instrument_weighted45_grader
+from .policy45 import WEIGHTED45_POLICY_VERSION
 from .schema import AiderPolyglotTask, AiderShadowRubric
 
 
@@ -201,6 +203,13 @@ def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
     _assert_regular_file(hidden_test, exercise)
     if sha256_path(hidden_test) != rubric.hidden_test_sha256:
         raise ValueError(f"hidden-test hash mismatch: {exercise.name}")
+    _instrumented, hidden_check_count = _instrument_weighted45_grader(
+        hidden_test.read_text(encoding="utf-8")
+    )
+    if hidden_check_count < WEIGHTED45_SUITE_COUNT:
+        raise ValueError(
+            f"weighted45 grader exposes fewer than five checks: {exercise.name}"
+        )
     instructions = exercise / ".docs" / "instructions.md"
     if not instructions.is_file() or instructions.is_symlink() or (exercise / ".docs").is_symlink():
         raise ValueError(f"missing instructions: {exercise.name}")
@@ -446,7 +455,7 @@ def build_aider_polyglot_datasets(
         source_manifest_sha256 = sha256_path(manifest_path)
         data_manifest = {
             "kind": DATASET_KIND,
-            "schema_version": 4,
+            "schema_version": 5,
             "profile": profile,
             "run_id": run_id,
             "source_root": str(source),
@@ -467,6 +476,15 @@ def build_aider_polyglot_datasets(
                 "official_26": "external fixed evaluation only",
                 "official_task_id_overlap": [],
                 "reference_answers_packaged": False,
+            },
+            "reward_contract": {
+                "policy": WEIGHTED45_POLICY_VERSION,
+                "tiers": 9,
+                "checks_per_tier": 5,
+                "total_checks": 45,
+                "hidden_suite_partitions": WEIGHTED45_SUITE_COUNT,
+                "raw_tier_formula": "0.3*N_passed-0.5",
+                "normalization_weight": 6.54,
             },
             "counts": {
                 "available_shadow": len(rubrics),

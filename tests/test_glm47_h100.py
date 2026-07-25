@@ -494,6 +494,7 @@ def test_modal_aider_profile_binds_objective_adapter_and_safe_reward() -> None:
     assert "f1ea45bc327dc6e28d0287aea75c6b691e99d2ec2f7fdb7f07bbbf5ccd6cf36a" in text
     assert '"MILES_DATA_BUILD_MODULE"' in text
     assert '"glm47_posttraining.integrations.miles_aider_polyglot.reward_func"' in text
+    assert '"MILES_AIDER_REWARD_MODE": "weighted45"' in text
     assert '"MILES_ROLLOUT_MAX_RESPONSE_LEN": "4096"' in text
     assert '"MILES_ROLLOUT_STOP_TOKEN_IDS": "154820 154827 154829"' in text
     assert '"MILES_ROLLOUT_SKIP_SPECIAL_TOKENS": "1"' in text

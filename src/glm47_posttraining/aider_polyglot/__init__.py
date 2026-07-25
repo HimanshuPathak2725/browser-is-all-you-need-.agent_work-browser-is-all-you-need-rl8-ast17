@@ -6,6 +6,7 @@ from .reward import (
     ProductionAiderRewardBreakdown,
     compute_aider_reward,
     compute_production_aider_reward,
+    compute_weighted45_aider_reward,
 )
 from .schema import AiderPolyglotTask, AiderTestResult
 
@@ -19,4 +20,5 @@ __all__ = [
     "compute_ast17_score",
     "compute_aider_reward",
     "compute_production_aider_reward",
+    "compute_weighted45_aider_reward",
 ]

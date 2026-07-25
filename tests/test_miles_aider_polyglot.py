@@ -60,7 +60,15 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
         (exercise / source).write_text(
             f'#include "{header}"\nint answer() {{ return 0; }}\n', encoding="utf-8"
         )
-        test_bytes = f'#include "{header}"\nint main() {{ return answer() == {index} ? 0 : 1; }}\n'
+        test_bytes = (
+            f'#include "{header}"\nint main() {{\n'
+            f"  if (answer() != {index}) return 1;\n"
+            f"  if (answer() < {index}) return 2;\n"
+            f"  if (answer() > {index}) return 3;\n"
+            f"  if (answer() != answer()) return 4;\n"
+            f"  if ((answer() == {index}) == false) return 5;\n"
+            "  return 0;\n}\n"
+        )
         (exercise / test).write_text(test_bytes, encoding="utf-8")
         (exercise / "CMakeLists.txt").write_text("project(example CXX)\n", encoding="utf-8")
         rubric = {
@@ -284,6 +292,46 @@ def _run_ordinal_shadow(tmp_path: Path, monkeypatch, candidate_returncode: int):
     )
 
 
+def test_shadow_harness_counted_grader_scores_all_five_checks(tmp_path, monkeypatch) -> None:
+    exercise = tmp_path / "shadow-counted"
+    (exercise / ".grader").mkdir(parents=True)
+    (exercise / "example.cpp").write_text("int answer(){return 42;}\n", encoding="utf-8")
+    hidden = (
+        "#define GLM47_AIDER_COUNTED_TESTS 5\n"
+        "int answer();\n"
+        "int main(){\n"
+        "  int failed = 0;\n"
+        "  const int value = answer();\n"
+        "  failed += value != 42;\n"
+        "  failed += value < 0;\n"
+        "  failed += value > 100;\n"
+        "  failed += (value % 2) != 0;\n"
+        "  failed += answer() != value;\n"
+        "  return failed;\n"
+        "}\n"
+    )
+    (exercise / ".grader" / "test.cpp").write_text(hidden, encoding="utf-8")
+    results = iter(
+        [
+            subprocess.CompletedProcess(["c++"], 0, stdout="", stderr=""),
+            # The counted contract returns two failed checks, so three passed.
+            subprocess.CompletedProcess(["candidate_test"], 2, stdout="", stderr=""),
+        ]
+    )
+    monkeypatch.setattr(harness_module, "_run_stage", lambda *a, **k: next(results))
+
+    result = run_shadow_tests(
+        exercise,
+        {"example.cpp": "int answer(){return 42;}\n"},
+        expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
+    )
+
+    assert result.status == "tests_failed"
+    assert result.tests_passed == 3
+    assert result.tests_total == 5
+    assert result.fraction_tests_passed == pytest.approx(0.6)
+
+
 def test_shadow_harness_awards_partial_credit_for_ordinal_grader(tmp_path, monkeypatch) -> None:
     # Exit code 3 means checks 1 and 2 passed before check 3 failed: 2 of 5.
     result = _run_ordinal_shadow(tmp_path, monkeypatch, candidate_returncode=3)
@@ -426,6 +474,16 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert manifest["kind"] == DATASET_KIND
     assert manifest["counts"] == {"available_shadow": 253, "monitor": 2, "train": 3}
     assert manifest["split_contract"]["official_26"] == "external fixed evaluation only"
+    assert manifest["schema_version"] == 5
+    assert manifest["reward_contract"] == {
+        "checks_per_tier": 5,
+        "hidden_suite_partitions": 5,
+        "normalization_weight": 6.54,
+        "policy": "weighted45-v1",
+        "raw_tier_formula": "0.3*N_passed-0.5",
+        "tiers": 9,
+        "total_checks": 45,
+    }
     first = AiderPolyglotTask.read_json(
         paths["manifest"].parent / train_rows[0]["metadata"]["task_path"]
     )

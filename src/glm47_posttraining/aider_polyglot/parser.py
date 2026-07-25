@@ -43,7 +43,13 @@ def parse_whole_file_response(response: str, editable_files: Iterable[str]) -> P
     editable set stay fatal — that is the tamper boundary.
     """
 
-    if len(response.encode("utf-8")) > MAX_RESPONSE_BYTES:
+    try:
+        response_bytes = response.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise AiderResponseError(
+            "invalid_encoding", "response is not valid UTF-8 text"
+        ) from exc
+    if len(response_bytes) > MAX_RESPONSE_BYTES:
         raise AiderResponseError("response_too_large", "response exceeds the safe byte limit")
 
     # GLM-4.7's pinned generation config treats these chat-control tokens as

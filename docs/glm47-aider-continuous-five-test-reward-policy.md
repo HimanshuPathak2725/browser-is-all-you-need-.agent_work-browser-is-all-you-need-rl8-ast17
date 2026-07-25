@@ -218,3 +218,51 @@ full-pass bonus.
    downstream checks are recorded as failed.
 6. Verifier infrastructure failure is the only mask/drop condition because it
    is not evidence about model quality.
+
+## Implemented evaluator contract
+
+The repository implementation uses reward mode `weighted45` and emits one
+strict receipt for every scored rollout. The receipt contains:
+
+- exactly 45 named booleans (`F1` through `A5`);
+- evidence text for each observed check;
+- all nine pass counts, raw tier rewards, and weighted tier rewards;
+- the weighted numerator, fixed denominator `6.54`, normalized reward, and
+  normalized percentage.
+
+The response evaluator always runs the 25 static checks (`F`, `C`, `P`, `L`,
+and `D`). The sandbox harness supplies the remaining 20 outcomes:
+
+| Checks | Observed implementation |
+| --- | --- |
+| `K1`–`K5` | Separate candidate syntax, hidden API/type, strict-warning, link, and executable-target probes. |
+| `R1`–`R5` | Process start, crash status, bounded return status, workspace cleanup, and a per-run secret handshake. |
+| `H1`–`H5` | Five isolated executions of stable partitions of the SHA-256-verified hidden grader. Existing sequential-return, `assert`, `CHECK`, and `REQUIRE` graders are instrumented only after their original hash is verified. |
+| `A1`–`A5` | Standard full grader, ASan/UBSan, bounded execution, applicable TSan, and complete five-partition verification. |
+
+Parser or compile failure does not omit later fields: checks that cannot safely
+run are stored as `false` with a reason. Candidate code containing a forbidden
+runtime primitive is never executed. Infrastructure errors remain non-reward
+failures and abort the optimizer batch.
+
+The launch preflight compiles and runs normal, ASan/UBSan/LSan, and TSan probes.
+Unsupported sanitizer runtimes (for example, LSan under `ptrace` or a TSan
+shadow-memory mapping failure) abort before GPU training and are never charged
+to a candidate.
+
+Dataset materialization now validates that every hidden grader exposes at least
+five instrumentable checks and records `weighted45-v1` in manifest schema 5.
+The audit command is:
+
+```bash
+PYTHONPATH=src python3 scripts/audit_aider_weighted45_graders.py \
+  --tasks-dir /workspace/assets/aider-shadow/tasks/aider_polyglot_cpp_shadow \
+  --compile \
+  --output weighted45-grader-audit.json
+```
+
+The 25 July 2026 audit of the current `glm47-assets/aider-shadow` archive
+validated and compiled all 253 transformed graders under C++17 warning and
+pedantic flags. Candidate translation units retain `-Werror`. The graders expose
+5 to 61 underlying checks per task; the canonical per-task audit-record digest is
+`4b93025a2567a4b498ecff301cea2b88efeeee3728992f8c3a7dd390d2a358a0`.

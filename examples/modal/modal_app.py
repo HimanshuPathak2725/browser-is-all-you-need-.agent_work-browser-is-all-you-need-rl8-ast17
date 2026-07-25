@@ -361,7 +361,7 @@ def _stage_env(
                 "MILES_REWARD_PREFLIGHT_MODULE": (
                     "glm47_posttraining.integrations.miles_aider_polyglot"
                 ),
-                "MILES_AIDER_REWARD_MODE": "production_ast17",
+                "MILES_AIDER_REWARD_MODE": "weighted45",
                 "MILES_EXPECTED_DATASET_KIND": dataset_kind,
                 "MILES_EVAL_NAME": eval_name,
                 "MILES_EVAL_PROMPT_DATA": (

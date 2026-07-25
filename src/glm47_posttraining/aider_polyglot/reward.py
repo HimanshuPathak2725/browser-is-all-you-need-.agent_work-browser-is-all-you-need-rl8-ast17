@@ -11,9 +11,15 @@ from typing import Callable
 from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
 from .ast_evaluator import AST17Evaluation, compute_ast17_score
-from .harness import CandidatePolicyError, run_aider_tests
+from .harness import CandidatePolicyError, run_aider_tests, run_shadow_weighted45_tests
 from .parser import AiderResponseError, ParsedAiderResponse, parse_whole_file_response
-from .schema import AiderPolyglotTask, AiderTestResult
+from .policy45 import (
+    Weighted45Score,
+    evaluate_response_checks,
+    failed_harness_checks,
+    score_weighted45,
+)
+from .schema import AiderPolyglotTask, AiderTestResult, WEIGHTED45_HARNESS_CHECK_IDS
 
 
 Runner = Callable[[Path, dict[str, str]], AiderTestResult]
@@ -49,10 +55,8 @@ COMPILATION_FAILURE_WARNING_REWARD = -0.32
 SANITIZER_ERROR_REWARD = -0.5
 CANDIDATE_TIMEOUT_REWARD = -0.5
 INFRASTRUCTURE_MASK_REWARD = 0.0
-FULL_PASS_REWARD_FLOOR = 0.85
-PARTIAL_TEST_BASE = 0.15
-PARTIAL_TEST_SCALE = 0.6
-EPS = 1e-9
+TEST_EXECUTION_FLOOR = -0.20
+TEST_EXECUTION_CEILING = 1.00
 PROTECTED_NAMES = {"CMakeLists.txt"}
 PROTECTED_SUFFIXES = ("_test.cpp", "_test.cc", "_test.h", ".cmake")
 SANITIZER_ERROR_MARKERS = (
@@ -146,6 +150,13 @@ class ProductionAiderRewardBreakdown(AiderRewardBreakdown):
     ast17_checks: dict[str, float] | None = None
 
 
+@dataclass(frozen=True)
+class Weighted45AiderRewardBreakdown(ProductionAiderRewardBreakdown):
+    """Production breakdown carrying every weighted45 outcome and intermediate."""
+
+    weighted45: Weighted45Score | None = None
+
+
 def compute_aider_reward(
     task: AiderPolyglotTask,
     exercise_dir: Path,
@@ -207,9 +218,10 @@ def compute_production_aider_reward(
     - compile failure: diagnostic-shaped -0.55..-0.30
     - timeout/sanitizer failure: -0.5
     - infrastructure fault: 0.0 with ``infrastructure_error=True``
-    - runtime zero-pass: 0.05..0.12
-    - partial tests: shaped ``0.15 + 0.60*S_Aider + small bounded bonuses``
-    - full pass: ``max(0.85, 0.90 + small AST/style/format bonuses - capped bloat)``
+    - compiled test execution: continuous ``-0.20 + 1.20*S_Aider``
+    - runtime zero-pass: -0.20
+    - partial tests: proportional test reward in (-0.20, 1.00)
+    - full pass: 1.00; AST/style/bloat remain diagnostic telemetry
     """
 
     try:
@@ -273,30 +285,17 @@ def compute_production_aider_reward(
         )
 
     s_aider = max(0.0, min(1.0, harness.fraction_tests_passed))
-    format_score = _aider_format_score(parsed)
-    mechanism_score = _mechanism_score(task, parsed)
     cpp_quality = _cpp_quality_score(parsed.files)
+    test_reward = _continuous_test_reward(harness)
     if not harness.all_tests_pass:
-        if harness.tests_passed <= 0:
-            reward = 0.05 + 0.07 * format_score + 0.05 * mechanism_score
-            return ProductionAiderRewardBreakdown(
-                reward=round(min(0.12, reward), 4),
-                reason=_format_sensitive_reason(parsed, RUNTIME_ZERO_PASS_REASON),
-                parsed=parsed,
-                harness=harness,
-                s_aider=s_aider,
-                s_style=cpp_quality,
-            )
-        reward = (
-            PARTIAL_TEST_BASE
-            + PARTIAL_TEST_SCALE * s_aider
-            + 0.06 * format_score
-            + 0.05 * mechanism_score
-            + 0.03 * cpp_quality
+        reason = (
+            RUNTIME_ZERO_PASS_REASON
+            if harness.tests_passed <= 0
+            else PARTIAL_TEST_PASS_REASON
         )
         return ProductionAiderRewardBreakdown(
-            reward=round(min(0.80, reward), 4),
-            reason=_format_sensitive_reason(parsed, PARTIAL_TEST_PASS_REASON),
+            reward=test_reward,
+            reason=_format_sensitive_reason(parsed, reason),
             parsed=parsed,
             harness=harness,
             s_aider=s_aider,
@@ -317,10 +316,8 @@ def compute_production_aider_reward(
         ast_checks = {}
     s_style = cpp_quality
     anti_bloat = min(0.08, 0.02 * math.sqrt(max(0, line_count - 50)))
-    reward = 0.90 + 0.04 * s_ast17 + 0.03 * s_style + 0.02 * format_score - anti_bloat
-    reward = max(FULL_PASS_REWARD_FLOOR, min(1.0, reward))
     return ProductionAiderRewardBreakdown(
-        reward=round(reward, 4),
+        reward=test_reward,
         reason=_format_sensitive_reason(parsed, "correct"),
         parsed=parsed,
         harness=harness,
@@ -333,6 +330,156 @@ def compute_production_aider_reward(
     )
 
 
+def compute_weighted45_aider_reward(
+    task: AiderPolyglotTask,
+    exercise_dir: Path,
+    model_output: str,
+    *,
+    runner: Runner | None = None,
+) -> Weighted45AiderRewardBreakdown:
+    """Evaluate all nine tiers and all 45 checks without outcome buckets.
+
+    Unsafe or unparsable responses still receive all 45 boolean outcomes, but
+    unsafe code is not executed.  A sandbox/verifier infrastructure fault is the
+    only masked outcome and is rejected by the Miles bridge before optimization.
+    """
+
+    parsed: ParsedAiderResponse | None = None
+    parse_error: AiderResponseError | None = None
+    try:
+        parsed = parse_whole_file_response(model_output, task.editable_files)
+    except AiderResponseError as exc:
+        parse_error = exc
+
+    static_checks, static_evidence = evaluate_response_checks(
+        task,
+        exercise_dir,
+        model_output,
+        parsed=parsed,
+        parse_error=parse_error,
+    )
+    harness: AiderTestResult | None = None
+    policy_violation = False
+    if parsed is None:
+        harness_checks, harness_evidence = failed_harness_checks(
+            "not executed: response did not yield a safe editable file"
+        )
+    else:
+        try:
+            selected_runner = runner
+            if selected_runner is None:
+                if task.harness_kind != "shadow_cpp17":
+                    raise SandboxInfrastructureError(
+                        "weighted45 requires the shadow_cpp17 hidden-grader contract"
+                    )
+                selected_runner = run_shadow_weighted45_tests
+            harness = selected_runner(exercise_dir, parsed.files)
+        except CandidatePolicyError:
+            policy_violation = True
+            harness_checks, harness_evidence = failed_harness_checks(
+                "not executed: forbidden runtime/verifier-bypass primitive"
+            )
+        except SandboxInfrastructureError as exc:
+            return Weighted45AiderRewardBreakdown(
+                reward=INFRASTRUCTURE_MASK_REWARD,
+                reason=INFRASTRUCTURE_FAULT_REASON,
+                parsed=parsed,
+                infrastructure_error=True,
+                ast17_checks={"error": 0.0},
+            )
+        else:
+            if harness.status == "infrastructure_error":
+                return Weighted45AiderRewardBreakdown(
+                    reward=INFRASTRUCTURE_MASK_REWARD,
+                    reason=INFRASTRUCTURE_FAULT_REASON,
+                    parsed=parsed,
+                    harness=harness,
+                    infrastructure_error=True,
+                )
+            if set(harness.weighted45_checks) != WEIGHTED45_HARNESS_CHECK_IDS:
+                raise SandboxInfrastructureError(
+                    "weighted45 harness did not return the exact 20 K/R/H/A outcomes"
+                )
+            harness_checks = dict(harness.weighted45_checks)
+            harness_evidence = dict(harness.weighted45_evidence)
+
+    all_checks = {**static_checks, **harness_checks}
+    all_evidence = {**static_evidence, **harness_evidence}
+    weighted45 = score_weighted45(all_checks, all_evidence)
+    reason = _weighted45_reason(
+        parsed=parsed,
+        parse_error=parse_error,
+        response=model_output,
+        harness=harness,
+        policy_violation=policy_violation,
+    )
+    s_aider = sum(all_checks[f"H{index}"] for index in range(1, 6)) / 5.0
+    line_count = _candidate_line_count(parsed.files) if parsed else 0
+    return Weighted45AiderRewardBreakdown(
+        reward=weighted45.normalized_reward,
+        reason=reason,
+        parsed=parsed,
+        harness=harness,
+        s_aider=s_aider,
+        s_style=_cpp_quality_score(parsed.files) if parsed else 0.0,
+        line_count=line_count,
+        weighted45=weighted45,
+    )
+
+
+def _weighted45_reason(
+    *,
+    parsed: ParsedAiderResponse | None,
+    parse_error: AiderResponseError | None,
+    response: str,
+    harness: AiderTestResult | None,
+    policy_violation: bool,
+) -> str:
+    if policy_violation:
+        return FORBIDDEN_VIOLATION_REASON
+    if parse_error is not None:
+        _legacy_reward, reason = _parse_failure_reward(parse_error, response)
+        return reason
+    if harness is None:
+        return FATAL_PARSE_REASON
+    if harness.all_tests_pass:
+        return _format_sensitive_reason(parsed, "correct") if parsed else "correct"
+    if harness.status == "compile_failed":
+        _legacy_reward, reason = _classify_compile_failure(harness)
+        return _format_sensitive_reason(parsed, reason) if parsed else reason
+    if harness.status == "candidate_timeout":
+        return CANDIDATE_TIMEOUT_REASON
+    return (
+        _format_sensitive_reason(parsed, PARTIAL_TEST_PASS_REASON)
+        if parsed
+        else PARTIAL_TEST_PASS_REASON
+    )
+
+
+def _continuous_test_reward(harness: AiderTestResult) -> float:
+    """Map executed test progress monotonically onto [-0.20, 1.00].
+
+    Parse and compilation outcomes have their own negative progress bands. Once
+    the candidate can execute tests, correctness alone determines its reward;
+    formatting, AST, style, and bloat remain telemetry and cannot move a
+    candidate across a test-case boundary.
+    """
+
+    if harness.tests_total <= 0:
+        raise SandboxInfrastructureError(
+            "compiled Aider candidate did not report a positive test count"
+        )
+    if harness.tests_passed > harness.tests_total:
+        raise SandboxInfrastructureError(
+            "compiled Aider candidate reported more passing tests than total tests"
+        )
+    fraction = harness.tests_passed / harness.tests_total
+    reward = TEST_EXECUTION_FLOOR + (
+        TEST_EXECUTION_CEILING - TEST_EXECUTION_FLOOR
+    ) * fraction
+    return round(max(-1.0, min(1.0, reward)), 4)
+
+
 def _parse_failure_reward(exc: AiderResponseError, response: str) -> tuple[float, str]:
     if exc.reason == "forbidden_file":
         target = _extract_target_from_error(exc)
@@ -341,6 +488,8 @@ def _parse_failure_reward(exc: AiderResponseError, response: str) -> tuple[float
         return WRONG_FILE_LABEL_REWARD, WRONG_FILE_LABEL_REASON
     if exc.reason == "duplicate_file":
         return DUPLICATE_FILE_REWARD, DUPLICATE_FILE_REASON
+    if exc.reason in {"invalid_encoding", "response_too_large"}:
+        return FATAL_PARSE_REWARD, FATAL_PARSE_REASON
     if _has_no_usable_file_output(response):
         return CLARIFICATION_OR_NO_FILE_REWARD, CLARIFICATION_OR_NO_FILE_REASON
     return FATAL_PARSE_REWARD, FATAL_PARSE_REASON
@@ -414,10 +563,6 @@ def _contains_any(text: str, markers: tuple[str, ...]) -> bool:
 
 def _compile_format_adjustment(parsed: ParsedAiderResponse) -> float:
     return 0.03 if parsed.format_valid else -0.05
-
-
-def _aider_format_score(parsed: ParsedAiderResponse) -> float:
-    return 1.0 if parsed.format_valid else 0.5
 
 
 def _format_sensitive_reason(parsed: ParsedAiderResponse, reason: str) -> str:

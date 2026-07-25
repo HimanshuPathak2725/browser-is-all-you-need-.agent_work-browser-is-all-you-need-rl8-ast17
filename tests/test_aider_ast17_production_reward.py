@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Literal
 
 import pytest
 
@@ -223,33 +224,42 @@ def test_production_reward_sanitizer_marker_is_hard_negative(tmp_path: Path) -> 
     assert (result.reward, result.reason) == (-0.5, SANITIZER_ERROR_REASON)
 
 
-def test_production_reward_partial_pass_is_scaled_fraction(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("tests_passed", "status", "expected_reward", "expected_reason"),
+    [
+        (0, "tests_failed", -0.20, RUNTIME_ZERO_PASS_REASON),
+        (1, "tests_failed", 0.04, PARTIAL_TEST_PASS_REASON),
+        (2, "tests_failed", 0.28, PARTIAL_TEST_PASS_REASON),
+        (3, "tests_failed", 0.52, PARTIAL_TEST_PASS_REASON),
+        (4, "tests_failed", 0.76, PARTIAL_TEST_PASS_REASON),
+        (5, "passed", 1.00, "correct"),
+    ],
+)
+def test_production_reward_is_continuous_across_five_test_cases(
+    tmp_path: Path,
+    tests_passed: int,
+    status: Literal["tests_failed", "passed"],
+    expected_reward: float,
+    expected_reason: str,
+) -> None:
     def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
-        return AiderTestResult(status="tests_failed", tests_passed=3, tests_total=5)
+        return AiderTestResult(
+            status=status,
+            tests_passed=tests_passed,
+            tests_total=5,
+        )
 
     result = compute_production_aider_reward(
         _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
     )
-    assert (result.reward, result.reason, result.s_aider) == (
-        pytest.approx(0.65),
-        PARTIAL_TEST_PASS_REASON,
-        pytest.approx(0.6),
-    )
-
-
-def test_production_reward_runtime_zero_pass_is_positive_but_capped(tmp_path: Path) -> None:
-    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
-        return AiderTestResult(status="tests_failed", tests_passed=0, tests_total=5)
-
-    result = compute_production_aider_reward(
-        _task(), tmp_path, _response("int answer(){return 42;}"), runner=runner
-    )
-    assert (result.reward, result.reason) == (pytest.approx(0.12), RUNTIME_ZERO_PASS_REASON)
+    assert result.reward == pytest.approx(expected_reward)
+    assert result.reason == expected_reason
+    assert result.s_aider == pytest.approx(tests_passed / 5)
 
 
 def test_production_reward_full_pass_includes_ast17_style_and_bloat(tmp_path: Path) -> None:
     def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
-        return AiderTestResult(status="passed", tests_passed=4, tests_total=4)
+        return AiderTestResult(status="passed", tests_passed=5, tests_total=5)
 
     code = """
     #include <memory>
@@ -262,5 +272,5 @@ def test_production_reward_full_pass_includes_ast17_style_and_bloat(tmp_path: Pa
     assert result.reason == "correct"
     assert result.s_aider == 1.0
     assert -1.0 <= result.s_ast17 <= 1.0
-    assert 0.85 <= result.reward <= 1.0
+    assert result.reward == 1.0
     assert result.anti_bloat == 0.0

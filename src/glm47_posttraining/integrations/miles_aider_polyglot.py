@@ -19,14 +19,16 @@ from glm47_posttraining.aider_polyglot.harness import (
     run_aider_tests,
     run_sandbox_preflight,
     run_shadow_tests,
+    run_shadow_weighted45_tests,
 )
 from glm47_posttraining.aider_polyglot.parser import parse_whole_file_response
 from glm47_posttraining.aider_polyglot.reward import (
     AiderRewardBreakdown,
     compute_aider_reward,
     compute_production_aider_reward,
+    compute_weighted45_aider_reward,
 )
-from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask
+from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, WEIGHTED45_CHECK_IDS
 
 
 DEFAULT_DATA_ROOT_ENV = "GLM47_DATA_DIR"
@@ -81,8 +83,13 @@ def _score_sample(sample: Any) -> dict[str, Any]:
         task = AiderPolyglotTask.read_json(task_path)
         exercise_dir = _resolve_exercise_dir(task_path, task.exercise_dir)
 
+        reward_mode = _reward_mode()
         harness_runner = (
-            run_shadow_tests if task.harness_kind == "shadow_cpp17" else run_aider_tests
+            run_shadow_weighted45_tests
+            if reward_mode == "weighted45" and task.harness_kind == "shadow_cpp17"
+            else run_shadow_tests
+            if task.harness_kind == "shadow_cpp17"
+            else run_aider_tests
         )
 
         def runner(path: Path, files: dict[str, str]):
@@ -93,7 +100,11 @@ def _score_sample(sample: Any) -> dict[str, Any]:
                 kwargs["expected_test_sha256"] = task.hidden_test_sha256
             return harness_runner(path, files, **kwargs)
 
-        if _reward_mode() in {"production", "production_ast17"}:
+        if reward_mode == "weighted45":
+            breakdown = compute_weighted45_aider_reward(
+                task, exercise_dir, _sample_response(sample), runner=runner
+            )
+        elif reward_mode in {"production", "production_ast17"}:
             breakdown = compute_production_aider_reward(
                 task, exercise_dir, _sample_response(sample), runner=runner
             )
@@ -160,6 +171,9 @@ def reward_record(
     ast17_checks = getattr(breakdown, "ast17_checks", None)
     if isinstance(ast17_checks, dict):
         record["ast17_checks"] = ast17_checks
+    weighted45 = getattr(breakdown, "weighted45", None)
+    if weighted45 is not None:
+        record["weighted45"] = weighted45.to_record()
     if harness and _include_logs():
         record["logs"] = harness.logs
     elif harness:
@@ -296,6 +310,19 @@ def validate_aider_rollout_batch(args: Any, data: list[list[Any]]) -> None:
                 raise AiderRewardInfrastructureError(
                     f"Aider rollout group {group_index} contains an invalid reward: {record}"
                 )
+            if record.get("reward_mode") == "weighted45":
+                weighted45 = record.get("weighted45")
+                weighted_checks = (
+                    weighted45.get("checks") if isinstance(weighted45, Mapping) else None
+                )
+                if (
+                    not isinstance(weighted_checks, Mapping)
+                    or set(weighted_checks) != WEIGHTED45_CHECK_IDS
+                    or any(not isinstance(value, bool) for value in weighted_checks.values())
+                ):
+                    raise AiderRewardInfrastructureError(
+                        f"Aider rollout group {group_index} lacks the exact 45-check receipt"
+                    )
             tests_passed = record.get("tests_passed")
             tests_total = record.get("tests_total")
             if (

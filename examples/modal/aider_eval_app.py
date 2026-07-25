@@ -1,4 +1,4 @@
-"""Pinned fixed-26 Aider C++ evaluation for a provenance-gated GRPO adapter."""
+"""Pinned fixed-26 Aider C++ evaluation for GRPO or SFT adapters."""
 
 from __future__ import annotations
 
@@ -119,6 +119,7 @@ def verify_training_binding(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
+    adapter_kind: str = "grpo",
 ) -> tuple[Path, dict[str, object]]:
     source = validate_adapter_path(adapter_path)
     validate_adapter_files(source)
@@ -128,6 +129,20 @@ def verify_training_binding(
     )
     if sha256_path(source / "adapter_model.bin") != adapter_sha256:
         raise RuntimeError("selected adapter bytes do not match the caller-bound SHA-256")
+    if adapter_kind == "sft":
+        return source, {
+            "kind": "glm47-aider-sft-checkpoint-binding",
+            "status": "passed",
+            "phase": "sft",
+            "run_id": source.parts[2],
+            "adapter_path": str(source),
+            "adapter_model_sha256": adapter_sha256,
+            "adapter_config_sha256": sha256_path(source / "adapter_config.json"),
+            "data_manifest_sha256": data_manifest_sha256,
+            "official_26_role": "external fixed evaluation only",
+        }
+    if adapter_kind != "grpo":
+        raise ValueError("adapter_kind must be either 'grpo' or 'sft'")
     run_id = source.parts[2]
     gate_path = Path("/runs", run_id, "grpo_lora_r16", "grpo_training_gate.json")
     if not gate_path.is_file():
@@ -177,6 +192,7 @@ def inspect_adapter(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
+    adapter_kind: str = "grpo",
 ) -> dict[str, object]:
     import torch
 
@@ -185,6 +201,7 @@ def inspect_adapter(
         expected_adapter_sha256,
         expected_data_manifest_sha256,
         expected_training_phase,
+        adapter_kind,
     )
     state = torch.load(source / "adapter_model.bin", map_location="cpu", weights_only=True, mmap=True)
     keys = list(state)
@@ -209,6 +226,7 @@ def prepare_adapter(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
+    adapter_kind: str = "grpo",
 ) -> dict[str, object]:
     import torch
 
@@ -217,6 +235,7 @@ def prepare_adapter(
         expected_adapter_sha256,
         expected_data_manifest_sha256,
         expected_training_phase,
+        adapter_kind,
     )
     destination = serving_adapter_path(adapter_path)
     if destination.exists():
@@ -302,11 +321,14 @@ def main(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
+    adapter_kind: str = "grpo",
     run_id: str = "",
     inspect: bool = False,
     prepare: bool = False,
     parallel: bool = False,
 ) -> None:
+    if adapter_kind not in {"grpo", "sft"}:
+        raise ValueError("--adapter-kind must be either 'grpo' or 'sft'")
     if sum((inspect, prepare, parallel)) > 1:
         raise ValueError("choose at most one of --inspect, --prepare, and --parallel")
     if inspect:
@@ -315,6 +337,7 @@ def main(
             expected_adapter_sha256=expected_adapter_sha256,
             expected_data_manifest_sha256=expected_data_manifest_sha256,
             expected_training_phase=expected_training_phase,
+            adapter_kind=adapter_kind,
         )
     elif prepare:
         payload = prepare_adapter.remote(
@@ -322,6 +345,7 @@ def main(
             expected_adapter_sha256=expected_adapter_sha256,
             expected_data_manifest_sha256=expected_data_manifest_sha256,
             expected_training_phase=expected_training_phase,
+            adapter_kind=adapter_kind,
         )
     elif parallel:
         resolved_run_id = validate_run_id(run_id)
@@ -331,6 +355,7 @@ def main(
                 expected_adapter_sha256=expected_adapter_sha256,
                 expected_data_manifest_sha256=expected_data_manifest_sha256,
                 expected_training_phase=expected_training_phase,
+                adapter_kind=adapter_kind,
                 run_id=resolved_run_id,
                 shard_index=index,
             )
@@ -347,6 +372,7 @@ def main(
             expected_adapter_sha256=expected_adapter_sha256,
             expected_data_manifest_sha256=expected_data_manifest_sha256,
             expected_training_phase=expected_training_phase,
+            adapter_kind=adapter_kind,
             run_id=validate_run_id(run_id),
         )
     print(json.dumps(payload, indent=2))
@@ -522,6 +548,7 @@ def evaluate_shard(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str,
+    adapter_kind: str,
     run_id: str,
     shard_index: int,
 ) -> dict[str, object]:
@@ -530,6 +557,7 @@ def evaluate_shard(
         expected_adapter_sha256,
         expected_data_manifest_sha256,
         expected_training_phase,
+        adapter_kind,
     )
     serving_path = serving_adapter_path(adapter_path)
     validate_adapter_files(serving_path)
@@ -766,6 +794,7 @@ def evaluate(
     expected_adapter_sha256: str,
     expected_data_manifest_sha256: str,
     expected_training_phase: str = EXPECTED_TRAINING_PHASE,
+    adapter_kind: str = "grpo",
     run_id: str = "",
 ) -> dict[str, object]:
     source, training_gate = verify_training_binding(
@@ -773,6 +802,7 @@ def evaluate(
         expected_adapter_sha256,
         expected_data_manifest_sha256,
         expected_training_phase,
+        adapter_kind,
     )
     serving_path = serving_adapter_path(adapter_path)
     validate_adapter_files(serving_path)

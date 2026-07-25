@@ -6,7 +6,28 @@ import json
 from pathlib import Path, PurePath
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+
+WEIGHTED45_TIER_CHECKS: dict[str, tuple[str, ...]] = {
+    "forbidden_file_bypass": ("F1", "F2", "F3", "F4", "F5"),
+    "clarification_no_file": ("C1", "C2", "C3", "C4", "C5"),
+    "fatal_parse_failure": ("P1", "P2", "P3", "P4", "P5"),
+    "wrong_file_label": ("L1", "L2", "L3", "L4", "L5"),
+    "duplicate_file": ("D1", "D2", "D3", "D4", "D5"),
+    "compilation": ("K1", "K2", "K3", "K4", "K5"),
+    "runtime": ("R1", "R2", "R3", "R4", "R5"),
+    "hidden_tests": ("H1", "H2", "H3", "H4", "H5"),
+    "full_pass": ("A1", "A2", "A3", "A4", "A5"),
+}
+WEIGHTED45_CHECK_IDS = frozenset(
+    check_id for check_ids in WEIGHTED45_TIER_CHECKS.values() for check_id in check_ids
+)
+WEIGHTED45_HARNESS_CHECK_IDS = frozenset(
+    check_id
+    for tier in ("compilation", "runtime", "hidden_tests", "full_pass")
+    for check_id in WEIGHTED45_TIER_CHECKS[tier]
+)
 
 
 class AiderChatMessage(BaseModel):
@@ -95,6 +116,28 @@ class AiderTestResult(BaseModel):
     tests_total: int = Field(default=0, ge=0)
     candidate_returncode: int | None = None
     logs: dict[str, str] = Field(default_factory=dict)
+    weighted45_checks: dict[str, bool] = Field(default_factory=dict)
+    weighted45_evidence: dict[str, str] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _validate_weighted45_contract(self) -> "AiderTestResult":
+        if not self.weighted45_checks:
+            if self.weighted45_evidence:
+                raise ValueError("weighted45 evidence requires weighted45 check outcomes")
+            return self
+        observed = set(self.weighted45_checks)
+        if observed != WEIGHTED45_HARNESS_CHECK_IDS:
+            missing = sorted(WEIGHTED45_HARNESS_CHECK_IDS - observed)
+            extra = sorted(observed - WEIGHTED45_HARNESS_CHECK_IDS)
+            raise ValueError(
+                f"weighted45 harness contract mismatch: missing={missing} extra={extra}"
+            )
+        unknown_evidence = set(self.weighted45_evidence) - observed
+        if unknown_evidence:
+            raise ValueError(
+                f"weighted45 evidence has unknown checks: {sorted(unknown_evidence)}"
+            )
+        return self
 
     @property
     def all_tests_pass(self) -> bool:
