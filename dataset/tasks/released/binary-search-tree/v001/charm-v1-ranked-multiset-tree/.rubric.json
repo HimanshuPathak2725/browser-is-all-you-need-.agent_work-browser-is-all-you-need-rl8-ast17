@@ -1,0 +1,25 @@
+{
+  "category": "order-statistics",
+  "editable_files": [
+    "ranked-multiset-tree.h",
+    "ranked-multiset-tree.cpp",
+    "ranked-multiset-tree_detail.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "ranked-multiset-tree_test.cpp",
+  "hidden_test_sha256": "6dc0d4236f8fc73499c061d5a8f6cfd82c87a821f8aa8a3880f96009bc079d99",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "19ede5c5e2b9e7d265deb2e3640ff8c42002fa11584c88024332cc8b22afea41",
+  "tags": [
+    "duplicates",
+    "rank",
+    "erase",
+    "header-edit"
+  ],
+  "task_id": "charm-v1-ranked-multiset-tree",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

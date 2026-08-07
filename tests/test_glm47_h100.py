@@ -721,7 +721,12 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
         (task / ".rubric.json").write_text("{}")
     source_manifest = {
         "kind": "aider-polyglot-cpp-shadow-rubrics",
+        "schema_version": 2,
         "counts": {"tasks": 253},
+        "contract": {
+            "oracle_references_packaged": True,
+            "reference_answers_model_facing": False,
+        },
     }
     manifest_bytes = (json.dumps(source_manifest) + "\n").encode()
     (source / "manifest.json").write_bytes(manifest_bytes)
@@ -730,6 +735,7 @@ def test_aider_shadow_asset_extracts_verified_archive(tmp_path) -> None:
         handle.add(source, arcname="aider_polyglot_cpp_shadow")
     artifact_manifest = {
         "kind": "glm47-aider-shadow-rubrics-archive",
+        "schema_version": 2,
         "archive": "aider-shadow-rubrics.tar.gz",
         "archive_root": "aider_polyglot_cpp_shadow",
         "source_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),

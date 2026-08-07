@@ -1,0 +1,23 @@
+{
+  "category": "member-backed-phone-parser",
+  "editable_files": [
+    "member-backed-phone-parser.h",
+    "member-backed-phone-parser.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "member-backed-phone-parser_test.cpp",
+  "hidden_test_sha256": "82b369522734e2dda6a31ac9055c5b4018e5190f0d391a2a4bcee5be84d41390",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "219e6a64a670bdaa91c1f7b11b561ea1d21ba2b936bd422000664db21bd0f5be",
+  "tags": [
+    "member-state",
+    "shadowing-mutation",
+    "invalid-optional"
+  ],
+  "task_id": "charm-v1n7-member-backed-phone-parser",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

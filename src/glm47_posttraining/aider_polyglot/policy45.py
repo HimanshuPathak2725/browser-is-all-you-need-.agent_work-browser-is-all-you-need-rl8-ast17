@@ -48,7 +48,7 @@ WEIGHTED45_POLICY_VERSION = "weighted45-v1"
 STATIC_CHECK_IDS = WEIGHTED45_CHECK_IDS - WEIGHTED45_HARNESS_CHECK_IDS
 
 SYSTEM_CALL_RE = re.compile(
-    r"\b(?:system|popen|fork|vfork|exec[a-z]*|posix_spawn|kill|raise|_Exit|_exit|"
+    r"\b(?:system|popen|fork|vfork|exec(?:l|le|lp|v|ve|vp|vpe)|posix_spawn|kill|raise|_Exit|_exit|"
     r"exit|quick_exit|abort|terminate)\s*\("
 )
 PRIVILEGE_RE = re.compile(
@@ -61,7 +61,7 @@ RESTRICTED_PATH_RE = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 PROCESS_EXEC_RE = re.compile(
-    r"\b(?:system|popen|fork|vfork|exec[a-z]*|posix_spawn)\s*\(|"
+    r"\b(?:system|popen|fork|vfork|exec(?:l|le|lp|v|ve|vp|vpe)|posix_spawn)\s*\(|"
     r"\b(?:bash|sh|zsh|python|perl|ruby)\s+-[a-z]",
     re.IGNORECASE,
 )
@@ -76,7 +76,7 @@ CLARIFICATION_RE = re.compile(
     re.IGNORECASE,
 )
 CPP_DEFINITION_RE = re.compile(
-    r"\b(?:class|struct|enum(?:\s+class)?|namespace)\s+([A-Za-z_]\w*)|"
+    r"\b(?:class|struct|enum(?:\s+class)?)\s+([A-Za-z_]\w*)|"
     r"\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*(?:const\s*)?\{"
 )
 CPP_API_RE = re.compile(
@@ -378,6 +378,7 @@ def _preprocessor_lexically_valid(source: str) -> bool:
 def _definition_names(files: Mapping[str, str]) -> list[str]:
     names: list[str] = []
     for contents in files.values():
+        contents = re.sub(r"/\*.*?\*/|//[^\n]*", "", contents, flags=re.DOTALL)
         for match in CPP_DEFINITION_RE.finditer(contents):
             declaration_name = match.group(1)
             function_name = match.group(2)

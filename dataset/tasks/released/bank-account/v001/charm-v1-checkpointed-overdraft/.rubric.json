@@ -1,0 +1,23 @@
+{
+  "category": "rollback-state",
+  "editable_files": [
+    "checkpointed-overdraft.hpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "checkpointed-overdraft_test.cpp",
+  "hidden_test_sha256": "b3f6edaf3034f20d01a9313775255a91b9eabe1266b214dcee357a400bbd5755",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "aa76f07eb4c8e5fa722ad41327f7aa78e79538d28b2b730c4fe9f0c967c25fc0",
+  "tags": [
+    "header-only",
+    "linker-repair",
+    "snapshots",
+    "state-machine"
+  ],
+  "task_id": "charm-v1-checkpointed-overdraft",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

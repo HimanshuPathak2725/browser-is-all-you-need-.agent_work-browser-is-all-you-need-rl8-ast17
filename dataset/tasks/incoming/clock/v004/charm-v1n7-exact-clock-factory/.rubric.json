@@ -1,0 +1,24 @@
+{
+  "category": "exact-clock-factory",
+  "editable_files": [
+    "exact-clock-factory.h",
+    "exact-clock-factory.cpp",
+    "exact-clock-factory_detail.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "exact-clock-factory_test.cpp",
+  "hidden_test_sha256": "322f88b77dac4ee66a29a8d9c3d7c69caeee2fd494a85ba00df9ee0898690ae5",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4b199fc8588036f9c1944214999e018f52b8305e400393cf1f0a543a2032d7c7",
+  "tags": [
+    "case-sensitive-api",
+    "factory",
+    "operator"
+  ],
+  "task_id": "charm-v1n7-exact-clock-factory",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

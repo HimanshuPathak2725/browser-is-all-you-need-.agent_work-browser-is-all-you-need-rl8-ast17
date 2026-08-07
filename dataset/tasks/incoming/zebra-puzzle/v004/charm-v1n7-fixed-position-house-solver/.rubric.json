@@ -1,0 +1,23 @@
+{
+  "category": "fixed-position-house-solver",
+  "editable_files": [
+    "fixed-position-house-solver.h",
+    "fixed-position-house-solver.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "fixed-position-house-solver_test.cpp",
+  "hidden_test_sha256": "efaecbca2d99d2146b757b236c508ede3872420e88bebf22322601415d5c2a1d",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d408faf13687b0df6ac108ec208de9a75c6e747a960ad528fbf9289a7c220643",
+  "tags": [
+    "solve-api",
+    "bounded",
+    "deterministic"
+  ],
+  "task_id": "charm-v1n7-fixed-position-house-solver",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

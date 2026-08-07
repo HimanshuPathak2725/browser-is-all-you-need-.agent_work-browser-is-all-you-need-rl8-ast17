@@ -1,0 +1,23 @@
+{
+  "category": "typed-plant-row-parser",
+  "editable_files": [
+    "typed-plant-row-parser.h",
+    "typed-plant-row-parser.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "typed-plant-row-parser_test.cpp",
+  "hidden_test_sha256": "1328dc76db6f9b2c069988ec5b53e7bfc3fb3c69bebd35920dbab52252b1d587",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "f08e8a8010f079b84a9cbb1c36faaf88a64ec454a5c336703a3f5454071fc281",
+  "tags": [
+    "enum-api",
+    "direct-include",
+    "mapping-order"
+  ],
+  "task_id": "charm-v1n7-typed-plant-row-parser",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

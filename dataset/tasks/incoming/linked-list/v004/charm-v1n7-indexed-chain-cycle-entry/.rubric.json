@@ -1,0 +1,23 @@
+{
+  "category": "indexed-chain-cycle-entry",
+  "editable_files": [
+    "indexed-chain-cycle-entry.h",
+    "indexed-chain-cycle-entry.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "indexed-chain-cycle-entry_test.cpp",
+  "hidden_test_sha256": "31598c98a5a4137be74a8e6d529e20c5a5c47d356de92ed346e1d164ed1f330c",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "a89d211c1af68d4819baba127b4157588d56d34f443bd1f64d8f0ec84f25cbf1",
+  "tags": [
+    "cycle",
+    "index-validation",
+    "constant-space"
+  ],
+  "task_id": "charm-v1n7-indexed-chain-cycle-entry",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

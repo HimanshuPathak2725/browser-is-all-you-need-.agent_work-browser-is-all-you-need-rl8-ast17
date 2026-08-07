@@ -1,0 +1,148 @@
+{
+  "schema_version": "charm-task-specific-profile-catalog-v1",
+  "profile_version": 1,
+  "scope": "post-baseline3-task-specific",
+  "scalable_topic_target": 17,
+  "topics": {
+    "Clock": {
+      "expected_task_count": 3,
+      "categories": {
+        "offset-normalization": {
+          "category": "offset-normalization",
+          "slot_id": 1,
+          "role": "direct_verified_success",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["time", "floor-mod", "formatting"],
+          "prompt_contains": ["negative local inputs", "day wrap", "offset formatting", "one instant"],
+          "test_contains": ["at(-1, -30, -90)", "plus_minutes(-1440)", "same_instant"],
+          "minimum_assertions": 7
+        },
+        "recurring-window": {
+          "category": "recurring-window",
+          "slot_id": 2,
+          "role": "repair_trajectory",
+          "editable_layout": "cpp_only",
+          "required_tags": ["half-open", "wraparound", "intersection"],
+          "prompt_contains": ["recurring half-open", "touching windows", "wraparound may split"],
+          "test_contains": ["{10, 20}, {20, 30}", "{10000, 20}", "{-1, 4}"],
+          "minimum_assertions": 7
+        },
+        "elapsed-counter": {
+          "category": "elapsed-counter",
+          "slot_id": 3,
+          "role": "direct_verified_success",
+          "editable_layout": "header_only",
+          "required_tags": ["wrap-count", "overflow", "optional"],
+          "prompt_contains": ["explicit nonnegative wrap count", "end before start", "multiplication overflow"],
+          "test_contains": ["elapsed(1000, 500, 1)", "elapsed(0, 0, 2)", "std::numeric_limits<long long>::max()"],
+          "minimum_assertions": 8
+        }
+      }
+    },
+    "Complex Numbers": {
+      "expected_task_count": 3,
+      "categories": {
+        "stable-arithmetic": {
+          "category": "stable-arithmetic",
+          "slot_id": 1,
+          "role": "boundary_case",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["floating-point", "division", "header-extension"],
+          "prompt_contains": ["scale-safe quotient", "division by zero", "very large balanced operands", "negative tolerances"],
+          "test_contains": ["divided_by(StableComplex())", "1e300", "std::numeric_limits<double>::infinity()"],
+          "minimum_assertions": 7
+        },
+        "horner-derivative": {
+          "category": "horner-derivative",
+          "slot_id": 2,
+          "role": "direct_verified_success",
+          "editable_layout": "cpp_only",
+          "required_tags": ["complex", "one-pass", "cpp-only"],
+          "prompt_contains": ["one Horner pass", "empty polynomial", "constant derivative", "descending coefficient order"],
+          "test_contains": ["evaluate_with_derivative({}, {2, 1})", "quadratic.derivative", "complex_value.derivative"],
+          "minimum_assertions": 7
+        },
+        "circular-statistics": {
+          "category": "circular-statistics",
+          "slot_id": 3,
+          "role": "direct_verified_success",
+          "editable_layout": "header_only",
+          "required_tags": ["weighted", "normalization", "optional"],
+          "prompt_contains": ["nonnegative finite weights", "zero resultant", "negative atan2 results"],
+          "test_contains": ["weighted_direction({})", "{{1, 0}, -1}", "{{0, 0}, 9}"],
+          "minimum_assertions": 7
+        }
+      }
+    },
+    "Spiral Matrix": {
+      "expected_task_count": 3,
+      "categories": {
+        "corner-spiral": {
+          "category": "corner-spiral",
+          "slot_id": 1,
+          "role": "boundary_case",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["rectangular", "corner", "header-edit"],
+          "prompt_contains": ["arbitrary rectangular matrix", "all four corners", "negative or zero step", "every cell is filled once"],
+          "test_contains": ["Corner::top_right", "Corner::bottom_right", "Corner::bottom_left"],
+          "minimum_assertions": 7
+        },
+        "obstacle-walk": {
+          "category": "obstacle-walk",
+          "slot_id": 2,
+          "role": "repair_trajectory",
+          "editable_layout": "cpp_only",
+          "required_tags": ["turning", "visited", "cpp-only"],
+          "prompt_contains": ["turning clockwise", "blocked, outside, or visited", "never revisited", "disconnected cells"],
+          "test_contains": ["walk({\"#\"}", "walk({\"...\",\".#.\",\"...\"}", "{-1,0}"],
+          "minimum_assertions": 7
+        },
+        "perimeter-layer": {
+          "category": "perimeter-layer",
+          "slot_id": 3,
+          "role": "calibration",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["calibration", "thin-shape", "header-frozen"],
+          "prompt_contains": ["without duplicating corners", "single row", "single column", "nested layer"],
+          "test_contains": ["{{1,2,3}}", "{{1},{2},{3}}", "layer_clockwise(matrix,2).empty()"],
+          "minimum_assertions": 7
+        }
+      }
+    },
+    "Zebra Puzzle": {
+      "expected_task_count": 3,
+      "categories": {
+        "unique-csp": {
+          "category": "unique-csp",
+          "slot_id": 1,
+          "role": "repair_trajectory",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["backtracking", "constraints", "header-extension"],
+          "prompt_contains": ["exactly one assignment", "globally unique", "zero or multiple solutions"],
+          "test_contains": ["solve_unique(0", "immediately_left", "\"missing\""],
+          "minimum_assertions": 8
+        },
+        "certificate-verification": {
+          "category": "certificate-verification",
+          "slot_id": 2,
+          "role": "direct_verified_success",
+          "editable_layout": "cpp_only",
+          "required_tags": ["verification", "stable-index", "cpp-only"],
+          "prompt_contains": ["category completeness", "stable zero-based indices", "violated indices preserve input order"],
+          "test_contains": ["good.complete", "wrong.violated", "missing.violated"],
+          "minimum_assertions": 6
+        },
+        "minimal-conflict": {
+          "category": "minimal-conflict",
+          "slot_id": 3,
+          "role": "boundary_case",
+          "editable_layout": "header_and_cpp",
+          "required_tags": ["minimal-core", "determinism", "header-edit"],
+          "prompt_contains": ["inclusion-minimal", "removing any selected clue", "output is deterministic"],
+          "test_contains": ["contradictory", "core==std::vector<std::size_t>({0,1})", "repeated==core"],
+          "minimum_assertions": 6
+        }
+      }
+    }
+  }
+}

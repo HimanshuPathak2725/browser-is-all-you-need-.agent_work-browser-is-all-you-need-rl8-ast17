@@ -1,0 +1,540 @@
+"""Owner source for the three independently designed CHARM V1 Allergies tasks."""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from typing import Any
+
+
+def _sha(text: str) -> str:
+    return hashlib.sha256(text.encode()).hexdigest()
+
+
+def _package(
+    *, task_id: str, instructions: str, editable: dict[str, str],
+    reference: dict[str, str], hidden_name: str, hidden: str, cmake: str,
+    category: str, tags: list[str],
+) -> dict[str, Any]:
+    if set(editable) != set(reference):
+        raise ValueError(f"starter/reference editable mismatch: {task_id}")
+    rubric = {
+        "schema_version": 2,
+        "task_id": task_id,
+        "language": "cpp",
+        "editable_files": list(editable),
+        "hidden_test_file": hidden_name,
+        "hidden_test_sha256": _sha(hidden),
+        "source_prompt_sha256": _sha(instructions),
+        "reference_answer_packaged": True,
+        "reference_answer_model_facing": False,
+        "verification_stage": "passed",
+        "verification_gate": "charm-v1-weighted45-oracle-v1",
+        "family": "Allergies",
+        "category": category,
+        "tags": tags,
+    }
+    files = {
+        ".docs/instructions.md": instructions,
+        ".rubric.json": json.dumps(rubric, indent=2, sort_keys=True) + "\n",
+        "CMakeLists.txt": cmake,
+        hidden_name: hidden,
+        **editable,
+        **{f".reference/{name}": contents for name, contents in reference.items()},
+    }
+    return {"task_id": task_id, "topic": "Allergies", "release_version": "v002", "files": files}
+
+
+EXPOSURE_INSTRUCTIONS = """# Rolling exposure ledger
+
+Implement the exact public API in `exposure-window-ledger.h` and its two source
+files, all in namespace `charm::allergy`.
+
+`ExposureWindowLedger::record(name, severity, minute)` appends an immutable
+event when `name` is non-empty and `severity` is nonnegative; otherwise it does
+nothing. `active(minimum_severity, now, horizon)` returns the distinct allergen
+names having at least one recorded event whose severity is at least the
+threshold and whose minute is in the inclusive interval
+`[now - horizon, now]`. A negative horizon returns an empty vector. Future
+events do not qualify. Return names in ascending bytewise lexical order.
+
+The required signatures are:
+
+```cpp
+class ExposureWindowLedger {
+public:
+    void record(std::string name, int severity, int minute);
+    std::vector<std::string> active(int minimum_severity,
+                                    int now,
+                                    int horizon) const;
+};
+```
+
+Use only C++17 standard-library facilities. Preserve the exact namespace,
+class name, signatures, const qualifier, and file names.
+"""
+
+EXPOSURE_HEADER_STARTER = """#pragma once
+
+#include <string>
+#include <vector>
+
+namespace charm::allergy {
+
+class ExposureWindowLedger {
+public:
+    void record(std::string name, int severity);
+    std::vector<std::string> active(int minimum_severity, int now) const;
+};
+
+}  // namespace charm::allergy
+"""
+
+EXPOSURE_HEADER = """#pragma once
+
+#include <string>
+#include <vector>
+
+namespace charm::allergy {
+
+class ExposureWindowLedger {
+public:
+    void record(std::string name, int severity, int minute);
+    std::vector<std::string> active(int minimum_severity,
+                                    int now,
+                                    int horizon) const;
+
+private:
+    struct Event {
+        std::string name;
+        int severity;
+        int minute;
+    };
+    std::vector<Event> events_;
+};
+
+}  // namespace charm::allergy
+"""
+
+EXPOSURE_CPP = """#include "exposure-window-ledger.h"
+
+#include <set>
+#include <utility>
+
+namespace charm::allergy::detail {
+bool within_inclusive_window(int minute, int now, int horizon);
+}
+
+namespace charm::allergy {
+
+void ExposureWindowLedger::record(std::string name, int severity, int minute) {
+    if (name.empty() || severity < 0) {
+        return;
+    }
+    events_.push_back(Event{std::move(name), severity, minute});
+}
+
+std::vector<std::string> ExposureWindowLedger::active(
+    int minimum_severity, int now, int horizon) const {
+    if (horizon < 0) {
+        return {};
+    }
+    std::set<std::string> names;
+    for (const Event& event : events_) {
+        if (event.severity >= minimum_severity &&
+            detail::within_inclusive_window(event.minute, now, horizon)) {
+            names.insert(event.name);
+        }
+    }
+    return {names.begin(), names.end()};
+}
+
+}  // namespace charm::allergy
+"""
+
+EXPOSURE_DETAIL = """namespace charm::allergy::detail {
+
+bool within_inclusive_window(int minute, int now, int horizon) {
+    const long long observed = minute;
+    const long long upper = now;
+    const long long lower = upper - static_cast<long long>(horizon);
+    return observed >= lower && observed <= upper;
+}
+
+}  // namespace charm::allergy::detail
+"""
+
+EXPOSURE_TEST = """#include "exposure-window-ledger.h"
+
+#include <cassert>
+#include <limits>
+#include <string>
+#include <vector>
+
+using charm::allergy::ExposureWindowLedger;
+
+int main() {
+    ExposureWindowLedger empty;
+    assert(empty.active(0, 10, 5).empty());
+
+    ExposureWindowLedger ledger;
+    ledger.record("pollen", 4, 90);
+    ledger.record("dust", 7, 95);
+    ledger.record("pollen", 9, 100);
+    ledger.record("mold", 10, 101);
+    assert((ledger.active(7, 100, 5) == std::vector<std::string>{"dust", "pollen"}));
+
+    assert((ledger.active(4, 100, 10) == std::vector<std::string>{"dust", "pollen"}));
+
+    ledger.record("", 100, 100);
+    ledger.record("latex", -1, 100);
+    assert((ledger.active(0, 100, 0) == std::vector<std::string>{"pollen"}));
+
+    ledger.record("cedar", 8, std::numeric_limits<int>::min());
+    assert((ledger.active(8, std::numeric_limits<int>::min(), 0) ==
+            std::vector<std::string>{"cedar"}));
+
+    assert(ledger.active(0, 100, -1).empty());
+    return 0;
+}
+"""
+
+EXPOSURE_CMAKE = """cmake_minimum_required(VERSION 3.16)
+project(charm_v1_exposure_window_ledger LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(exposure_window_ledger_test
+    exposure-window-ledger.cpp
+    exposure-window-ledger_detail.cpp
+    exposure-window-ledger_test.cpp)
+target_compile_options(exposure_window_ledger_test PRIVATE -Wall -Wextra -Werror -pedantic)
+"""
+
+
+DOSE_INSTRUCTIONS = """# Atomic allergen dose policy
+
+Complete the existing C++17 implementation in `dose-policy-table.cpp`. The file
+itself is the public include surface and must define `charm::allergy::DosePolicyTable`.
+
+`set_limit(name, limit)` stores or replaces a nonnegative cumulative dose limit
+for a non-empty allergen name and returns `true`; invalid inputs return `false`
+without changing the table. `exceeded(batch)` first validates every pair: an
+empty name or negative dose invalidates the entire batch and yields an empty
+result. Otherwise aggregate repeated names. Names with no configured limit are
+ignored. Return configured names whose aggregate dose is strictly greater than
+their limit, in ascending bytewise lexical order. The call is read-only.
+
+Required API:
+
+```cpp
+class DosePolicyTable {
+public:
+    bool set_limit(std::string name, int limit);
+    std::vector<std::string> exceeded(
+        const std::vector<std::pair<std::string, int>>& batch) const;
+};
+```
+
+Keep every method inline in this single editable `.cpp` file so it can be used
+as an include surface. Use no external dependencies.
+"""
+
+DOSE_STARTER = """#include <map>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace charm::allergy {
+
+class DosePolicyTable {
+public:
+    bool set_limit(std::string name, int limit) {
+        if (name.empty() || limit < 0) {
+            return false;
+        }
+        limits_[std::move(name)] = limit;
+        return true;
+    }
+
+    std::vector<std::string> exceeded(
+        const std::vector<std::pair<std::string, int>>& batch) const {
+        (void)batch;
+        return {};
+    }
+
+private:
+    std::map<std::string, int> limits_;
+};
+
+}  // namespace charm::allergy
+"""
+
+DOSE_REFERENCE = """#include <limits>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace charm::allergy {
+
+class DosePolicyTable {
+public:
+    bool set_limit(std::string name, int limit) {
+        if (name.empty() || limit < 0) {
+            return false;
+        }
+        limits_[std::move(name)] = limit;
+        return true;
+    }
+
+    std::vector<std::string> exceeded(
+        const std::vector<std::pair<std::string, int>>& batch) const {
+        std::map<std::string, long long> totals;
+        for (const auto& [name, dose] : batch) {
+            if (name.empty() || dose < 0) {
+                return {};
+            }
+            long long& total = totals[name];
+            if (total > std::numeric_limits<long long>::max() - dose) {
+                total = std::numeric_limits<long long>::max();
+            } else {
+                total += dose;
+            }
+        }
+        std::vector<std::string> result;
+        for (const auto& [name, limit] : limits_) {
+            const auto found = totals.find(name);
+            if (found != totals.end() && found->second > limit) {
+                result.push_back(name);
+            }
+        }
+        return result;
+    }
+
+private:
+    std::map<std::string, int> limits_;
+};
+
+}  // namespace charm::allergy
+"""
+
+DOSE_TEST = """#include "dose-policy-table.cpp"
+
+#include <cassert>
+#include <string>
+#include <utility>
+#include <vector>
+
+using charm::allergy::DosePolicyTable;
+
+int main() {
+    DosePolicyTable table;
+    assert(!table.set_limit("", 2) && !table.set_limit("dust", -1));
+    assert(table.set_limit("dust", 5) && table.set_limit("pollen", 3));
+
+    assert((table.exceeded({{"dust", 2}, {"dust", 4}}) ==
+            std::vector<std::string>{"dust"}));
+
+    assert((table.exceeded({{"unknown", 100}, {"pollen", 3}}).empty()));
+
+    assert(table.exceeded({{"dust", 9}, {"", 1}}).empty());
+
+    assert(table.set_limit("pollen", 0));
+    assert((table.exceeded({{"pollen", 1}, {"dust", 6}}) ==
+            std::vector<std::string>{"dust", "pollen"}));
+
+    assert(table.exceeded({{"dust", -1}}).empty());
+    return 0;
+}
+"""
+
+DOSE_CMAKE = """cmake_minimum_required(VERSION 3.16)
+project(charm_v1_dose_policy_table LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(dose_policy_table_test dose-policy-table_test.cpp)
+target_compile_options(dose_policy_table_test PRIVATE -Wall -Wextra -Werror -pedantic)
+"""
+
+
+MASK_INSTRUCTIONS = """# Rotating sensitivity mask repair
+
+Repair and complete the header-only C++17 type in
+`rotating-sensitivity-mask.hpp`, in namespace `charm::allergy`.
+
+Only the low eight bits of the constructor's `raw_mask` are retained. Normalize
+the signed rotation into `[0, 7]`. The public allergen order is exactly:
+`cedar, dust, egg, latex, mold, nickel, pollen, wool`. For allergen index `i`,
+`reacts_to` tests stored bit `(i + normalized_rotation) % 8`. An unknown name
+returns `false`. `reactions()` returns every reacting public name in that fixed
+order.
+
+Required API:
+
+```cpp
+class SensitivityMask {
+public:
+    SensitivityMask(unsigned raw_mask, int rotation);
+    bool reacts_to(std::string_view allergen) const;
+    std::vector<std::string> reactions() const;
+};
+```
+
+The initial header intentionally does not compile. Preserve the exact API and
+keep all definitions inline in the header. Use only the standard library.
+"""
+
+MASK_STARTER = """#pragma once
+
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace charm::allergy {
+
+class SensitivityMask {
+public:
+    SensitivityMask(unsigned raw_mask, int rotation)
+        : mask_(raw_mask), rotation_(normalize_rotation(rotation)) {}
+
+    bool reacts_to(std::string_view allergen) const;
+    std::vector<std::string> reactions() const;
+
+private:
+    unsigned mask_;
+    int rotation_;
+};
+
+}  // namespace charm::allergy
+"""
+
+MASK_REFERENCE = """#pragma once
+
+#include <array>
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace charm::allergy {
+
+class SensitivityMask {
+public:
+    SensitivityMask(unsigned raw_mask, int rotation)
+        : mask_(raw_mask & 0xffU), rotation_(normalize(rotation)) {}
+
+    bool reacts_to(std::string_view allergen) const {
+        for (std::size_t index = 0; index < names_.size(); ++index) {
+            if (names_[index] == allergen) {
+                const std::size_t bit = (index + static_cast<std::size_t>(rotation_)) % names_.size();
+                return (mask_ & (1U << bit)) != 0U;
+            }
+        }
+        return false;
+    }
+
+    std::vector<std::string> reactions() const {
+        std::vector<std::string> result;
+        for (std::string_view name : names_) {
+            if (reacts_to(name)) {
+                result.emplace_back(name);
+            }
+        }
+        return result;
+    }
+
+private:
+    static int normalize(int rotation) {
+        const int remainder = rotation % 8;
+        return remainder < 0 ? remainder + 8 : remainder;
+    }
+
+    inline static constexpr std::array<std::string_view, 8> names_{
+        "cedar", "dust", "egg", "latex", "mold", "nickel", "pollen", "wool"};
+    unsigned mask_;
+    int rotation_;
+};
+
+}  // namespace charm::allergy
+"""
+
+MASK_TEST = """#include "rotating-sensitivity-mask.hpp"
+
+#include <cassert>
+#include <string>
+#include <vector>
+
+using charm::allergy::SensitivityMask;
+
+int main() {
+    const SensitivityMask none(0U, 0);
+    assert(none.reactions().empty() && !none.reacts_to("unknown"));
+
+    const SensitivityMask basic(0b00000101U, 0);
+    assert(basic.reacts_to("cedar") && basic.reacts_to("egg") && !basic.reacts_to("dust"));
+
+    const SensitivityMask shifted(0b00000100U, 1);
+    assert(shifted.reacts_to("dust") && !shifted.reacts_to("egg"));
+
+    const SensitivityMask negative(0b10000000U, -1);
+    assert(negative.reacts_to("cedar"));
+
+    const SensitivityMask high_bits(0x100U | 0x02U, 8);
+    assert((high_bits.reactions() == std::vector<std::string>{"dust"}));
+
+    const SensitivityMask order(0xffU, 12345);
+    assert((order.reactions() == std::vector<std::string>{
+        "cedar", "dust", "egg", "latex", "mold", "nickel", "pollen", "wool"}));
+    return 0;
+}
+"""
+
+MASK_CMAKE = """cmake_minimum_required(VERSION 3.16)
+project(charm_v1_rotating_sensitivity_mask LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(rotating_sensitivity_mask_test rotating-sensitivity-mask_test.cpp)
+target_compile_options(rotating_sensitivity_mask_test PRIVATE -Wall -Wextra -Werror -pedantic)
+"""
+
+
+def tasks() -> list[dict[str, Any]]:
+    return [
+        _package(
+            task_id="charm-v1-exposure-window-ledger",
+            instructions=EXPOSURE_INSTRUCTIONS,
+            editable={
+                "exposure-window-ledger.h": EXPOSURE_HEADER_STARTER,
+                "exposure-window-ledger.cpp": "",
+                "exposure-window-ledger_detail.cpp": "",
+            },
+            reference={
+                "exposure-window-ledger.h": EXPOSURE_HEADER,
+                "exposure-window-ledger.cpp": EXPOSURE_CPP,
+                "exposure-window-ledger_detail.cpp": EXPOSURE_DETAIL,
+            },
+            hidden_name="exposure-window-ledger_test.cpp", hidden=EXPOSURE_TEST,
+            cmake=EXPOSURE_CMAKE, category="rolling-window-state",
+            tags=["public-api-repair", "multi-file", "deduplication", "boundary"],
+        ),
+        _package(
+            task_id="charm-v1-dose-policy-table",
+            instructions=DOSE_INSTRUCTIONS,
+            editable={"dose-policy-table.cpp": DOSE_STARTER},
+            reference={"dose-policy-table.cpp": DOSE_REFERENCE},
+            hidden_name="dose-policy-table_test.cpp", hidden=DOSE_TEST,
+            cmake=DOSE_CMAKE, category="atomic-batch-aggregation",
+            tags=["cpp-include-surface", "partial-starter", "validation", "aggregation"],
+        ),
+        _package(
+            task_id="charm-v1-rotating-sensitivity-mask",
+            instructions=MASK_INSTRUCTIONS,
+            editable={"rotating-sensitivity-mask.hpp": MASK_STARTER},
+            reference={"rotating-sensitivity-mask.hpp": MASK_REFERENCE},
+            hidden_name="rotating-sensitivity-mask_test.cpp", hidden=MASK_TEST,
+            cmake=MASK_CMAKE, category="bit-rotation-repair",
+            tags=["header-only", "compile-repair", "bitmask", "negative-normalization"],
+        ),
+    ]

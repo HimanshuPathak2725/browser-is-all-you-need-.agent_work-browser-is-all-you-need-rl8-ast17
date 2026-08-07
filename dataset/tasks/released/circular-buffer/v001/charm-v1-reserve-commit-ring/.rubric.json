@@ -1,0 +1,23 @@
+{
+  "category": "reservation-state",
+  "editable_files": [
+    "reserve-commit-ring.cpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "reserve-commit-ring_test.cpp",
+  "hidden_test_sha256": "19ca4d40b7144d6bced9913a33e00ee50b01cb306df980cadd087b9b734205ad",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "a28a8bd1c67357450315b4e9ec46fc9a7abb19c12a3520894bda03cd217c3536",
+  "tags": [
+    "api-repair",
+    "state-machine",
+    "ordering",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-reserve-commit-ring",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

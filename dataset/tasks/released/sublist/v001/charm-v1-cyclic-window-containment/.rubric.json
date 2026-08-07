@@ -1,0 +1,23 @@
+{
+  "category": "circular-containment",
+  "editable_files": [
+    "cyclic-window-containment.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "cyclic-window-containment_test.cpp",
+  "hidden_test_sha256": "4d84683469b0fe39ac7b806188a86e50a92d8d6c1bac75050f2028aedc2fcefc",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "386e76360cc09504092319a9f2837790abb7750f5ba640f7a274b6e7d39e7c02",
+  "tags": [
+    "cpp-only",
+    "cyclic",
+    "earliest",
+    "empty-pattern"
+  ],
+  "task_id": "charm-v1-cyclic-window-containment",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

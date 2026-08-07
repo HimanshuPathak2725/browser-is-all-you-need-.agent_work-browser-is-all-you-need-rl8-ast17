@@ -1,0 +1,23 @@
+{
+  "category": "horner-derivative",
+  "editable_files": [
+    "complex-polynomial.cpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "complex-polynomial_test.cpp",
+  "hidden_test_sha256": "d27191e7db984460f176d6ad3c13d204ebcb10cdd70e41974b68beb1b14b807d",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "7556893b8b688f7460619234d7e527df2a82d1dab86d2684d114479fde2e083f",
+  "tags": [
+    "semantic-bug",
+    "complex",
+    "one-pass",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-complex-polynomial",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

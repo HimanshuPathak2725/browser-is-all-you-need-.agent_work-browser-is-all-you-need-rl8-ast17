@@ -1,0 +1,24 @@
+{
+  "category": "account-lifecycle-machine",
+  "editable_files": [
+    "account-lifecycle-machine.h",
+    "account-lifecycle-machine.cpp",
+    "account-lifecycle-machine_detail.cpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "account-lifecycle-machine_test.cpp",
+  "hidden_test_sha256": "b0cba442b4c46b6da03c703fd52303ba65ccb9f04c829c58224e6523df83de73",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "2a2cf751c19c3a470b0c2247fa0ef765f999323a834bba3ce4f60ba9c7840256",
+  "tags": [
+    "lifecycle",
+    "state-machine",
+    "api-repair"
+  ],
+  "task_id": "charm-v1n7-account-lifecycle-machine",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

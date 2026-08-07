@@ -1,0 +1,23 @@
+{
+  "category": "logical-slicing",
+  "editable_files": [
+    "wrapped-slice-repair.hpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "wrapped-slice-repair_test.cpp",
+  "hidden_test_sha256": "8478445d5af2922abca8c043b6ef1fbbd891833d7d377d0ec487a00628a4d81f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "849a3556266478ab0302df6d0e5f08d925b91ea24ae51f0fc509e09f7c9d434c",
+  "tags": [
+    "semantic-repair",
+    "negative-index",
+    "clamping",
+    "header-only"
+  ],
+  "task_id": "charm-v1-wrapped-slice-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -9,3 +9,8 @@ rubrics
 wandb
 **/__pycache__
 **/*.pyc
+**/__pycache__
+**/*.pyc
+**/*.pyo
+.git
+.venv

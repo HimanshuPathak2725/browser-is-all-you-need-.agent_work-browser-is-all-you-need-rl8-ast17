@@ -1,0 +1,23 @@
+{
+  "category": "ascii-sharded-frequency",
+  "editable_files": [
+    "ascii-sharded-frequency.h",
+    "ascii-sharded-frequency.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "ascii-sharded-frequency_test.cpp",
+  "hidden_test_sha256": "b5b4ffcd181f27d3ca023a26f8307c587ba917248dc9b60c2b36054e19f85d74",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "f9a15d3a026a8e0f01d10403a6a50bb679206f9e83f2675d3732eeafa6f9e314",
+  "tags": [
+    "unordered-map",
+    "partition-join",
+    "race-free"
+  ],
+  "task_id": "charm-v1n7-ascii-sharded-frequency",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

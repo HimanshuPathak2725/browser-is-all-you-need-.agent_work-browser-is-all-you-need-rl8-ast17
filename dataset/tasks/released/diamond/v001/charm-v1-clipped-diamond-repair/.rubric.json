@@ -1,0 +1,23 @@
+{
+  "category": "viewport-clipping",
+  "editable_files": [
+    "clipped-diamond-repair.hpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "clipped-diamond-repair_test.cpp",
+  "hidden_test_sha256": "08cfaecd86e46ee4ae4d9b8294f6b245bf26f431a90817a1d377bdb912177e06",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9128ab62e3ebe71945c8da7ed933c22056a28f82084bb6d22b68f4bcc7f4a4ed",
+  "tags": [
+    "header-only",
+    "near-correct",
+    "half-open",
+    "boundary"
+  ],
+  "task_id": "charm-v1-clipped-diamond-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

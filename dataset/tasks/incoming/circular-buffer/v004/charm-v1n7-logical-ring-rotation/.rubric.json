@@ -1,0 +1,22 @@
+{
+  "category": "logical-ring-rotation",
+  "editable_files": [
+    "logical-ring-rotation.hpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "logical-ring-rotation_test.cpp",
+  "hidden_test_sha256": "3d9eb0697a4ca88ded5ccd3372c1adcb58a90bec6d7f1b3a6dbe802c54eeec22",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "210c5b6690054ef2803e63299cf9177e110cd1501dd0efa261e829d40e92e8fd",
+  "tags": [
+    "rotation",
+    "normalization",
+    "lifetime"
+  ],
+  "task_id": "charm-v1n7-logical-ring-rotation",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

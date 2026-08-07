@@ -1,0 +1,22 @@
+{
+  "category": "meal-mask-filter",
+  "editable_files": [
+    "meal-mask-filter.hpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "meal-mask-filter_test.cpp",
+  "hidden_test_sha256": "7ce82e4df5b87525a260e37d32028ee9409a19b98bc1f92069cb99a5b23c235d",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9208945beed53abf45131d96037a52f471cf6688463fe54fc6227f468ed3df64",
+  "tags": [
+    "bitmask",
+    "filtering",
+    "header-edit"
+  ],
+  "task_id": "charm-v1n7-meal-mask-filter",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

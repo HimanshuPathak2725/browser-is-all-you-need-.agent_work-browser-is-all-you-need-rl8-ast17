@@ -1,0 +1,154 @@
+import hashlib
+import json
+from pathlib import Path
+
+from w8_biayn.aider_task_validator.common import tree_sha256
+from w8_biayn.aider_task_validator.projector import (
+    _repair_feedback,
+    replay_tokens,
+    whole_file,
+)
+from w8_biayn.aider_task_validator.validator import (
+    CMAKE_VALIDATION_BUILD_TYPE,
+    LAYOUT_COUNTS,
+    PINNED_CPP_IMAGE,
+    ROLE_COUNTS,
+    TOPICS,
+    ValidationError,
+    _cmake_test_target,
+    _docker_cmake_command,
+    _resolve_task_root,
+)
+
+def test_v1_frozen_counts() -> None:
+    assert len(TOPICS) == 17
+    assert sum(ROLE_COUNTS.values()) == 51
+    assert sum(LAYOUT_COUNTS.values()) == 51
+    assert ROLE_COUNTS["repair_trajectory"] == 11
+    assert ROLE_COUNTS["calibration"] == 3
+
+
+def test_cpp_keywords_are_not_counted_as_api_identifiers() -> None:
+    source = (Path(__file__).parents[1] / "src" / "w8_biayn" / "aider_task_validator" / "validator.py").read_text()
+    assert "\"default\"" in source
+
+
+def test_whole_file_renderer_is_complete_and_ordered() -> None:
+    rendered = whole_file([
+        {"path": "a.h", "content": "#pragma once\n"},
+        {"path": "a.cpp", "content": "#include \"a.h\"\n"},
+    ])
+    assert rendered.index("a.h") < rendered.index("a.cpp")
+    assert rendered.count(chr(96) * 3) == 4
+    assert rendered.endswith("\n")
+    assert "empty.cpp\n```cpp\n```\n" == whole_file([{"path": "empty.cpp", "content": ""}])
+
+
+def test_repair_feedback_is_sanitized() -> None:
+    feedback = _repair_feedback(["compile_repair"])
+    assert len(feedback.splitlines()) <= 100
+    assert "_test.cpp" not in feedback
+    assert ".reference" not in feedback
+    assert "private test names and output are intentionally withheld" in feedback.lower()
+
+
+def test_task_root_resolution_survives_immutable_release_move(tmp_path: Path) -> None:
+    task_id = "charm-v1-example"
+    incoming = tmp_path / "dataset" / "tasks" / "incoming" / "bank-account" / "v001" / task_id
+    released = tmp_path / "dataset" / "tasks" / "released" / "bank-account" / "v001" / task_id
+    released.mkdir(parents=True)
+
+    assert _resolve_task_root(incoming, "Bank Account", task_id) == released.resolve()
+
+
+
+def test_task_root_resolution_accepts_protocol_version_v002(tmp_path: Path) -> None:
+    task_id = "charm-v1-example"
+    incoming = (
+        tmp_path
+        / "dataset"
+        / "tasks"
+        / "incoming"
+        / "bank-account"
+        / "v002"
+        / task_id
+    )
+    incoming.mkdir(parents=True)
+
+    assert _resolve_task_root(incoming, "Bank Account", task_id) == incoming.resolve()
+
+
+def test_pinned_cmake_command_is_digest_bound_and_offline(tmp_path: Path) -> None:
+    copied = tmp_path / "task"
+    build = tmp_path / "build"
+    copied.mkdir()
+    build.mkdir()
+    command = _docker_cmake_command(copied, build, ["cmake", "--version"])
+
+    assert command[:5] == ["docker", "run", "--rm", "--network", "none"]
+    assert PINNED_CPP_IMAGE in command
+    assert "@sha256:" in PINNED_CPP_IMAGE
+    assert CMAKE_VALIDATION_BUILD_TYPE == "Debug"
+
+
+def test_cmake_target_resolution_is_exact_and_fails_on_ambiguity(tmp_path: Path) -> None:
+    cmake = tmp_path / "CMakeLists.txt"
+    cmake.write_text("add_executable(custom_test test.cpp)\n", encoding="utf-8")
+    assert _cmake_test_target(tmp_path) == "custom_test"
+
+    cmake.write_text(
+        "add_executable(first_test first.cpp)\nadd_executable(second_test second.cpp)\n",
+        encoding="utf-8",
+    )
+    try:
+        _cmake_test_target(tmp_path)
+    except ValidationError:
+        pass
+    else:
+        raise AssertionError("ambiguous executable targets must fail closed")
+
+
+def test_configs_are_json_not_yaml() -> None:
+    root = Path(__file__).parents[1] / "configs" / "aider_task_validator"
+    assert all(path.suffix == ".json" for path in root.iterdir())
+
+
+def test_task_tree_hash_matches_existing_receipt_contract(tmp_path: Path) -> None:
+    (tmp_path / "prompt.md").write_text("inclusive ≥ boundary\n", encoding="utf-8")
+    files = {"prompt.md": "inclusive ≥ boundary\n"}
+    expected = hashlib.sha256(
+        (
+            json.dumps(files, sort_keys=True, separators=(",", ":")) + "\n"
+        ).encode("utf-8")
+    ).hexdigest()
+
+    assert tree_sha256(tmp_path) == expected
+
+
+class _FakeTokenizer:
+    eos_token_id = 154820
+
+    def apply_chat_template(self, messages, **kwargs):
+        del kwargs
+        prefix = list(range(70))
+        if messages[-1]["content"] == "":
+            return {"input_ids": prefix, "attention_mask": [1] * len(prefix)}
+        return {
+            "input_ids": [*prefix, 100, 101],
+            "attention_mask": [1] * (len(prefix) + 2),
+        }
+
+
+def test_replay_tokens_uses_batch_input_ids_and_four_turn_final_loss() -> None:
+    messages = [
+        {"role": "user", "mask": 0, "content": "task"},
+        {"role": "assistant", "mask": 0, "content": "failing candidate"},
+        {"role": "user", "mask": 0, "content": _repair_feedback(["api_repair"])},
+        {"role": "assistant", "mask": 1, "content": "corrected candidate"},
+    ]
+    replay = replay_tokens(_FakeTokenizer(), messages)
+
+    assert replay["token_count"] == 73
+    assert replay["token_ids"][-1] == _FakeTokenizer.eos_token_id
+    assert replay["loss_mask"] == [0] * 70 + [1, 1, 1]
+    assert replay["token_count"] != 3

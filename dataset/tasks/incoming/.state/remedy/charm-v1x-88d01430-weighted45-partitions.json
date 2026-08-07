@@ -1,0 +1,61 @@
+{
+  "schema_version": "charm-v1-family-remedy-v1",
+  "remedy_id": "charm-v1x-88d01430-weighted45-partitions",
+  "generation_batch_id": "charm-task-generation-v1x-20260804T031538Z",
+  "generation_session_id": "88d01430-b6b6-460c-904f-89a94512a7c2",
+  "disposition": "repair-in-place",
+  "root_cause": "Thirteen private graders contain four assert expressions, below the mandatory five independently selectable weighted45 hidden-test partitions.",
+  "observed": "_load_verified_rubric raised weighted45 hidden grader exposes only 4 independent checks; five required",
+  "expected": "Every task exposes at least five deterministic contract-derived hidden checks and all five H1-H5 partitions are reachable.",
+  "affected_topics": [
+    "Binary Search Tree",
+    "Complex Numbers",
+    "Diamond",
+    "Grade School",
+    "Phone Number",
+    "Spiral Matrix",
+    "Sublist"
+  ],
+  "affected_task_ids": [
+    "charm-v1x-88d01430-nearest-query-tree",
+    "charm-v1x-88d01430-range-total-index",
+    "charm-v1x-88d01430-manual-dft-bin",
+    "charm-v1x-88d01430-manhattan-shell-histogram",
+    "charm-v1x-88d01430-isometric-projection-order",
+    "charm-v1x-88d01430-promotion-rule-replay",
+    "charm-v1x-88d01430-quantile-letter-bands",
+    "charm-v1x-88d01430-transcript-three-way-merge",
+    "charm-v1x-88d01430-dtmf-run-decoder",
+    "charm-v1x-88d01430-clockwise-path-turns",
+    "charm-v1x-88d01430-nested-record-segments",
+    "charm-v1x-88d01430-kmp-overlap-positions",
+    "charm-v1x-88d01430-multiset-window-matches"
+  ],
+  "public_contract": "Unchanged from frozen plan SHA-256 ef3d774f8e643ed3eaeccd543571e01ef2d340e8c01f74059c9c11d9633c04c1.",
+  "representation_and_invariant": "Each added assertion exercises a distinct documented edge or nominal behavior; the complete affected three-task family is regenerated at v003 through one digest-bound owner.",
+  "forbidden_substitutes": [
+    "assert(true)",
+    "duplicate assertions",
+    "duplicating one hidden partition to manufacture H5",
+    "lowering WEIGHTED45_SUITE_COUNT",
+    "editing materialized roots or receipts",
+    "changing public prompts or APIs"
+  ],
+  "independent_reference": "The existing v002 reference implementation remains the independent positive oracle; only contract-derived private coverage and private provenance change.",
+  "negative_fixture": "The semantic mutation runner must still find a compiling mutation rejected by at least one reachable hidden partition for every task.",
+  "metadata_roles": {
+    "model_facing": [".docs/instructions.md", "declared editable files"],
+    "private": [".rubric.json", ".provenance.json", ".reference/*", "*_test.cpp", "CMakeLists.txt"]
+  },
+  "owner_source": "scripts/charm_v1x_88d01430_remediate_partitions.py",
+  "oracle_commands": [
+    "python3 scripts/charm_v1_dependency_preflight.py --dependency-manifest <frozen dependency manifest> --materialization-manifest <remediated manifest> --environment-manifest dataset/configs/charm-v1-cpp17-environment.json --output <receipt>",
+    "PYTHONPATH=src:. python3 scripts/charm_v1_certify_materialized.py --materialization-receipt <receipt> --output-dir <oracle proofs> --summary <oracle summary> --gcc-image <pinned GCC image> --clang-tsan-image <pinned TSan image> --oracle-source-manifest <bound manifest>"
+  ],
+  "benchmark_family_screen": "All public contracts remain clean-room and the official fixed-26 suite remains evaluation-only; post-generation uniqueness must be rerun after supersession.",
+  "downstream_evidence_invalidated": [
+    "v1_scope_and_evidence_bundle.json",
+    "v1_scope_and_evidence_receipt-v2.json",
+    "first oracle attempt before any proof was written"
+  ]
+}

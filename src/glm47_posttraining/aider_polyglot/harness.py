@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 import platform
 import re
 import secrets
 import shutil
 import subprocess
+import time
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Mapping
+from typing import Iterator, Mapping
 
 from glm47_posttraining.cpp_perf.sandbox import (
     SandboxInfrastructureError,
@@ -57,10 +61,16 @@ INFRASTRUCTURE_MARKERS = (
     "threadsanitizer: failed to mmap",
     "shadow memory range interleaves",
 )
+TSAN_UNEXPECTED_MAPPING_MARKER = "threadsanitizer: unexpected memory mapping"
+TSAN_ASLR_LAYOUT_MARKERS = (
+    "threadsanitizer: check failed:",
+    "personality(old_personality | addr_no_randomize)",
+)
+TSAN_MAX_LAYOUT_ATTEMPTS = 32
 FORBIDDEN_CANDIDATE_PATTERNS = (
     re.compile(r"#\s*(?:define|undef)\s+(?:main|return|if|for|while|switch)\b"),
     re.compile(r"\b(?:std::)?(?:_Exit|_exit|exit|quick_exit|abort|terminate)\s*\("),
-    re.compile(r"\b(?:system|popen|fork|vfork|exec[a-z]*|kill|raise)\s*\("),
+    re.compile(r"\b(?:system|popen|fork|vfork|exec(?:l|le|lp|v|ve|vp|vpe)|kill|raise)\s*\("),
     re.compile(r"\b(?:__asm__|__asm|asm)\b"),
     re.compile(r"(?:/proc/self|\.grader|CMakeLists\.txt|_test\.cpp)"),
 )
@@ -68,6 +78,37 @@ FORBIDDEN_CANDIDATE_PATTERNS = (
 
 class CandidatePolicyError(ValueError):
     """Generated source attempts to bypass or inspect the hidden verifier."""
+
+
+_STAGE_RECEIPT_CAPTURE: ContextVar[list[dict[str, object]] | None] = ContextVar(
+    "aider_stage_receipt_capture", default=None
+)
+
+
+@contextmanager
+def capture_stage_receipts() -> Iterator[list[dict[str, object]]]:
+    """Capture private stage metadata and log digests without retaining log text."""
+
+    receipts: list[dict[str, object]] = []
+    token = _STAGE_RECEIPT_CAPTURE.set(receipts)
+    try:
+        yield receipts
+    finally:
+        _STAGE_RECEIPT_CAPTURE.reset(token)
+
+
+def stage_receipt_bundle(receipts: list[dict[str, object]]) -> dict[str, object]:
+    canonical = (
+        json.dumps(receipts, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
+    ).encode("utf-8")
+    return {
+        "schema_version": "aider-private-stage-receipts-v1",
+        "stage_count": len(receipts),
+        "exact_commands_bound": True,
+        "stdout_stderr_content_disclosed": False,
+        "receipts_sha256": hashlib.sha256(canonical).hexdigest(),
+        "receipts": receipts,
+    }
 
 
 def ensure_ast17_tooling(*, raise_on_error: bool = True, require_clang18: bool = False) -> bool:
@@ -240,7 +281,18 @@ def run_shadow_tests(
             target.write_text(contents, encoding="utf-8")
 
         sources = sorted(path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"})
-        quoted_sources = " ".join(shlex_quote(name) for name in sources)
+        included_sources = {
+            name
+            for name in sources
+            if re.search(
+                rf'^\s*#\s*include\s*["<]{re.escape(name)}[">]',
+                grader_source,
+                flags=re.MULTILINE,
+            )
+        }
+        quoted_link_sources = " ".join(
+            shlex_quote(name) for name in sources if name not in included_sources
+        )
         success_marker = f"GLM47_AIDER_PASS_{secrets.token_hex(16)}"
         driver = scratch / ".grader" / "driver.cpp"
         driver.write_text(
@@ -264,7 +316,7 @@ def run_shadow_tests(
                     "-Dmain=glm47_hidden_main -c .grader/test.cpp -o .grader/test.o",
                     f"&& rm .grader/test.cpp && timeout {build_timeout_s}s c++",
                     compiler_flags,
-                    quoted_sources,
+                    quoted_link_sources,
                     ".grader/driver.cpp .grader/test.o -o .grader/candidate_test",
                 ]
             ),
@@ -342,6 +394,9 @@ def run_shadow_weighted45_tests(
     build_timeout_s: int = DEFAULT_BUILD_TIMEOUT_S,
     test_timeout_s: int = DEFAULT_TEST_TIMEOUT_S,
     expected_test_sha256: str | None = None,
+    cpp_standard: str = "c++17",
+    optimize: bool = False,
+    hidden_werror: bool = False,
 ) -> AiderTestResult:
     """Return observed K/R/H/A outcomes for the weighted 45-check policy.
 
@@ -351,6 +406,8 @@ def run_shadow_weighted45_tests(
     instead of inferred from the first failing assertion.
     """
 
+    if cpp_standard not in {"c++17", "c++20"}:
+        raise ValueError(f"unsupported oracle C++ standard: {cpp_standard}")
     source = Path(exercise_dir)
     if not source.is_dir():
         raise FileNotFoundError(f"shadow task directory not found: {source}")
@@ -382,6 +439,28 @@ def run_shadow_weighted45_tests(
         private_grader.write_text(instrumented_source, encoding="utf-8")
         sources = sorted(path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"})
         quoted_sources = " ".join(shlex_quote(name) for name in sources)
+        included_sources = {
+            name
+            for name in sources
+            if re.search(
+                rf'^\s*#\s*include\s*["<]{re.escape(name)}[">]',
+                grader_source,
+                flags=re.MULTILINE,
+            )
+        }
+        quoted_link_sources = " ".join(
+            shlex_quote(name) for name in sources if name not in included_sources
+        )
+        syntax_sources = quoted_sources
+        if not sources:
+            headers = sorted(name for name in files if Path(name).suffix in {".h", ".hpp"})
+            if not headers:
+                raise ValueError("candidate has no C++ translation unit or header")
+            header_probe = scratch / ".grader" / "candidate_headers.cpp"
+            header_probe.write_text(
+                "".join(f'#include "{name}"\n' for name in headers), encoding="utf-8"
+            )
+            syntax_sources = ".grader/candidate_headers.cpp"
         success_marker = f"GLM47_AIDER_WEIGHTED45_{secrets.token_hex(16)}"
         driver = scratch / ".grader" / "driver.cpp"
         driver.write_text(
@@ -396,17 +475,19 @@ def run_shadow_weighted45_tests(
             "}\n",
             encoding="utf-8",
         )
-        compiler_flags = "-std=c++17 -Wall -Wextra -Werror -pedantic -pthread -I."
-        hidden_compiler_flags = "-std=c++17 -Wall -Wextra -pedantic -pthread -I."
+        optimization_flag = " -O2" if optimize else ""
+        hidden_warning_flag = " -Werror" if hidden_werror else ""
+        compiler_flags = (
+            f"-std={cpp_standard}{optimization_flag} -Wall -Wextra -Werror -pedantic -pthread -I."
+        )
+        hidden_compiler_flags = f"-std={cpp_standard}{optimization_flag} -Wall -Wextra{hidden_warning_flag} -pedantic -pthread -I."
         logs: dict[str, str] = {}
         checks = {check_id: False for check_id in WEIGHTED45_HARNESS_CHECK_IDS}
-        evidence = {
-            check_id: "stage not reached" for check_id in WEIGHTED45_HARNESS_CHECK_IDS
-        }
+        evidence = {check_id: "stage not reached" for check_id in WEIGHTED45_HARNESS_CHECK_IDS}
 
         syntax = _run_stage(
             scratch,
-            f"timeout {build_timeout_s}s c++ {compiler_flags} -fsyntax-only {quoted_sources}",
+            f"timeout {build_timeout_s}s c++ {compiler_flags} -fsyntax-only {syntax_sources}",
             image=image,
             timeout_s=build_timeout_s + 10,
         )
@@ -447,7 +528,7 @@ def run_shadow_weighted45_tests(
         else:
             link = _run_stage(
                 scratch,
-                f"timeout {build_timeout_s}s c++ {compiler_flags} {quoted_sources} "
+                f"timeout {build_timeout_s}s c++ {compiler_flags} {quoted_link_sources} "
                 ".grader/driver.cpp .grader/test.o -o .grader/candidate_test",
                 image=image,
                 timeout_s=build_timeout_s + 10,
@@ -477,7 +558,9 @@ def run_shadow_weighted45_tests(
                 if path.is_file() and path.suffix in {".cpp", ".cc", ".h", ".hpp"}
             )
             concurrency_applicable = bool(
-                WEIGHTED45_CONCURRENCY_RE.search(grader_source + "\n" + task_contract_source)
+                WEIGHTED45_CONCURRENCY_RE.search(
+                    grader_source + "\n" + task_contract_source + "\n" + "\n".join(files.values())
+                )
             )
             if checks["K1"] and checks["K5"]:
                 sanitizer = _run_stage(
@@ -487,7 +570,7 @@ def run_shadow_weighted45_tests(
                     "-Dmain=glm47_hidden_main -c .grader/test.cpp -o .grader/test_asan.o "
                     f"&& timeout {build_timeout_s}s c++ {compiler_flags} "
                     "-fsanitize=address,undefined -fno-omit-frame-pointer "
-                    f"{quoted_sources} .grader/driver.cpp .grader/test_asan.o "
+                    f"{quoted_link_sources} .grader/driver.cpp .grader/test_asan.o "
                     "-o .grader/candidate_test_asan",
                     image=image,
                     timeout_s=2 * build_timeout_s + 10,
@@ -500,11 +583,11 @@ def run_shadow_weighted45_tests(
                 if concurrency_applicable:
                     tsan = _run_stage(
                         scratch,
-                        f"timeout {build_timeout_s}s c++ {hidden_compiler_flags} -fsanitize=thread "
+                        f"timeout {build_timeout_s}s c++ {hidden_compiler_flags} -fsanitize=thread -fPIE "
                         "-Dmain=glm47_hidden_main -c .grader/test.cpp -o .grader/test_tsan.o "
-                        f"&& timeout {build_timeout_s}s c++ {compiler_flags} -fsanitize=thread "
-                        f"{quoted_sources} .grader/driver.cpp .grader/test_tsan.o "
-                        "-o .grader/candidate_test_tsan",
+                        f"&& timeout {build_timeout_s}s c++ {compiler_flags} -fsanitize=thread -fPIE "
+                        f"{quoted_link_sources} .grader/driver.cpp .grader/test_tsan.o "
+                        "-pie -o .grader/candidate_test_tsan",
                         image=image,
                         timeout_s=2 * build_timeout_s + 10,
                     )
@@ -533,8 +616,7 @@ def run_shadow_weighted45_tests(
                 before_runtime = _workspace_file_snapshot(scratch)
                 full_run = _run_stage(
                     scratch,
-                    f"timeout {test_timeout_s}s env GLM47_AIDER_SUITE=-1 "
-                    ".grader/candidate_test",
+                    f"timeout {test_timeout_s}s env GLM47_AIDER_SUITE=-1 .grader/candidate_test",
                     image=image,
                     timeout_s=test_timeout_s + 10,
                 )
@@ -604,9 +686,7 @@ def run_shadow_weighted45_tests(
                         f"handshake={sanitizer_handshake}"
                     )
                 else:
-                    evidence["A2"] = (
-                        "ASan/UBSan build failed: " + sanitizer_compile_logs[-500:]
-                    )
+                    evidence["A2"] = "ASan/UBSan build failed: " + sanitizer_compile_logs[-500:]
                 checks["A2"] = sanitizer_pass
                 checks["A3"] = full_run.returncode != 124 and full_handshake
                 evidence["A3"] = (
@@ -617,7 +697,7 @@ def run_shadow_weighted45_tests(
                     checks["A4"] = True
                     evidence["A4"] = "not applicable: no threading primitive in candidate"
                 elif tsan_ready:
-                    tsan_run = _run_stage(
+                    tsan_run, tsan_layout_retries = _run_tsan_stage(
                         scratch,
                         f"timeout {test_timeout_s}s env GLM47_AIDER_SUITE=-1 "
                         "TSAN_OPTIONS=halt_on_error=1 .grader/candidate_test_tsan",
@@ -626,12 +706,11 @@ def run_shadow_weighted45_tests(
                     )
                     tsan_logs = _combined_logs(tsan_run)
                     logs["thread_sanitizer_run"] = tsan_logs
-                    if _is_infrastructure_error(tsan_logs):
-                        raise SandboxInfrastructureError(tsan_logs)
                     tsan_handshake = f"{success_marker}:{tsan_run.returncode}" in tsan_logs
                     checks["A4"] = tsan_run.returncode == 0 and tsan_handshake
                     evidence["A4"] = (
-                        f"TSan returncode={tsan_run.returncode} handshake={tsan_handshake}"
+                        f"TSan returncode={tsan_run.returncode} handshake={tsan_handshake} "
+                        f"aslr_layout_retries={tsan_layout_retries}"
                     )
                 else:
                     checks["A4"] = False
@@ -867,11 +946,7 @@ def _matching_cpp_delimiter(
 
 def _workspace_file_snapshot(root: Path) -> tuple[str, ...]:
     return tuple(
-        sorted(
-            path.relative_to(root).as_posix()
-            for path in root.rglob("*")
-            if path.is_file()
-        )
+        sorted(path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file())
     )
 
 
@@ -890,16 +965,37 @@ def _run_stage(
         command = _local_sandbox_command(scratch, script)
     else:
         command = docker_base_args(scratch, image=image, memory="4g") + ["bash", "-lc", script]
+    started_ns = time.monotonic_ns()
     try:
         completed = subprocess.run(
             command, check=False, capture_output=True, text=False, timeout=timeout_s
         )
-        return subprocess.CompletedProcess(
+        result = subprocess.CompletedProcess(
             completed.args,
             completed.returncode,
             stdout=_text(completed.stdout),
             stderr=_text(completed.stderr),
         )
+        capture = _STAGE_RECEIPT_CAPTURE.get()
+        if capture is not None:
+            stdout = result.stdout or ""
+            stderr = result.stderr or ""
+            capture.append(
+                {
+                    "stage_index": len(capture) + 1,
+                    "script": script,
+                    "command": [str(part) for part in result.args],
+                    "image": image,
+                    "timeout_s": timeout_s,
+                    "returncode": result.returncode,
+                    "duration_ms": max(0, (time.monotonic_ns() - started_ns) // 1_000_000),
+                    "stdout_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
+                    "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
+                    "stdout_bytes": len(stdout.encode("utf-8")),
+                    "stderr_bytes": len(stderr.encode("utf-8")),
+                }
+            )
+        return result
     except subprocess.TimeoutExpired as exc:
         stdout = _text(exc.stdout)
         stderr = _text(exc.stderr)
@@ -991,7 +1087,7 @@ def assert_local_sandbox_ready() -> None:
         raise SandboxInfrastructureError("bubblewrap is required for secure Aider reward execution")
 
 
-def run_sandbox_preflight() -> None:
+def run_sandbox_preflight(*, image: str = DEFAULT_AIDER_DOCKER_IMAGE) -> None:
     """Prove normal, ASan/UBSan/LSan, and TSan execution before training."""
 
     ensure_ast17_tooling()
@@ -1013,13 +1109,23 @@ def run_sandbox_preflight() -> None:
             "&& ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 "
             "UBSAN_OPTIONS=halt_on_error=1 ./probe_asan "
             "&& c++ -std=c++17 -Wall -Wextra -Werror -pedantic -pthread "
-            "-fsanitize=thread probe.cpp -o probe_tsan "
-            "&& TSAN_OPTIONS=halt_on_error=1 ./probe_tsan",
-            image=DEFAULT_AIDER_DOCKER_IMAGE,
+            "-fsanitize=thread probe.cpp -o probe_tsan",
+            image=image,
             timeout_s=90,
         )
         if result.returncode != 0:
             raise SandboxInfrastructureError(_combined_logs(result) or "sandbox preflight failed")
+        tsan_result, _layout_retries = _run_tsan_stage(
+            scratch,
+            "TSAN_OPTIONS=halt_on_error=1 ./probe_tsan",
+            image=image,
+            timeout_s=90,
+            retry_empty_sigsegv=True,
+        )
+        if tsan_result.returncode != 0:
+            raise SandboxInfrastructureError(
+                _combined_logs(tsan_result) or "TSan sandbox preflight failed"
+            )
 
 
 def shlex_quote(value: str) -> str:
@@ -1042,3 +1148,48 @@ def _text(value: str | bytes | None) -> str:
 def _is_infrastructure_error(logs: str) -> bool:
     lowered = logs.lower()
     return any(marker in lowered for marker in INFRASTRUCTURE_MARKERS)
+
+
+def _is_tsan_aslr_layout_error(logs: str) -> bool:
+    """Match only TSan's documented high-entropy-ASLR startup collision."""
+
+    lowered = logs.lower()
+    return TSAN_UNEXPECTED_MAPPING_MARKER in lowered or all(
+        marker in lowered for marker in TSAN_ASLR_LAYOUT_MARKERS
+    )
+
+
+def _run_tsan_stage(
+    scratch: Path,
+    script: str,
+    *,
+    image: str,
+    timeout_s: int,
+    max_layout_attempts: int = TSAN_MAX_LAYOUT_ATTEMPTS,
+    retry_empty_sigsegv: bool = False,
+) -> tuple[subprocess.CompletedProcess[str], int]:
+    """Retry only TSan's pre-main randomized-layout collision.
+
+    Docker's default seccomp policy intentionally blocks ``personality``. LLVM
+    TSan uses that syscall only after a high-entropy ASLR placement collides
+    with its shadow range. A fresh process can receive a compatible layout, so
+    bounded retries preserve the sandbox and never mask race diagnostics.
+    """
+
+    if max_layout_attempts < 1:
+        raise ValueError("max_layout_attempts must be positive")
+    last_logs = ""
+    for attempt in range(max_layout_attempts):
+        result = _run_stage(scratch, script, image=image, timeout_s=timeout_s)
+        last_logs = _combined_logs(result)
+        empty_sigsegv = (
+            retry_empty_sigsegv and result.returncode in {-11, 139} and not last_logs.strip()
+        )
+        if not (_is_tsan_aslr_layout_error(last_logs) or empty_sigsegv):
+            if _is_infrastructure_error(last_logs):
+                raise SandboxInfrastructureError(last_logs)
+            return result, attempt
+    raise SandboxInfrastructureError(
+        "TSan never received a compatible randomized address-space layout "
+        f"after {max_layout_attempts} attempts; last_logs={last_logs[-500:]}"
+    )

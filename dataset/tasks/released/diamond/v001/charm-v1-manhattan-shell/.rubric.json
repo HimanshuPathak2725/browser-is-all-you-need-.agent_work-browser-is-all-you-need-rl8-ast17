@@ -1,0 +1,23 @@
+{
+  "category": "grid-enumeration",
+  "editable_files": [
+    "manhattan-shell.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "manhattan-shell_test.cpp",
+  "hidden_test_sha256": "5038b2c99cdd1449d151bec75fb717c49b154ce76986b1e64155725283046d34",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "188e8b33c9dbc802b546785002309f2c00724b084b4376a0bce7bb8358ff389f",
+  "tags": [
+    "cpp-only",
+    "clockwise",
+    "coordinates",
+    "deduplication"
+  ],
+  "task_id": "charm-v1-manhattan-shell",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

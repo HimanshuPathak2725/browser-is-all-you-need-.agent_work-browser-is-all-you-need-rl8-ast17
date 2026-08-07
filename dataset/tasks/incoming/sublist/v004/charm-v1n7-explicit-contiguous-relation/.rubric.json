@@ -1,0 +1,23 @@
+{
+  "category": "explicit-contiguous-relation",
+  "editable_files": [
+    "explicit-contiguous-relation.h",
+    "explicit-contiguous-relation.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "explicit-contiguous-relation_test.cpp",
+  "hidden_test_sha256": "d0d131b4045216303aecd853ffebd9b6079746e51131aaa349a6d8eb705a428f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d56c12f3c4811d516ee8351cdddac540bf846741bc5caecb13579124100efdf0",
+  "tags": [
+    "relation-enum",
+    "generic-values",
+    "complexity-bound"
+  ],
+  "task_id": "charm-v1n7-explicit-contiguous-relation",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

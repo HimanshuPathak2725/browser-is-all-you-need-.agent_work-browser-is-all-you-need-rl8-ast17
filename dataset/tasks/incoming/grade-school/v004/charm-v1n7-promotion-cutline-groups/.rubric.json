@@ -1,0 +1,22 @@
+{
+  "category": "promotion-cutline-groups",
+  "editable_files": [
+    "promotion-cutline-groups.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "promotion-cutline-groups_test.cpp",
+  "hidden_test_sha256": "d64820f0ef1fb4f1c6d4a79cd7664371b80f8b8679b262e23c42cef03969aced",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "127ac2dede0a9052d55022b1ecd74399e168e6fe717d81636c06b9a950d4609b",
+  "tags": [
+    "promotion",
+    "tie",
+    "ordering"
+  ],
+  "task_id": "charm-v1n7-promotion-cutline-groups",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

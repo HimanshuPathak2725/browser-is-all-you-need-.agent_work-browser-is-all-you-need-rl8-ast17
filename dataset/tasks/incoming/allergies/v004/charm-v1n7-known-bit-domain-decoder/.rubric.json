@@ -1,0 +1,24 @@
+{
+  "category": "known-bit-domain-decoder",
+  "editable_files": [
+    "known-bit-domain-decoder.h",
+    "known-bit-domain-decoder.cpp",
+    "known-bit-domain-decoder_detail.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "known-bit-domain-decoder_test.cpp",
+  "hidden_test_sha256": "6234fb672813c122d7bdc08104c9d4b672d2f4223c53bf5ca19682584240b3b1",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "6d7022ffeaa8cd7fa4bbd91e36dfac21b9a366ca7d4a44914b23b95aaa1618ce",
+  "tags": [
+    "bitmask",
+    "domain-validation",
+    "case-sensitive-api"
+  ],
+  "task_id": "charm-v1n7-known-bit-domain-decoder",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

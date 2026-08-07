@@ -1,0 +1,25 @@
+{
+  "category": "offset-normalization",
+  "editable_files": [
+    "offset-civil-clock.h",
+    "offset-civil-clock.cpp",
+    "offset-civil-clock_detail.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "offset-civil-clock_test.cpp",
+  "hidden_test_sha256": "25a27b967bcba069fbffa91f6bed152cd7c984edc71cc3c1f130c78c5cd678a5",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5acef0fa9b7bd76e5c3fca871d5c5e257ee3a725bae6746796f0989f4fbe9615",
+  "tags": [
+    "public-api-repair",
+    "time",
+    "floor-mod",
+    "formatting"
+  ],
+  "task_id": "charm-v1-offset-civil-clock",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

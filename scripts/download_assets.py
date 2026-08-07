@@ -201,6 +201,8 @@ def _extract_aider_shadow_archive(root: Path) -> Path:
     )
     if artifact_manifest.get("kind") != "glm47-aider-shadow-rubrics-archive":
         raise RuntimeError("unexpected Aider shadow artifact kind")
+    if artifact_manifest.get("schema_version") != 2:
+        raise RuntimeError("Aider shadow artifact must use oracle-certified schema version 2")
     if artifact_manifest.get("counts", {}).get("tasks") != 253:
         raise RuntimeError("Aider shadow artifact does not bind exactly 253 tasks")
     archive_name = str(artifact_manifest.get("archive") or "")
@@ -234,6 +236,13 @@ def _extract_aider_shadow_archive(root: Path) -> Path:
     source_manifest = json.loads((extracted / "manifest.json").read_text(encoding="utf-8"))
     if source_manifest.get("kind") != "aider-polyglot-cpp-shadow-rubrics":
         raise RuntimeError("unexpected extracted Aider shadow manifest kind")
+    if source_manifest.get("schema_version") != 2:
+        raise RuntimeError("extracted Aider shadow manifest is not oracle-certified v2")
+    source_contract = source_manifest.get("contract", {})
+    if source_contract.get("oracle_references_packaged") is not True:
+        raise RuntimeError("extracted Aider shadow corpus lacks private oracle references")
+    if source_contract.get("reference_answers_model_facing") is not False:
+        raise RuntimeError("extracted Aider shadow corpus has an unsafe reference contract")
     if source_manifest.get("counts", {}).get("tasks") != 253:
         raise RuntimeError("extracted Aider shadow manifest does not bind 253 tasks")
     actual = sum(1 for path in extracted.rglob(".rubric.json") if path.is_file())

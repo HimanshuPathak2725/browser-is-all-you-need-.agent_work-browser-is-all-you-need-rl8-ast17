@@ -1,0 +1,23 @@
+{
+  "category": "interval-query",
+  "editable_files": [
+    "interval-coverage-tree.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "interval-coverage-tree_test.cpp",
+  "hidden_test_sha256": "2bf4656153c5bfc072a65f41b8fb244c39131001a6d64b6823c777f609b12ebd",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "37105220bc96d33d5bf90c7e6ac8bc5b25fb71beb7c77c56a56a3b28cc569d68",
+  "tags": [
+    "closed-interval",
+    "ordering",
+    "boundary",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-interval-coverage-tree",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

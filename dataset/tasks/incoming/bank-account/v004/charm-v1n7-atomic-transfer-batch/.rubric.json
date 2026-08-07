@@ -1,0 +1,22 @@
+{
+  "category": "atomic-transfer-batch",
+  "editable_files": [
+    "atomic-transfer-batch.cpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "atomic-transfer-batch_test.cpp",
+  "hidden_test_sha256": "7291c823aa9732dd1b0cec96d43286c205c23bc5520ad370fda961e94c0c35e6",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5519e4f7ab52a425b726b99c0122f9cb6e8b7172da084c2925e5263258e2bfee",
+  "tags": [
+    "atomicity",
+    "transfer",
+    "linker-repair"
+  ],
+  "task_id": "charm-v1n7-atomic-transfer-batch",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,316 @@
+{
+  "schema_version": "charm-generator-admission-v4.1",
+  "policy_version": "charm-synthmem-api-action-remediation-v2",
+  "example_only": true,
+  "iteration_contract": {
+    "iteration_id": "REPLACE_ME",
+    "target_behavior": "Increase first-turn public-API-complete C++ solutions without regressing the previous-best checkpoint.",
+    "observed_failure_hypothesis": "The prior corpus taught nonempty starter -> protected header -> source-only output, causing public API visibility failures.",
+    "planned_data_intervention": "Rebalance action topologies, add genuine redacted-feedback repair rows, preserve anchor exposure, and canary before full training.",
+    "primary_metric": "mean_pass_at_1_over_4_frozen_trials",
+    "promotion_threshold": "Meet the predeclared matched improvement threshold with no compile/API regression.",
+    "stop_condition": "Stop if pass@1 drops by more than one task or public-API-absent failures rise by more than two percentage points.",
+    "previous_best_run_ids": [
+      "REPLACE_WITH_REEVALUATED_PREVIOUS_BEST_RUN"
+    ],
+    "previous_best_attempt_ledger_sha256": "REPLACE_WITH_REAL_SHA256",
+    "authorized_training_diff": [
+      "dataset_mixture"
+    ],
+    "feedback_policy_id": "redacted-compiler-feedback-v1"
+  },
+  "failure_evidence": {
+    "status": "valid",
+    "invalid_evidence_count": 0,
+    "unresolved_diagnosis_count": 0,
+    "unauthorized_disposition_count": 0,
+    "profile": {
+      "profile_id": "synthmem-v3-modal-eval4-20260803T054055Z",
+      "counts": {
+        "actual_attempts": 311,
+        "failed_attempts": 288,
+        "compile_or_link_failures": 281,
+        "public_api_absent_or_misnamed_failures": 264,
+        "semantic_counterexamples": 6,
+        "runtime_failures": 1,
+        "existing_header_change_rows": 0,
+        "genuine_repair_trajectory_rows": 0,
+        "calibration_rows": 0
+      }
+    },
+    "artifact_bindings": {
+      "audit_summary": {
+        "path": "REPLACE_WITH_AUDIT_SUMMARY.json",
+        "sha256": "b2553fe505bbecd4420159deb7e070f30b3da71c8b1e5ff224b69a96a9c54f90"
+      },
+      "detailed_audit": {
+        "path": "REPLACE_WITH_DETAILED_POSTRUN_AUDIT.md",
+        "sha256": "4876a032875f0a31773bcc79d949d95131effaf8213ae9213953b4963c0f1ca6"
+      },
+      "validator_v4_spec": {
+        "path": "REPLACE_WITH_VALIDATOR_V4_SPEC.md",
+        "sha256": "55ef7e69fb0a6d7f2d861ee761407f15971fb2fd0b28354d31e70cef11aaaef8"
+      },
+      "mechanism_summary": {
+        "path": "REPLACE_WITH_mechanism_summary.json",
+        "sha256": "52e6b1581e86e7bdd5fbee8f5ec583ef17e9906dab56e57ffc95cca3c4c2c7a6"
+      },
+      "dataset_shape": {
+        "path": "REPLACE_WITH_dataset_shape_audit.json",
+        "sha256": "6edba0c806293ab3a788434edba61ebd9bffb2506321d6d0f1191646be9a246b"
+      },
+      "training_dynamics": {
+        "path": "REPLACE_WITH_training_dynamics_audit.json",
+        "sha256": "6f0bf263cb883930ebf3505c435f407ffa36e1fecbc05816050d56f09c0028e8"
+      }
+    }
+  },
+  "audit_skill_tree": {
+    "path": "REPLACE_WITH_updated task/audit-sft-data-quality",
+    "sha256": "REPLACE_WITH_REAL_TREE_SHA256"
+  },
+  "generation_plan": {
+    "authorized_task_count": 20,
+    "role_counts": {
+      "direct_verified_success": 11,
+      "boundary_case": 4,
+      "repair_trajectory": 4,
+      "calibration": 1
+    },
+    "action_counts": {
+      "empty_starter": 4,
+      "existing_header_change": 11,
+      "header_only_or_template": 2,
+      "header_and_source": 9,
+      "unparseable": 0,
+      "unjustified_noop": 0,
+      "action_shapes": {
+        "header_and_source": 9,
+        "header_only_or_template": 2,
+        "source_only": 8,
+        "calibration_no_change": 1
+      }
+    },
+    "editable_layout_counts": {
+      "cpp_only": 8,
+      "header_only": 2,
+      "header_and_cpp": 10,
+      "multi_file_gt2": 2
+    },
+    "starter_type_counts": {
+      "empty": 4,
+      "skeleton": 5,
+      "partial_implementation": 4,
+      "semantic_bug": 3,
+      "compile_bug": 2,
+      "near_correct": 2
+    },
+    "api_capability_counts": {
+      "implement_missing_api": 15,
+      "preserve_api": 15,
+      "extend_api": 15,
+      "repair_api": 15,
+      "refactor_api": 15
+    },
+    "header_mode_counts": {
+      "frozen": 4,
+      "editable": 4,
+      "reconstructed": 4,
+      "repaired": 4,
+      "extended": 4
+    },
+    "dataset_shape_plan": {
+      "histograms": {
+        "topic": {"REPLACE": 20},
+        "difficulty": {"REPLACE": 20},
+        "starter": {"REPLACE": 20},
+        "repair": {"REPLACE": 20},
+        "file_count": {"REPLACE": 20},
+        "header_edit": {"REPLACE": 20},
+        "template_usage": {"REPLACE": 20},
+        "exception_usage": {"REPLACE": 20},
+        "concurrency_usage": {"REPLACE": 20},
+        "pointer_usage": {"REPLACE": 20},
+        "ast_nodes": {"REPLACE": 20},
+        "api_shape": {"REPLACE": 20}
+      },
+      "families_below_minimum": []
+    },
+    "families": [
+      {
+        "family_id": "REPLACE_WITH_TOPIC_OR_FAMILY",
+        "action_topology_count": 4,
+        "has_existing_scaffold": true
+      }
+    ],
+    "source_counts": {
+      "verified_non_synthetic": 2,
+      "synthetic": 18
+    },
+    "required_mechanism_ids": [
+      "public-api-completeness",
+      "file-action-selection",
+      "header-self-containment",
+      "compiler-feedback-repair",
+      "state-transition-ordering",
+      "container-lifetime",
+      "member-shadowing",
+      "warning-as-error",
+      "whole-file-application",
+      "anchor-retention"
+    ],
+    "repair_plan": {
+      "genuine_four_turn_suffix_required": true,
+      "failing_candidate_receipt_required": true,
+      "corrected_candidate_receipt_required": true,
+      "metadata_only_rows_count_as_repair": false,
+      "planned_genuine_repair_count": 4,
+      "repair_type_counts": {
+        "compile_repair": 1,
+        "linker_repair": 1,
+        "api_repair": 1,
+        "hidden_test_repair": 1,
+        "runtime_repair": 1,
+        "sanitizer_repair": 1
+      }
+    }
+  },
+  "feedback_policy": {
+    "policy_id": "redacted-compiler-feedback-v1",
+    "policy_sha256": "REPLACE_WITH_REAL_SHA256",
+    "private_test_output_disclosed": false,
+    "separate_full_private_diagnostic_lane": true,
+    "repair_training_matches_promotion_policy": true,
+    "sanitized": true,
+    "maximum_feedback_lines": 100,
+    "hidden_answers_disclosed": false,
+    "expected_outputs_disclosed": false,
+    "private_test_names_disclosed": false
+  },
+  "uniqueness_receipt": {
+    "path": "REPLACE_WITH_PREGEN_UNIQUENESS_RECEIPT.json",
+    "sha256": "REPLACE_WITH_REAL_SHA256"
+  },
+  "task_id_reservation_plan": {
+    "path": "REPLACE_WITH_TASK_ID_RESERVATION_PLAN.json",
+    "sha256": "REPLACE_WITH_REAL_SHA256"
+  },
+  "task_id_reservation_receipt": {
+    "path": "REPLACE_WITH_ATOMIC_TASK_ID_RESERVATION_RECEIPT.json",
+    "sha256": "REPLACE_WITH_REAL_SHA256"
+  },
+  "batch_code_reservation_receipt": {
+    "path": "REPLACE_WITH_ATOMIC_BATCH_CODE_RESERVATION_RECEIPT.json",
+    "sha256": "REPLACE_WITH_REAL_SHA256"
+  },
+  "proof_plan": {
+    "public_api_probe_required": true,
+    "header_isolation_required": true,
+    "strict_cpp17_werror_required": true,
+    "target_pass_required": true,
+    "starter_rejection_required": true,
+    "failure_mutation_required": true,
+    "semantic_mutation_required": true,
+    "grader_determinism_required": true,
+    "grader_portability_required": true,
+    "sanitizer_required": true,
+    "anti_cheat_required": true,
+    "dynamic_nonce_required": true,
+    "application_replay_required": true,
+    "required_companion_file_check": true,
+    "global_uniqueness_recheck_after_generation": true
+  },
+  "source_bindings": {
+    "builder_source": {
+      "path": "REPLACE_WITH_EXACT_BUILDER_SOURCE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "verifier_source": {
+      "path": "REPLACE_WITH_EXACT_VERIFIER_SOURCE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "eval_wrapper_source": {
+      "path": "REPLACE_WITH_EXACT_EVAL_WRAPPER_SOURCE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "feedback_policy": {
+      "path": "REPLACE_WITH_REDACTED_FEEDBACK_POLICY",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "tokenizer_manifest": {
+      "path": "REPLACE_WITH_TOKENIZER_MANIFEST",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "chat_template": {
+      "path": "REPLACE_WITH_CHAT_TEMPLATE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "heldout_manifest": {
+      "path": "REPLACE_WITH_HELDOUT_MANIFEST",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "task_id_reserver_source": {
+      "path": "REPLACE_WITH_TASK_ID_RESERVER_SOURCE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    },
+    "uniqueness_scanner_source": {
+      "path": "REPLACE_WITH_UNIQUENESS_SCANNER_SOURCE",
+      "sha256": "REPLACE_WITH_REAL_SHA256"
+    }
+  },
+  "serialization_plan": {
+    "exact_token_replay_required": true,
+    "exact_loss_mask_required": true,
+    "exact_eos_required": true,
+    "whole_file_application_replay_required": true,
+    "max_unparseable_rows": 0,
+    "max_truncated_rows": 0,
+    "max_private_leak_rows": 0
+  },
+  "exposure_plan": {
+    "previous_anchor_effective_exposure": 26000,
+    "planned_anchor_effective_exposure": 26000,
+    "dilution_explicitly_authorized": false,
+    "retention_canary_defined": true
+  },
+  "canary_plan": {
+    "previous_best_attempt_ledger_sha256": "REPLACE_WITH_REAL_SHA256",
+    "task_count": 20,
+    "epochs_before_decision": 5,
+    "evaluation_during_training": true,
+    "frozen_trial_count": 4,
+    "stop_if_pass_at_1_drop_exceeds_tasks": 1,
+    "stop_if_public_api_absent_increase_pp": 2.0,
+    "stop_on_contamination": true,
+    "stop_on_missing_action_topology": true,
+    "max_malformed_outputs": 0,
+    "max_infrastructure_failures": 0,
+    "max_context_exhaustion_fraction": 0.01,
+    "full_training_blocked_until_canary_pass": true
+  },
+  "training_dynamics_plan": {
+    "log_every_checkpoint": true,
+    "require_training_loss": true,
+    "require_validation_loss": true,
+    "require_compile_rate": true,
+    "require_hidden_test_rate": true,
+    "early_stopping_enabled": true,
+    "selection_policy": "best_composite_not_always_final",
+    "checkpoint_selection_weights": {
+      "compile": 0.4,
+      "hidden_tests": 0.4,
+      "validation_loss": 0.2
+    }
+  },
+  "task_receipts": [],
+  "post_generation_uniqueness_receipt": {},
+  "serialization_receipts": [],
+  "corpus_admission": {},
+  "dataset_shape_receipt": {},
+  "api_failure_predictor": {},
+  "canary_result": {},
+  "training_dynamics_result": {},
+  "promotion_result": {},
+  "promotion_score": {},
+  "deployment_certification": {}
+}

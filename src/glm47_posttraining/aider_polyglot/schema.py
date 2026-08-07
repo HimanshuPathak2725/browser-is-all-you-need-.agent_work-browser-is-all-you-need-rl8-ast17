@@ -162,19 +162,21 @@ class AiderShadowRubric(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    schema_version: Literal[1] = 1
+    schema_version: Literal[2] = 2
     task_id: str
     language: Literal["cpp"] = "cpp"
     editable_files: list[str]
     hidden_test_file: str
     hidden_test_sha256: str
     source_prompt_sha256: str
-    reference_answer_packaged: Literal[False]
+    reference_answer_packaged: Literal[True]
+    reference_answer_model_facing: Literal[False]
     verification_stage: Literal["passed"]
     verification_gate: str
     family: str
     category: str
     tags: list[str] = Field(default_factory=list)
+    lineage: str | None = None
 
     @field_validator("editable_files")
     @classmethod

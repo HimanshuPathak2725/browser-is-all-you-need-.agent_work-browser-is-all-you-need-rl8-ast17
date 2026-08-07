@@ -1,0 +1,29 @@
+#!/bin/sh
+export LD_LIBRARY_PATH=/opt/llvm/lib
+compile_only=0
+for arg in "$@"; do
+  case "$arg" in
+    -c|-fsyntax-only) compile_only=1 ;;
+  esac
+done
+if [ "$compile_only" -eq 1 ]; then
+  exec /opt/llvm/bin/clang \
+    --driver-mode=g++ \
+    --gcc-toolchain=/usr/local \
+    -resource-dir=/opt/llvm/lib/clang/18 \
+    -nostdinc++ \
+    -isystem /usr/local/include/c++/13.4.0 \
+    -isystem /usr/local/include/c++/13.4.0/x86_64-linux-gnu \
+    -isystem /usr/local/include/c++/13.4.0/backward \
+    "$@"
+fi
+exec /opt/llvm/bin/clang \
+  --driver-mode=g++ \
+  --gcc-toolchain=/usr/local \
+  --ld-path=/opt/llvm/bin/ld-wrapper \
+  -resource-dir=/opt/llvm/lib/clang/18 \
+  -nostdinc++ \
+  -isystem /usr/local/include/c++/13.4.0 \
+  -isystem /usr/local/include/c++/13.4.0/x86_64-linux-gnu \
+  -isystem /usr/local/include/c++/13.4.0/backward \
+  "$@"

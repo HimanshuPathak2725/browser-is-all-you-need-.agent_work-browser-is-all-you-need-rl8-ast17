@@ -1,0 +1,22 @@
+{
+  "category": "indexed-tree-level-widths",
+  "editable_files": [
+    "indexed-tree-level-widths.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "indexed-tree-level-widths_test.cpp",
+  "hidden_test_sha256": "f39d0ab95fa426a4ccfd15deb4b0774f29c8825fcf2263f0b0098d934aaaac8f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "75ff2b745c1c0ab5a814542528a1d8c323906c1ea2368f468bbc723006ea70db",
+  "tags": [
+    "index-graph",
+    "breadth-first",
+    "header-placement"
+  ],
+  "task_id": "charm-v1n7-indexed-tree-level-widths",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

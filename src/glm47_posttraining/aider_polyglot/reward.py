@@ -136,6 +136,7 @@ class AiderRewardBreakdown:
     parsed: ParsedAiderResponse | None = None
     harness: AiderTestResult | None = None
     infrastructure_error: bool = False
+    infrastructure_detail: str | None = None
 
 
 @dataclass(frozen=True)
@@ -247,6 +248,7 @@ def compute_production_aider_reward(
             reason=INFRASTRUCTURE_FAULT_REASON,
             parsed=parsed,
             infrastructure_error=True,
+            infrastructure_detail=str(exc)[-2000:],
             ast17_checks={"error": 0.0},
         )
 
@@ -257,6 +259,7 @@ def compute_production_aider_reward(
             parsed=parsed,
             harness=harness,
             infrastructure_error=True,
+            infrastructure_detail=_combined_harness_logs(harness)[-2000:],
         )
 
     if harness.status == "compile_failed":
@@ -384,6 +387,7 @@ def compute_weighted45_aider_reward(
                 reward=INFRASTRUCTURE_MASK_REWARD,
                 reason=INFRASTRUCTURE_FAULT_REASON,
                 parsed=parsed,
+                infrastructure_detail=str(exc)[-2000:],
                 infrastructure_error=True,
                 ast17_checks={"error": 0.0},
             )
@@ -395,6 +399,7 @@ def compute_weighted45_aider_reward(
                     parsed=parsed,
                     harness=harness,
                     infrastructure_error=True,
+                    infrastructure_detail=_combined_harness_logs(harness)[-2000:],
                 )
             if set(harness.weighted45_checks) != WEIGHTED45_HARNESS_CHECK_IDS:
                 raise SandboxInfrastructureError(

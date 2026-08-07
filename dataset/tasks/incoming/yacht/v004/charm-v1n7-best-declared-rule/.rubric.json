@@ -1,0 +1,22 @@
+{
+  "category": "best-declared-rule",
+  "editable_files": [
+    "best-declared-rule.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "best-declared-rule_test.cpp",
+  "hidden_test_sha256": "8e439f30efb7b2f29af921cb6eaf3b798531ccc2fd9c5b6bcbe8ecb6cedd1146",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5ce1f8edb9a2e50b089cb49c4b119505655c7562290175c4a8dac505c16dc3d7",
+  "tags": [
+    "selection",
+    "string-category",
+    "tie-break"
+  ],
+  "task_id": "charm-v1n7-best-declared-rule",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

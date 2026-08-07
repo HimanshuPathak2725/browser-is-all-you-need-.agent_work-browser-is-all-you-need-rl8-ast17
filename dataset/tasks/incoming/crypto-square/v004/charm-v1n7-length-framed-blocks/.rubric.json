@@ -1,0 +1,22 @@
+{
+  "category": "length-framed-blocks",
+  "editable_files": [
+    "length-framed-blocks.cpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "length-framed-blocks_test.cpp",
+  "hidden_test_sha256": "2887c757cb62451935ec3fb7c774e3d81d5ec9afefeb399c75bca98be853728b",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4121f77b44a0e7f180dc7568471a43c486025716ed2b4b5d4cf3324ff1d0d445",
+  "tags": [
+    "framing",
+    "input-use",
+    "termination-budget"
+  ],
+  "task_id": "charm-v1n7-length-framed-blocks",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

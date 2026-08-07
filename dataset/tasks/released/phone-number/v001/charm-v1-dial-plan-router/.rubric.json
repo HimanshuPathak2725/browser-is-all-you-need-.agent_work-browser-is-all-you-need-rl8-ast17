@@ -1,0 +1,23 @@
+{
+  "category": "longest-prefix",
+  "editable_files": [
+    "dial-plan-router.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "dial-plan-router_test.cpp",
+  "hidden_test_sha256": "1c4efb52da7ec41a6229f53d70a16386b70fdf1b659218190d9f3b2627fa4a79",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "567882919759da61a26bf69ab0bae656c11e9a63d9b1f4fbfcdd26b083465764",
+  "tags": [
+    "linker-repair",
+    "prefix",
+    "routing",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-dial-plan-router",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

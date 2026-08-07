@@ -1,0 +1,24 @@
+{
+  "category": "owned-duplicate-policy-build",
+  "editable_files": [
+    "owned-duplicate-policy-build.h",
+    "owned-duplicate-policy-build.cpp",
+    "owned-duplicate-policy-build_detail.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "owned-duplicate-policy-build_test.cpp",
+  "hidden_test_sha256": "61aa67f1102c5fb20f84f601b09604378e6895a0e18085bc76a45bef16427d6c",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "7e8cb104afe828c4f5be814d2753b35251fcfd8afe11e0d71718281ab0d9170e",
+  "tags": [
+    "unique-ptr",
+    "duplicate-policy",
+    "traversal"
+  ],
+  "task_id": "charm-v1n7-owned-duplicate-policy-build",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

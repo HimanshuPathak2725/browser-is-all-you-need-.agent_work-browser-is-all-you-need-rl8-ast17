@@ -90,7 +90,7 @@ def package(source: Path, output: Path) -> dict[str, object]:
 
     artifact_manifest = {
         "kind": "glm47-aider-shadow-rubrics-archive",
-        "schema_version": 1,
+        "schema_version": 2,
         "archive": ARCHIVE_NAME,
         "archive_root": ARCHIVE_ROOT,
         "archive_sha256": sha256_path(archive),

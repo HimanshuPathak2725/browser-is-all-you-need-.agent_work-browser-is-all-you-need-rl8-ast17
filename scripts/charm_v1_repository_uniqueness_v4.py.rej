@@ -1,0 +1,13 @@
+--- scripts/charm_v1_repository_uniqueness_v4.py
++++ scripts/charm_v1_repository_uniqueness_v4.py
+@@ -36,6 +36,10 @@
+     def search(self, text: str):
+         return self.token if self.token in self.token_set(text) else None
+ 
+ 
++def starter_component(value: str) -> str:
++    return value if value.strip() else "EMPTY_STARTER"
++
++
+ def main(argv: list[str] | None = None) -> int:
+ 

@@ -1,0 +1,23 @@
+{
+  "category": "recurring-window",
+  "editable_files": [
+    "weekly-window-intersection.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "weekly-window-intersection_test.cpp",
+  "hidden_test_sha256": "f2c05616f4d3645f9a3882e694b6f20592df14a17320dd79d9084a727efe80e4",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "f9412e105a86288d0f1b0b15fb851cdcf324b8114cbd2710ba523626f8d93096",
+  "tags": [
+    "repair",
+    "half-open",
+    "wraparound",
+    "intersection"
+  ],
+  "task_id": "charm-v1-weekly-window-intersection",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,24 @@
+{
+  "category": "stable-handles",
+  "editable_files": [
+    "splice-handle-list.h",
+    "splice-handle-list.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "splice-handle-list_test.cpp",
+  "hidden_test_sha256": "7a4932033c4436db9106698b22d83551af794d7a13525c9be86e91413a0b7e29",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "c6212ae363989702cd09e083d703840da925618ea224e6b2ec3ae4f3ad88a81b",
+  "tags": [
+    "move-only",
+    "splice",
+    "generation",
+    "header-repair"
+  ],
+  "task_id": "charm-v1-splice-handle-list",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

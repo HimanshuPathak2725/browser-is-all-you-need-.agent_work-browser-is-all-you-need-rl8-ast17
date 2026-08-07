@@ -1,0 +1,84 @@
+{
+  "schema_version": "charm-v1-admission-policy-v1",
+  "policy_version": "charm-synthmem-api-action-remediation-v2",
+  "feedback_policy_id": "redacted-compiler-feedback-v1",
+  "iteration": {
+    "target_behavior": "first-turn exact public API and correct whole-file action topology",
+    "observed_failure_hypothesis": "source-only training shortcuts suppressed required public-header reconstruction",
+    "planned_data_intervention": "51 unique API-visible direct, boundary, repair, and calibration tasks across balanced header actions",
+    "primary_metric": "mean_pass_at_1_over_4_frozen_trials",
+    "promotion_threshold": "strict improvement without compile, API, retention, or contamination regression",
+    "stop_condition": "stop on API visibility, Pass@1, exposure, or canary regression",
+    "authorized_training_diff": [
+      "dataset_mixture"
+    ]
+  },
+  "exposure_plan": {
+    "previous_anchor_effective_exposure": 100,
+    "planned_anchor_effective_exposure": 100,
+    "dilution_explicitly_authorized": false,
+    "retention_canary_defined": true,
+    "basis": "restore and preserve the documented successful-v1 anchor repetition target; do not silently halve it"
+  },
+  "canary_plan": {
+    "task_count": 20,
+    "epochs_before_decision": 5,
+    "evaluation_during_training": true,
+    "frozen_trial_count": 4,
+    "stop_if_pass_at_1_drop_exceeds_tasks": 1,
+    "stop_if_public_api_absent_increase_pp": 2.0,
+    "stop_on_contamination": true,
+    "stop_on_missing_action_topology": true,
+    "max_malformed_outputs": 0,
+    "max_infrastructure_failures": 0,
+    "max_context_exhaustion_fraction": 0.01,
+    "full_training_blocked_until_canary_pass": true
+  },
+  "training_dynamics_plan": {
+    "log_every_checkpoint": true,
+    "require_training_loss": true,
+    "require_validation_loss": true,
+    "require_compile_rate": true,
+    "require_hidden_test_rate": true,
+    "early_stopping_enabled": true,
+    "selection_policy": "best_composite_not_always_final",
+    "checkpoint_selection_weights": {
+      "compile": 0.4,
+      "hidden_tests": 0.4,
+      "validation_loss": 0.2
+    }
+  },
+  "serialization_plan": {
+    "exact_token_replay_required": true,
+    "exact_loss_mask_required": true,
+    "exact_eos_required": true,
+    "whole_file_application_replay_required": true,
+    "max_unparseable_rows": 0,
+    "max_truncated_rows": 0,
+    "max_private_leak_rows": 0
+  },
+  "proof_plan": {
+    "public_api_probe_required": true,
+    "header_isolation_required": true,
+    "strict_cpp17_werror_required": true,
+    "target_pass_required": true,
+    "starter_rejection_required": true,
+    "failure_mutation_required": true,
+    "semantic_mutation_required": true,
+    "grader_determinism_required": true,
+    "grader_portability_required": true,
+    "sanitizer_required": true,
+    "anti_cheat_required": true,
+    "dynamic_nonce_required": true,
+    "application_replay_required": true,
+    "required_companion_file_check": true,
+    "global_uniqueness_recheck_after_generation": true
+  },
+  "authority": {
+    "generation_validation_projection_and_attempted_sft_admission": true,
+    "training": false,
+    "canary_execution": false,
+    "checkpoint_promotion": false,
+    "deployment": false
+  }
+}

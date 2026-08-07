@@ -1,0 +1,23 @@
+{
+  "category": "transaction-simulation",
+  "editable_files": [
+    "atomic-transfer-plan.cpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "atomic-transfer-plan_test.cpp",
+  "hidden_test_sha256": "5d2ff93f415cd965f7cbfe98ce25b42df4afa52db68b4cc2d031996a98ff8af9",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "21940e1fa836a3d12394afcfe4faeaba1d1d40e5fb481c11ae9bb1a8b1a7af86",
+  "tags": [
+    "cpp-include-surface",
+    "atomic-batch",
+    "map",
+    "overflow"
+  ],
+  "task_id": "charm-v1-atomic-transfer-plan",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

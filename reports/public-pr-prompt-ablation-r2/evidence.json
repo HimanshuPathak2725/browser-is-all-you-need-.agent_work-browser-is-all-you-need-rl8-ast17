@@ -1,0 +1,95 @@
+{
+  "schema_version": "public-pr-prompt-ablation-evidence-v2",
+  "decision": "ready_for_gcp_image_build_and_fresh_evaluation",
+  "fresh_model_evaluation_status": "not_completed",
+  "classification": "public_pr_regression_diagnostic_only",
+  "source_evidence": {
+    "handoff_prompt": {
+      "path": "/opt/glm47-public-pr/fmtlib-prompt-tuning-handoff/prompts/proposed-upgraded-prompt.txt",
+      "bytes": 7063,
+      "sha256": "b3997db3f5148890b879db2807c9a3c8de6f5be0552954cef529d8110c86ed25"
+    },
+    "baseline_preserving_v3_prompt": {
+      "path": "reports/public-pr-prompt-ablation-r1/final-prompt.md",
+      "bytes": 13717,
+      "sha256": "0069f527919eda1a6f8d5c2ed178858fcc2498b91c6efb4cea6aa44379c21d6c"
+    },
+    "final_v4_prompt": {
+      "path": "reports/public-pr-prompt-ablation-r2/final-prompt.md",
+      "bytes": 9961,
+      "sha256": "c2e80dccbd50d0c9e1e38ba06a4c021821ac82fb16ba500ac0358a4fe5e9ced5"
+    }
+  },
+  "contract": {
+    "path": "configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v4.jsonl",
+    "sha256": "03ed4454a8953b80b09325392c0045e9ea0ba64b6c483ea886c3850ffbd7c7a3",
+    "sidecar_sha256": "29463a6347d93670f320475914144e1d9ad6bdb14d48f77778c3a2beee02cc3",
+    "task_count": 1,
+    "suite": "fmtlib-compact-repair-bestof4"
+  },
+  "run_controls": {
+    "candidate_count": 4,
+    "candidate_seeds": [
+      1701,
+      1702,
+      1703,
+      1704
+    ],
+    "candidate_isolation": "fresh_prepared_repository_copy",
+    "maximum_attempts_per_candidate": 2,
+    "initial_temperature": 0.7,
+    "repair_temperature": 0.2,
+    "top_p": 1.0,
+    "max_completion_tokens": 32768,
+    "aider_auto_lint": false,
+    "aider_auto_test": false,
+    "stop_on_first_executable_pass": true,
+    "selection": "first_executable_pass_else_furthest_executable_stage",
+    "editable_files": [
+      "include/fmt/chrono.h"
+    ]
+  },
+  "frozen_identities": {
+    "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "base_model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "training_run_id": "glm47-synth-mem-v3-v1std-50ep-20260803T023833Z",
+    "adapter_model_sha256": "5ca6a0cbede843e8c042ebb1004a80e85d85686974063cb9bd0540e236aab6ca",
+    "cmake_version_in_image": "3.27.9",
+    "gcc_major_in_image": 13
+  },
+  "implementation_sha256": {
+    "runner": "746a5045ac9172f8b69f64ca0524742088c635216a01729521b526860cf998f5",
+    "validator": "a099644685af56b037ce7b387aafe87088e0004263846976e6ccdc62ae6a1a95",
+    "builder": "7874a2fbcf1f6d55c9554cf7d01c5d128d271191aebb22537e7a210913efd777",
+    "gcp_runtime": "cdbb586bdeb118473cb3599e400b0a6e04b6e7d2bb5d00b03150d780bf598726",
+    "dockerfile": "9d90ad27b1747e374c010061ca78a7e52e56f2d59164432d1d1ecb0d102bd958",
+    "v4_tests": "3e0bcbdb9781bae0a7b54509a5064983105dc96220998c2418f5878b11d1cb54"
+  },
+  "validation": {
+    "deterministic_regeneration": "pass",
+    "sha256_sidecar": "pass",
+    "static_contract": "pass",
+    "focused_tests": {
+      "status": "pass",
+      "passed": 22
+    },
+    "full_tests": {
+      "status": "pass",
+      "passed": 413
+    },
+    "python_compileall": "pass",
+    "ruff": "pass",
+    "local_oracle_replay": {
+      "status": "not_completed",
+      "reason": "cmake is absent from the host",
+      "required_gate": "pinned Docker image build"
+    },
+    "fresh_gcp_inference": "not_completed"
+  },
+  "limitations": [
+    "No fresh model run has been executed.",
+    "Best-of-four increases inference cost and may stop before all four candidates when one passes.",
+    "Candidate repositories are isolated, but internal Aider diff reflections are not claimed to be transactionally atomic.",
+    "This public-patch task is diagnostic and must not be used as positive training data."
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CHARM Generator V4.1"
+  short_description: "Generate and admit unique Aider C++ SFT tasks"
+  default_prompt: "Use $charm-skill: Go for task generation V1, then execute its exact ten-step generation, validation, repair, projection, and SFT-admission loop for the frozen 17 topics and 51 tasks."

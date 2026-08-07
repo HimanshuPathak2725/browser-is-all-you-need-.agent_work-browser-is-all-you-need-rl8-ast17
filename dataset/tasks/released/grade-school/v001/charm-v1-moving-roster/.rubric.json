@@ -1,0 +1,24 @@
+{
+  "category": "mutable-roster",
+  "editable_files": [
+    "moving-roster.h",
+    "moving-roster.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "moving-roster_test.cpp",
+  "hidden_test_sha256": "cba111d6df35d6f8a86f8b37e283423b195609bbdfc1386a235d32de5f969d22",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "09c957709d8b193b86e5c32aca240026fd00722fe8bda30069bc1dc3b14153ee",
+  "tags": [
+    "header-reconstruction",
+    "move",
+    "ordering",
+    "state"
+  ],
+  "task_id": "charm-v1-moving-roster",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

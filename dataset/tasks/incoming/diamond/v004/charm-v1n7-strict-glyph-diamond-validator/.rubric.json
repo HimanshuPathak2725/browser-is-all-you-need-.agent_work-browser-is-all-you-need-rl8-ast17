@@ -1,0 +1,22 @@
+{
+  "category": "strict-glyph-diamond-validator",
+  "editable_files": [
+    "strict-glyph-diamond-validator.hpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "strict-glyph-diamond-validator_test.cpp",
+  "hidden_test_sha256": "7f18350f54e83195f491bba5cf14590c73cd52619fce6cda66488097a9af45d5",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "25e120422c748b000869bac5a1ba2aa119882c66f3dd5c192e9c9f6f445e5af8",
+  "tags": [
+    "validator",
+    "return-symbol",
+    "boundary-character"
+  ],
+  "task_id": "charm-v1n7-strict-glyph-diamond-validator",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

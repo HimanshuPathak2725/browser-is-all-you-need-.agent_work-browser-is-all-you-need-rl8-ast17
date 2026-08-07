@@ -1,0 +1,23 @@
+{
+  "category": "string-rule-score",
+  "editable_files": [
+    "string-rule-score.h",
+    "string-rule-score.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "string-rule-score_test.cpp",
+  "hidden_test_sha256": "804ce615e8f69d601e4e0d9e1f38ceeb1d779d7e56c2d8a5e7af4b65ccf34804",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "8aecc6e8ab7c4d7c0c462f6a241d0510153aca89f9f790a60866472b2bbae9a9",
+  "tags": [
+    "string-category",
+    "exhaustive",
+    "direct-include"
+  ],
+  "task_id": "charm-v1n7-string-rule-score",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

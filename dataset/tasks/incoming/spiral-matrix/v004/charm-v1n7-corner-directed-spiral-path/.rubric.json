@@ -1,0 +1,23 @@
+{
+  "category": "corner-directed-spiral-path",
+  "editable_files": [
+    "corner-directed-spiral-path.h",
+    "corner-directed-spiral-path.cpp"
+  ],
+  "family": "Spiral Matrix",
+  "hidden_test_file": "corner-directed-spiral-path_test.cpp",
+  "hidden_test_sha256": "4e2fcbb96e46814773dc973ed5e50cb0bdbcdce3e60e0c7050fcf1334e73d936",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4f6a97b5c01ab42cb7dac278b88d15595477815514f27ffa86cf20b4bed6ea4a",
+  "tags": [
+    "rectangular",
+    "coordinate-path",
+    "output-budget"
+  ],
+  "task_id": "charm-v1n7-corner-directed-spiral-path",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

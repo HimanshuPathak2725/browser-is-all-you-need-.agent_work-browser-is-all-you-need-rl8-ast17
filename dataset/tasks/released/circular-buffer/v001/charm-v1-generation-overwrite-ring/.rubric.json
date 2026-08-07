@@ -1,0 +1,25 @@
+{
+  "category": "generation-handles",
+  "editable_files": [
+    "generation-overwrite-ring.h",
+    "generation-overwrite-ring.cpp",
+    "generation-overwrite-ring_detail.cpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "generation-overwrite-ring_test.cpp",
+  "hidden_test_sha256": "f192369d3eae22f24306dbdb620ce472ea4041752e5399f3492f8b978c5f8f02",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "a92fa4c5474c5684fc60d7a09ec7fc745cef77dc0a1a82d2f7f1e28767178b7f",
+  "tags": [
+    "overwrite",
+    "stale-handle",
+    "wraparound",
+    "header-reconstruction"
+  ],
+  "task_id": "charm-v1-generation-overwrite-ring",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

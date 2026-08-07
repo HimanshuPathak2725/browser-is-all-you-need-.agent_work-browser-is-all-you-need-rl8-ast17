@@ -1,0 +1,22 @@
+{
+  "category": "exposure-cap-ledger",
+  "editable_files": [
+    "exposure-cap-ledger.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "exposure-cap-ledger_test.cpp",
+  "hidden_test_sha256": "0ab51485d66d72c64b1b3871974f745cc310fc6bfb6eea361672f3bb80ccc37a",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9bb0f8abd117283fdd80d5c4208f852ac13dd63570350a5e14ffbb660420fec3",
+  "tags": [
+    "ledger",
+    "overflow",
+    "ordering"
+  ],
+  "task_id": "charm-v1n7-exposure-cap-ledger",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

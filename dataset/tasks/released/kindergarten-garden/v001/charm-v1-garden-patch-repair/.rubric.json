@@ -1,0 +1,24 @@
+{
+  "category": "rectangular-query",
+  "editable_files": [
+    "garden-patch-repair.h",
+    "garden-patch-repair.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "garden-patch-repair_test.cpp",
+  "hidden_test_sha256": "7f4f66556bd9f64bf13f6b7efcf6d80401b5f38143e7ce6c5e29a9830959eb0f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4f2c06c0d25d4bf815bf6468df113b70a5c2094a11ce1ef2922f07e43faae457",
+  "tags": [
+    "sanitizer-repair",
+    "clipping",
+    "grid",
+    "header-frozen"
+  ],
+  "task_id": "charm-v1-garden-patch-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,22 @@
+{
+  "category": "value-fed-spiral-fill",
+  "editable_files": [
+    "value-fed-spiral-fill.cpp"
+  ],
+  "family": "Spiral Matrix",
+  "hidden_test_file": "value-fed-spiral-fill_test.cpp",
+  "hidden_test_sha256": "1f5820e65d43a069f4b218aa837eb452278d0861d329c2a7de92db7e3966c741",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "8711f5f6552a16fbc469d75b67ff32b266794f563c7bdc06186e7212e8f5b796",
+  "tags": [
+    "matrix-fill",
+    "applied-file",
+    "rectangular"
+  ],
+  "task_id": "charm-v1n7-value-fed-spiral-fill",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,24 @@
+{
+  "category": "encapsulated-complex-value",
+  "editable_files": [
+    "encapsulated-complex-value.h",
+    "encapsulated-complex-value.cpp",
+    "encapsulated-complex-value_detail.cpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "encapsulated-complex-value_test.cpp",
+  "hidden_test_sha256": "d695da969318e74c7f0533665d2b20d684780a81ca9504f4bbc3aa0a96b834eb",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "a8b79f3dc9cfc3b1bd3d57b5a2643227282f11e0a852a135aed17c3afed2da7d",
+  "tags": [
+    "encapsulation",
+    "accessor",
+    "strict-compile"
+  ],
+  "task_id": "charm-v1n7-encapsulated-complex-value",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "category": "gap-cursor",
+  "editable_files": [
+    "cursor-gap-list.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "cursor-gap-list_test.cpp",
+  "hidden_test_sha256": "9db790117359ea153bbb3ec1529ab9a8b6a03692e01dec1b5565e948f128789a",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "3c53a926acbdf467252f4502f4a3d898b6b77597b4c7a8502c7b759a29004e7f",
+  "tags": [
+    "compile-repair",
+    "cursor",
+    "sequence",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-cursor-gap-list",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

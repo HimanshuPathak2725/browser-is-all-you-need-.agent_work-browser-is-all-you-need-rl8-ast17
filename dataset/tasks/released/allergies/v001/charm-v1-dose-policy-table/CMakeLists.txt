@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.16)
+project(charm_v1_dose_policy_table LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+add_executable(dose_policy_table_test dose-policy-table_test.cpp)
+target_compile_options(dose_policy_table_test PRIVATE -Wall -Wextra -Werror -pedantic)

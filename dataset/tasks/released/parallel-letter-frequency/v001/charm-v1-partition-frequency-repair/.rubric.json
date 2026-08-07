@@ -1,0 +1,24 @@
+{
+  "category": "deterministic-partition",
+  "editable_files": [
+    "partition-frequency-repair.h",
+    "partition-frequency-repair.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "partition-frequency-repair_test.cpp",
+  "hidden_test_sha256": "ad1dd6ae0020dfc258875236e886c76704dc97ce09ab52050060362f0a7d39df",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "98dd962c7c4d953685217c81eb2c6b264c9ac9e49d0688012bc31c081dca10c6",
+  "tags": [
+    "repair",
+    "partitioning",
+    "coverage",
+    "header-edit"
+  ],
+  "task_id": "charm-v1-partition-frequency-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

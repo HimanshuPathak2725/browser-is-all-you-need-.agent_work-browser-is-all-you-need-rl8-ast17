@@ -1,0 +1,23 @@
+{
+  "category": "garden-capacity-audit",
+  "editable_files": [
+    "garden-capacity-audit.h",
+    "garden-capacity-audit.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "garden-capacity-audit_test.cpp",
+  "hidden_test_sha256": "a0cdc9948e04960b57f4da8cd1f4fab28b96a9fd58aba79c1e23a2e3d8999d56",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4a9070fbdb51776d8979f64a8e3a47730663a2ae2be39425f6414fca876c94c1",
+  "tags": [
+    "capacity",
+    "domain-types",
+    "direct-includes"
+  ],
+  "task_id": "charm-v1n7-garden-capacity-audit",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

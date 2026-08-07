@@ -1,0 +1,23 @@
+{
+  "category": "obstacle-walk",
+  "editable_files": [
+    "obstacle-spiral-walk.cpp"
+  ],
+  "family": "Spiral Matrix",
+  "hidden_test_file": "obstacle-spiral-walk_test.cpp",
+  "hidden_test_sha256": "5091298504bbe9921f68c926d1075d9418ffbf84de07f562a43f38c9b28c397d",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "8ace3b423447b579a63076323094a908e5c7049003fe7038f1eb5cb070f32b9c",
+  "tags": [
+    "api-repair",
+    "turning",
+    "visited",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-obstacle-spiral-walk",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

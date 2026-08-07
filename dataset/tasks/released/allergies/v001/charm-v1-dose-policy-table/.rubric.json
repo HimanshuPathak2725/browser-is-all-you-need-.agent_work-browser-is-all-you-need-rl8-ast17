@@ -1,0 +1,23 @@
+{
+  "category": "atomic-batch-aggregation",
+  "editable_files": [
+    "dose-policy-table.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "dose-policy-table_test.cpp",
+  "hidden_test_sha256": "542553d05da82112dc7f5d2a560811e7ef92362a37453078f48e828e38cde0ab",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "2eb46039e47d1a80aa3b706e8cb1591454c7eef2f3474aba652b65095ec80b14",
+  "tags": [
+    "cpp-include-surface",
+    "partial-starter",
+    "validation",
+    "aggregation"
+  ],
+  "task_id": "charm-v1-dose-policy-table",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "category": "rectangular-outline-diamond",
+  "editable_files": [
+    "rectangular-outline-diamond.h",
+    "rectangular-outline-diamond.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "rectangular-outline-diamond_test.cpp",
+  "hidden_test_sha256": "1de6b2d6712d339712273c866edf400014e6be28253a270bd38e8c821f01489b",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9e2faf0e64cd0930c0eeea04344105bfd63fae94e6fc92a1f771d8c444a6f696",
+  "tags": [
+    "outline",
+    "symmetry",
+    "whitespace-oracle"
+  ],
+  "task_id": "charm-v1n7-rectangular-outline-diamond",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

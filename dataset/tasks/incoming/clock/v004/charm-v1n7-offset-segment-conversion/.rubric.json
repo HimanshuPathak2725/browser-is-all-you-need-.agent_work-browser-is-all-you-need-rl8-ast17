@@ -1,0 +1,22 @@
+{
+  "category": "offset-segment-conversion",
+  "editable_files": [
+    "offset-segment-conversion.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "offset-segment-conversion_test.cpp",
+  "hidden_test_sha256": "bdfba5b4f3e7149730e58595ba6fdd3402bba7fd1792763bb22f7be77ddb7980",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "c922a9b37f051989a7ff755d6043a945219e981fb65d825c2b1267a381067825",
+  "tags": [
+    "offset",
+    "schedule",
+    "wraparound"
+  ],
+  "task_id": "charm-v1n7-offset-segment-conversion",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

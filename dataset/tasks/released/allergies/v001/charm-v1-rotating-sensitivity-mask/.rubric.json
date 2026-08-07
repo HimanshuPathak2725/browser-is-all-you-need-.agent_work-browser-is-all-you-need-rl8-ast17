@@ -1,0 +1,23 @@
+{
+  "category": "bit-rotation-repair",
+  "editable_files": [
+    "rotating-sensitivity-mask.hpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "rotating-sensitivity-mask_test.cpp",
+  "hidden_test_sha256": "dc02c4a49c9866eae11af37d4fde55842db452a73e6a0f89c646547ade730e2f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "37fda51a6797a2d78d9cc4aac24f6aeeb425bc89e5efa4e3dafa5348f842d0e3",
+  "tags": [
+    "header-only",
+    "compile-repair",
+    "bitmask",
+    "negative-normalization"
+  ],
+  "task_id": "charm-v1-rotating-sensitivity-mask",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

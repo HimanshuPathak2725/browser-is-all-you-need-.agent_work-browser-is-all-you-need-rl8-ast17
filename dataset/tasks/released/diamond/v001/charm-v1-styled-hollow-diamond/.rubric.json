@@ -1,0 +1,24 @@
+{
+  "category": "hollow-rendering",
+  "editable_files": [
+    "styled-hollow-diamond.h",
+    "styled-hollow-diamond.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "styled-hollow-diamond_test.cpp",
+  "hidden_test_sha256": "1e33faf4972e56992e5107617c6859ad8bed1c70bb5c4ba729f04d36b82014cf",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "c8ed3073b981f40d7c3f411f6c293c9dccffbfbe2d38e8fe24ca7ee2646f5c7a",
+  "tags": [
+    "runtime-repair",
+    "formatting",
+    "symmetry",
+    "header-edit"
+  ],
+  "task_id": "charm-v1-styled-hollow-diamond",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

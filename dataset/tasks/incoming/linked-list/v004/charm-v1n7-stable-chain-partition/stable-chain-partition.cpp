@@ -1,0 +1,1 @@
+#error incomplete_stable_chain_partition_starter

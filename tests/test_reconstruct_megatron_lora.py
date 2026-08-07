@@ -11,6 +11,7 @@ torch = pytest.importorskip("torch")
 module = runpy.run_path("scripts/reconstruct_megatron_lora.py")
 native_tensor_from_hf = module["native_tensor_from_hf"]
 reconstruct_adapter = module["reconstruct_adapter"]
+reconstruct_native_state = module["reconstruct_native_state"]
 sha256_path = module["sha256_path"]
 ReconstructionBlockedError = module["ReconstructionBlockedError"]
 RANK_LAYOUT_TP_MAJOR = module["RANK_LAYOUT_TP_MAJOR"]
@@ -292,6 +293,36 @@ def _synthetic_rank16_source_native_bundle(tmp_path: Path) -> Path:
     return source
 
 
+def _replace_legacy_shards_with_ep8(source: Path) -> None:
+    hf = torch.load(source / "adapter_model.bin", map_location="cpu", weights_only=True)
+    legacy = {
+        tp_rank: torch.load(
+            source / f"adapter_megatron_tp{tp_rank}_pp0.pt",
+            map_location="cpu",
+            weights_only=True,
+        )
+        for tp_rank in range(4)
+    }
+    for ep_rank in range(8):
+        tp_rank = ep_rank % 4
+        native = reconstruct_native_state(
+            hf,
+            legacy[tp_rank],
+            tp_rank=tp_rank,
+            tp_size=4,
+            rank_block_size=16,
+            experts_per_shard=1,
+            rank_layout=RANK_LAYOUT_TP_MAJOR,
+            expert_index_start=ep_rank,
+        )
+        torch.save(
+            native,
+            source / f"adapter_megatron_tp{tp_rank}_pp0_ep{ep_rank}.pt",
+        )
+    for tp_rank in range(4):
+        (source / f"adapter_megatron_tp{tp_rank}_pp0.pt").unlink()
+
+
 def test_reconstruction_is_proof_gated_and_deterministic(tmp_path) -> None:
     source, template = _synthetic_bundle(tmp_path)
     output_a = tmp_path / "output-a"
@@ -502,3 +533,34 @@ def test_source_native_template_is_explicit_and_fails_closed(tmp_path) -> None:
             source_native_template=True,
         )
     assert not rejected_output.exists()
+
+
+def test_ep8_only_source_native_template_is_proof_gated(tmp_path) -> None:
+    source = _synthetic_rank16_source_native_bundle(tmp_path)
+    _replace_legacy_shards_with_ep8(source)
+    output = tmp_path / "ep8-source-native-output"
+
+    manifest = reconstruct_adapter(
+        source,
+        source,
+        output,
+        expected_source_sha256=sha256_path(source / "adapter_model.bin"),
+        expert_parallel_size=8,
+        source_native_template=True,
+    )
+
+    proof = manifest["template"]["source_ep_native_proof"]
+    assert proof["status"] == "passed"
+    assert proof["all_source_ep_native_tensor_bytes_exact"] is True
+    assert proof["source_hf_roundtrip"]["coverage_fraction"] == 1.0
+    assert set(manifest["template"]["source_native_bundle"]["files"]) == {
+        "adapter_model.bin",
+        "adapter_config.json",
+        *{
+            f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt"
+            for ep_rank in range(8)
+        },
+    }
+    assert set(manifest["outputs"]["native_shards"]) == {
+        f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt" for ep_rank in range(8)
+    }

@@ -1,0 +1,25 @@
+{
+  "category": "stable-arithmetic",
+  "editable_files": [
+    "stable-complex-quotient.h",
+    "stable-complex-quotient.cpp",
+    "stable-complex-quotient_detail.cpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "stable-complex-quotient_test.cpp",
+  "hidden_test_sha256": "280a77dae9fb88ff78fa4339ab44037ab97aded29dfc1e0f2d85c4f2507bb15b",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "57f64c31ce624c434882a038aaafeb66df3d8a9e12099436adb16ea9a80181dc",
+  "tags": [
+    "boundary",
+    "floating-point",
+    "division",
+    "header-extension"
+  ],
+  "task_id": "charm-v1-stable-complex-quotient",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

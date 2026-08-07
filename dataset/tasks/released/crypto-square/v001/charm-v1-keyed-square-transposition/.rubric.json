@@ -1,0 +1,24 @@
+{
+  "category": "keyed-grid",
+  "editable_files": [
+    "keyed-square-transposition.h",
+    "keyed-square-transposition.cpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "keyed-square-transposition_test.cpp",
+  "hidden_test_sha256": "6e143e01b1517a7b192dcb14e43d5ce3dca08e11c215c2842feedacf8305d188",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "50f6792c2607306e141d05cf2a1a625fe52bfb191928827e08173232e4d2046d",
+  "tags": [
+    "calibration",
+    "no-change",
+    "permutation",
+    "normalization"
+  ],
+  "task_id": "charm-v1-keyed-square-transposition",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

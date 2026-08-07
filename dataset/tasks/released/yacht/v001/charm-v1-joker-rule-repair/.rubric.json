@@ -1,0 +1,24 @@
+{
+  "category": "joker-substitution",
+  "editable_files": [
+    "joker-rule-repair.h",
+    "joker-rule-repair.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "joker-rule-repair_test.cpp",
+  "hidden_test_sha256": "e3fd206f30a713dab670ed4997c8371358d4509bac2f5ee04269fe08dabb1c55",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "b8292072ff919d1abadd7f3a62828c0e59f7277276c9f0339a95ef7340b44047",
+  "tags": [
+    "partial",
+    "joker",
+    "maximization",
+    "header-frozen"
+  ],
+  "task_id": "charm-v1-joker-rule-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

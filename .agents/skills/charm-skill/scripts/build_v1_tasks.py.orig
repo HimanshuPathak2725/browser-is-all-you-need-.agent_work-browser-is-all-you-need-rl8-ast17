@@ -1,0 +1,331 @@
+#!/usr/bin/env python3
+"""Materialize an exact CHARM V1 task manifest under owner-bound reservations.
+
+This is the repository-owned source of task bytes.  It deliberately contains
+no model call: synthesis produces a frozen manifest, while this program alone
+is allowed to turn that manifest into task directories.  Every file is hash
+checked before the first write and every destination is created exclusively.
+"""
+
+from __future__ import annotations
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import re
+import sys
+import tempfile
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+
+MANIFEST_SCHEMA = "charm-v1-materialization-manifest-v1"
+RECEIPT_SCHEMA = "charm-v1-materialization-receipt-v1"
+REGISTRY_SCHEMA = "charm-task-id-reservation-registry-v1"
+PROTOCOL_ID = "task-generation-v1"
+V1_TOPICS = (
+    "Allergies", "Bank Account", "Binary Search Tree", "Circular Buffer", "Clock",
+    "Complex Numbers", "Crypto Square", "Diamond", "Grade School",
+    "Kindergarten Garden", "Linked List", "Parallel Letter Frequency",
+    "Phone Number", "Spiral Matrix", "Sublist", "Yacht", "Zebra Puzzle",
+)
+V1_SLOT_IDS = {"1", "2", "3"}
+V1_TASK_COUNT = len(V1_TOPICS) * len(V1_SLOT_IDS)
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+ALLOWED_PREFIXES = (".docs/", ".grader/", ".reference/")
+
+
+class BuildError(ValueError):
+    """The frozen manifest is unsafe, inconsistent, or not owner-authorized."""
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+
+
+def sha256_bytes(value: bytes) -> str:
+    return hashlib.sha256(value).hexdigest()
+
+
+def load_object(path: Path, label: str) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise BuildError(f"{label} is unreadable or invalid JSON: {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise BuildError(f"{label} must be a JSON object: {path}")
+    return value
+
+
+def require_token(value: Any, label: str) -> str:
+    if not isinstance(value, str) or TOKEN_RE.fullmatch(value) is None:
+        raise BuildError(f"{label} must be a safe non-empty token")
+    return value
+
+
+def require_sha256(value: Any, label: str) -> str:
+    if not isinstance(value, str) or SHA256_RE.fullmatch(value) is None:
+        raise BuildError(f"{label} must be a lowercase SHA-256")
+    return value
+
+
+def topic_slug(topic: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", topic.lower()).strip("-")
+
+
+def safe_file_name(raw: Any) -> str:
+    if not isinstance(raw, str) or not raw:
+        raise BuildError("task file name must be a non-empty string")
+    path = PurePosixPath(raw)
+    if path.is_absolute() or ".." in path.parts or raw.endswith("/"):
+        raise BuildError(f"unsafe task file path: {raw}")
+    if len(path.parts) > 1 and not raw.startswith(ALLOWED_PREFIXES):
+        raise BuildError(f"unsupported nested task file path: {raw}")
+    return raw
+
+
+def validate_manifest(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    if manifest.get("schema_version") != MANIFEST_SCHEMA:
+        raise BuildError(f"manifest schema_version must be {MANIFEST_SCHEMA}")
+    if manifest.get("protocol_id") != PROTOCOL_ID:
+        raise BuildError(f"manifest protocol_id must be {PROTOCOL_ID}")
+    require_token(manifest.get("generation_batch_id"), "generation_batch_id")
+    require_token(manifest.get("generation_session_id"), "generation_session_id")
+    require_sha256(manifest.get("proposal_plan_sha256"), "proposal_plan_sha256")
+    tasks = manifest.get("tasks")
+    if not isinstance(tasks, list) or len(tasks) != V1_TASK_COUNT:
+        raise BuildError(f"manifest must contain exactly {V1_TASK_COUNT} tasks")
+    ids: set[str] = set()
+    slots: set[tuple[str, str]] = set()
+    normalized: list[dict[str, Any]] = []
+    for index, value in enumerate(tasks):
+        if not isinstance(value, dict):
+            raise BuildError(f"tasks[{index}] must be an object")
+        task_id = require_token(value.get("task_id"), f"tasks[{index}].task_id")
+        topic = value.get("topic")
+        slot_id = value.get("slot_id")
+        proposal_sha256 = require_sha256(
+            value.get("proposal_sha256"), f"tasks[{index}].proposal_sha256"
+        )
+        if topic not in V1_TOPICS or slot_id not in V1_SLOT_IDS:
+            raise BuildError(f"invalid V1 topic/slot for {task_id}: {topic!r}/{slot_id!r}")
+        if task_id in ids or (topic, slot_id) in slots:
+            raise BuildError(f"duplicate task ID or topic slot: {task_id}")
+        ids.add(task_id)
+        slots.add((topic, slot_id))
+        release_version = require_token(value.get("release_version"), "release_version")
+        if not re.fullmatch(r"v[0-9]{3}", release_version):
+            raise BuildError(f"release_version must match vNNN: {release_version}")
+        files = value.get("files")
+        hashes = value.get("file_sha256s")
+        if not isinstance(files, dict) or not files or not isinstance(hashes, dict):
+            raise BuildError(f"files and file_sha256s must be non-empty objects: {task_id}")
+        if set(files) != set(hashes):
+            raise BuildError(f"file/hash key mismatch: {task_id}")
+        checked_files: dict[str, str] = {}
+        for raw_name, contents in files.items():
+            name = safe_file_name(raw_name)
+            if not isinstance(contents, str):
+                raise BuildError(f"task file must contain UTF-8 text: {task_id}/{name}")
+            expected = require_sha256(hashes[name], f"file_sha256s[{name}]")
+            observed = sha256_bytes(contents.encode("utf-8"))
+            if observed != expected:
+                raise BuildError(f"task file hash mismatch: {task_id}/{name}")
+            checked_files[name] = contents
+        normalized.append({
+            "task_id": task_id,
+            "topic": topic,
+            "slot_id": slot_id,
+            "proposal_sha256": proposal_sha256,
+            "release_version": release_version,
+            "files": checked_files,
+        })
+    expected_slots = {(topic, slot) for topic in V1_TOPICS for slot in V1_SLOT_IDS}
+    if slots != expected_slots:
+        raise BuildError("manifest does not contain slots 1, 2, and 3 for every V1 topic")
+    return normalized
+
+
+def validate_reservations(
+    manifest: dict[str, Any], tasks: list[dict[str, Any]], registry: dict[str, Any]
+) -> None:
+    if registry.get("schema_version") != REGISTRY_SCHEMA:
+        raise BuildError(f"registry schema_version must be {REGISTRY_SCHEMA}")
+    entries = registry.get("entries")
+    if not isinstance(entries, dict):
+        raise BuildError("registry entries must be an object")
+    for task in tasks:
+        entry = entries.get(task["task_id"])
+        expected = {
+            "protocol_id": PROTOCOL_ID,
+            "generation_batch_id": manifest["generation_batch_id"],
+            "generation_session_id": manifest["generation_session_id"],
+            "task_id": task["task_id"],
+            "topic": task["topic"],
+            "slot_id": task["slot_id"],
+            "proposal_sha256": task["proposal_sha256"],
+            "state": "reserved",
+        }
+        if not isinstance(entry, dict) or any(entry.get(key) != value for key, value in expected.items()):
+            raise BuildError(f"reservation ownership mismatch: {task['task_id']}")
+
+
+def atomic_write(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def materialize(
+    manifest_path: Path,
+    registry_path: Path,
+    output_root: Path,
+    prior_materialization_path: Path | None = None,
+) -> dict[str, Any]:
+    manifest = load_object(manifest_path, "materialization manifest")
+    tasks = validate_manifest(manifest)
+    lock_path = registry_path.with_name(f"{registry_path.name}.lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with lock_path.open("a+b") as lock_handle:
+        fcntl.flock(lock_handle.fileno(), fcntl.LOCK_EX)
+        registry = load_object(registry_path, "reservation registry")
+        validate_reservations(manifest, tasks, registry)
+        prior_records: dict[str, dict[str, Any]] = {}
+        if prior_materialization_path is not None:
+            prior = load_object(prior_materialization_path, "prior materialization receipt")
+            if (
+                prior.get("decision") != "PASS"
+                or prior.get("protocol_id") != PROTOCOL_ID
+                or prior.get("generation_batch_id") != manifest["generation_batch_id"]
+                or prior.get("generation_session_id") != manifest["generation_session_id"]
+                or prior.get("proposal_plan_sha256") != manifest["proposal_plan_sha256"]
+            ):
+                raise BuildError("prior materialization does not bind this exact V1 session")
+            prior_rows = prior.get("tasks")
+            if not isinstance(prior_rows, list) or len(prior_rows) != V1_TASK_COUNT:
+                raise BuildError("prior materialization must contain the exact 51-task batch")
+            prior_records = {
+                str(record.get("task_id")): record
+                for record in prior_rows
+                if isinstance(record, dict)
+            }
+            if len(prior_records) != V1_TASK_COUNT:
+                raise BuildError("prior materialization task identities are incomplete")
+        destinations = [
+            output_root / topic_slug(task["topic"]) / task["release_version"] / task["task_id"]
+            for task in tasks
+        ]
+        records: list[dict[str, Any]] = []
+        reused_task_ids: list[str] = []
+        created_task_ids: list[str] = []
+        for task, destination in zip(tasks, destinations, strict=True):
+            expected_tree = sha256_bytes(canonical_bytes(task["files"]))
+            if destination.exists() or destination.is_symlink():
+                prior_record = prior_records.get(task["task_id"])
+                if (
+                    not destination.is_dir()
+                    or destination.is_symlink()
+                    or not isinstance(prior_record, dict)
+                    or Path(str(prior_record.get("path", ""))).resolve() != destination.resolve()
+                    or prior_record.get("proposal_sha256") != task["proposal_sha256"]
+                    or prior_record.get("tree_sha256") != expected_tree
+                ):
+                    raise BuildError(f"refusing to overwrite or adopt task root: {destination}")
+                observed_files = {
+                    path.relative_to(destination).as_posix(): path.read_text(encoding="utf-8")
+                    for path in sorted(destination.rglob("*"))
+                    if path.is_file()
+                }
+                if sha256_bytes(canonical_bytes(observed_files)) != expected_tree:
+                    raise BuildError(f"prior materialized task root drift: {task['task_id']}")
+                reused_task_ids.append(task["task_id"])
+                records.append({
+                    "task_id": task["task_id"],
+                    "topic": task["topic"],
+                    "slot_id": task["slot_id"],
+                    "proposal_sha256": task["proposal_sha256"],
+                    "path": str(destination.resolve()),
+                    "tree_sha256": expected_tree,
+                })
+                continue
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.mkdir(mode=0o755, exist_ok=False)
+            for name, contents in sorted(task["files"].items()):
+                target = destination / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(contents, encoding="utf-8")
+            created_task_ids.append(task["task_id"])
+            records.append({
+                "task_id": task["task_id"],
+                "topic": task["topic"],
+                "slot_id": task["slot_id"],
+                "proposal_sha256": task["proposal_sha256"],
+                "path": str(destination.resolve()),
+                "tree_sha256": expected_tree,
+            })
+    return {
+        "schema_version": RECEIPT_SCHEMA,
+        "decision": "PASS",
+        "protocol_id": PROTOCOL_ID,
+        "generation_batch_id": manifest["generation_batch_id"],
+        "generation_session_id": manifest["generation_session_id"],
+        "proposal_plan_sha256": manifest["proposal_plan_sha256"],
+        "manifest_sha256": sha256_bytes(manifest_path.read_bytes()),
+        "registry_sha256": sha256_bytes(registry_path.read_bytes()),
+        "task_count": len(records),
+        "tasks": records,
+        "exclusive_creation": True,
+        "no_existing_task_root_overwritten": True,
+        "created_task_ids": sorted(created_task_ids),
+        "reused_task_ids": sorted(reused_task_ids),
+        "prior_materialization_sha256": (
+            sha256_bytes(prior_materialization_path.read_bytes())
+            if prior_materialization_path is not None
+            else None
+        ),
+        "owner_reservations_rechecked_under_lock": True,
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--manifest", required=True, type=Path)
+    parser.add_argument("--registry", required=True, type=Path)
+    parser.add_argument("--output-root", required=True, type=Path)
+    parser.add_argument("--receipt", required=True, type=Path)
+    parser.add_argument("--prior-materialization", type=Path)
+    args = parser.parse_args(argv)
+    if args.receipt.exists():
+        print(f"refusing to overwrite receipt: {args.receipt}", file=sys.stderr)
+        return 2
+    try:
+        receipt = materialize(
+            args.manifest,
+            args.registry,
+            args.output_root,
+            args.prior_materialization,
+        )
+    except BuildError as exc:
+        atomic_write(args.receipt, canonical_bytes({
+            "schema_version": RECEIPT_SCHEMA, "decision": "FAIL", "errors": [str(exc)]
+        }))
+        print(str(exc), file=sys.stderr)
+        return 1
+    atomic_write(args.receipt, canonical_bytes(receipt))
+    print(json.dumps(receipt, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

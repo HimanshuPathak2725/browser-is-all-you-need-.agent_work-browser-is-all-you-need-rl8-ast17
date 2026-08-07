@@ -1,0 +1,22 @@
+{
+  "category": "ordered-adjacency-permutation-solver",
+  "editable_files": [
+    "ordered-adjacency-permutation-solver.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "ordered-adjacency-permutation-solver_test.cpp",
+  "hidden_test_sha256": "223a81e5615bdfb4a6ff97b3c23f3e24bfdc2c9ad3cb20155aad61a63491a1d3",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5e651e8ee6ef638595dd3547f4e90b2a9b639768154819aeeb2c4a1031543afc",
+  "tags": [
+    "constraint-solver",
+    "permutation",
+    "completion"
+  ],
+  "task_id": "charm-v1n7-ordered-adjacency-permutation-solver",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

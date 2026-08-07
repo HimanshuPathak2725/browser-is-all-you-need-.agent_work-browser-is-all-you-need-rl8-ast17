@@ -1,0 +1,23 @@
+{
+  "category": "weighted-ranking",
+  "editable_files": [
+    "weighted-gradebook.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "weighted-gradebook_test.cpp",
+  "hidden_test_sha256": "58bd769ae7e43d11e409ee2124a8bb3a5b240b8ec26a15ab234528dd0bb41c64",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "1b98b6d61d5cc1cdbd0438698d18c3c801d27224924f2879863f93ec0fde5fa9",
+  "tags": [
+    "cpp-only",
+    "rounding",
+    "replacement",
+    "ranking"
+  ],
+  "task_id": "charm-v1-weighted-gradebook",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

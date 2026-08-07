@@ -1,0 +1,22 @@
+{
+  "category": "preserving-phone-redaction",
+  "editable_files": [
+    "preserving-phone-redaction.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "preserving-phone-redaction_test.cpp",
+  "hidden_test_sha256": "b9d1c05ebe43d599131f0abe73201860302643a1506d2ddb8f602d07e962b2b0",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9a9c290944fb643758b883f22c229e71586c0cd316ee546ee367ef05ca19a9ff",
+  "tags": [
+    "redaction",
+    "result-type",
+    "format-preserving"
+  ],
+  "task_id": "charm-v1n7-preserving-phone-redaction",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

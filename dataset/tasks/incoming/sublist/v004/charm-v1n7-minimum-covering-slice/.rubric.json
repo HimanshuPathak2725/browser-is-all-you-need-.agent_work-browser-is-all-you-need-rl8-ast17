@@ -1,0 +1,23 @@
+{
+  "category": "minimum-covering-slice",
+  "editable_files": [
+    "minimum-covering-slice.h",
+    "minimum-covering-slice.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "minimum-covering-slice_test.cpp",
+  "hidden_test_sha256": "79d9ed89f0ded3b78df5e5a87af33fda74c5d02388e521820a04219143072462",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "8c77fd916c5fb9bf6fa3f530231b0e4aa361ba9580645f43f2ec5bfec41c4a75",
+  "tags": [
+    "covering-window",
+    "multiplicity",
+    "linear"
+  ],
+  "task_id": "charm-v1n7-minimum-covering-slice",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

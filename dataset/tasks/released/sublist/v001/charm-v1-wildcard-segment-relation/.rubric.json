@@ -1,0 +1,24 @@
+{
+  "category": "wildcard-containment",
+  "editable_files": [
+    "wildcard-segment-relation.h",
+    "wildcard-segment-relation.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "wildcard-segment-relation_test.cpp",
+  "hidden_test_sha256": "2cf5505e117585ca0509decec84b04c870a2066569cc7d9b4cbc0a794f2ac6e7",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "f76877f07b7dcdb9417c78d844cfab429c295070de88ccf5799fadb0c2e167b9",
+  "tags": [
+    "boundary",
+    "wildcard",
+    "relation",
+    "header-reconstruction"
+  ],
+  "task_id": "charm-v1-wildcard-segment-relation",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

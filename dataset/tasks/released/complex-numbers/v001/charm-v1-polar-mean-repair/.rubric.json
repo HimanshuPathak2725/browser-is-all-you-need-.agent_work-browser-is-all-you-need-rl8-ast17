@@ -1,0 +1,23 @@
+{
+  "category": "circular-statistics",
+  "editable_files": [
+    "polar-mean-repair.hpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "polar-mean-repair_test.cpp",
+  "hidden_test_sha256": "42752fb447ac617e29f44b74194666dd36718ccd52efd3db871a00f23e3ee9db",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5d76ba2cb4ab04b5a58985712dea5a4b2bdd0955cb0aebfe0c2cc70ef2d9021d",
+  "tags": [
+    "header-only",
+    "weighted",
+    "normalization",
+    "optional"
+  ],
+  "task_id": "charm-v1-polar-mean-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

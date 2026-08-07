@@ -1,0 +1,23 @@
+{
+  "category": "duplicate-policy",
+  "editable_files": [
+    "duplicate-side-traversal.hpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "duplicate-side-traversal_test.cpp",
+  "hidden_test_sha256": "ebbc20c038187a9e6ee9a467c2975d14982a6dbb314f190ba92dce86419f112f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4fd9687ceabe0cd36e13ba7c9260406bb65163d78659c8f17dea00918b884ef6",
+  "tags": [
+    "header-only",
+    "unique-ptr",
+    "move",
+    "preorder"
+  ],
+  "task_id": "charm-v1-duplicate-side-traversal",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

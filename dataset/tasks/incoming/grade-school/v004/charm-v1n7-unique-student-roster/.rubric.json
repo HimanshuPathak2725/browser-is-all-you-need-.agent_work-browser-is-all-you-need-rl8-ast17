@@ -1,0 +1,23 @@
+{
+  "category": "unique-student-roster",
+  "editable_files": [
+    "unique-student-roster.h",
+    "unique-student-roster.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "unique-student-roster_test.cpp",
+  "hidden_test_sha256": "2e15e34e2076daff95658175965cd3c9fb92880e06c9aadfa91609838dc21143",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "582892f964e83be81d9b9903503852107fa522eaa79f72c1232eb6d784d60734",
+  "tags": [
+    "direct-include",
+    "set",
+    "roster"
+  ],
+  "task_id": "charm-v1n7-unique-student-roster",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

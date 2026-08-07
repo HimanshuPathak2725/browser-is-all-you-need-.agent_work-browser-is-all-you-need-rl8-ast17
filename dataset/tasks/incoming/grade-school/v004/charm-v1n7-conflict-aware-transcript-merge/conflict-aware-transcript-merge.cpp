@@ -1,0 +1,1 @@
+#error incomplete_conflict_aware_transcript_merge_starter

@@ -1,0 +1,22 @@
+{
+  "category": "transactional-ring-batches",
+  "editable_files": [
+    "transactional-ring-batches.cpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "transactional-ring-batches_test.cpp",
+  "hidden_test_sha256": "2a0b86f93e9f67c7460fbfd76b946920dd20672a99be8d1344983abf4bf73648",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "03caa56ac65a88799248db2b166dd89ddf0e7f8696df466f0a20fe6cd4442861",
+  "tags": [
+    "exception-safety",
+    "transaction",
+    "rollback"
+  ],
+  "task_id": "charm-v1n7-transactional-ring-batches",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

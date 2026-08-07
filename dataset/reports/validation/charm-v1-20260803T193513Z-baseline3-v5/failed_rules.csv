@@ -1,0 +1,3 @@
+task_id,failed_rules
+charm-v1-layer-view-repair,duplicate_target
+charm-v1-scorecard-assignment,duplicate_target

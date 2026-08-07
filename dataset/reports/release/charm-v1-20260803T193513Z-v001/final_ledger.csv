@@ -1,0 +1,2 @@
+schema_version,decision,release_id,planned,generated,regenerated,rejected,review,selected,sft_ready,canonical_generation_attempts,canonical_root_overwrites,topics,tasks_per_topic,task_status,projection_status,corpus_admission_status,consumer_status
+charm-v1-final-ledger-v1,PASS,charm-v1-20260803T193513Z-v001,51,51,0,0,0,51,51,51,0,17,3,local_family_verified,producer_projection_verified,pretraining_v4_1_admitted,consumer_verified_sft_ready

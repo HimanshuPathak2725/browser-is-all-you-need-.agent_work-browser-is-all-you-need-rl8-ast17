@@ -1,0 +1,24 @@
+{
+  "category": "variable-layout",
+  "editable_files": [
+    "variable-cup-garden.h",
+    "variable-cup-garden.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "variable-cup-garden_test.cpp",
+  "hidden_test_sha256": "2c5c023624b440143caaff088b796e207d736ee44f14bb0a14c5aee6a7960cef",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "db9b4ebcfa89c8ed57e33eef08c9bdd5b97fe71ce80b9815e47c556e8e76f5bb",
+  "tags": [
+    "header-reconstruction",
+    "parser",
+    "multi-row",
+    "indexing"
+  ],
+  "task_id": "charm-v1-variable-cup-garden",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

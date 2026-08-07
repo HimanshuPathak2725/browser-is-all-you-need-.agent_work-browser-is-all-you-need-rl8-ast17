@@ -1,0 +1,24 @@
+{
+  "category": "bounded-parallelism",
+  "editable_files": [
+    "bounded-shard-frequency.h",
+    "bounded-shard-frequency.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "bounded-shard-frequency_test.cpp",
+  "hidden_test_sha256": "8191ed6fe71b21d5fb3299febdc964b0432f8f5ca5a20e74f1cb6405d6164c69",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "573e2047a7d99c4ec6cbb246ad3dc6fe9173d6dfab32b21e1c2b7a6e52cc0536",
+  "tags": [
+    "threads",
+    "determinism",
+    "ascii",
+    "header-extension"
+  ],
+  "task_id": "charm-v1-bounded-shard-frequency",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

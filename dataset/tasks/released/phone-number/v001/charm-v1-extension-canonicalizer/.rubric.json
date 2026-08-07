@@ -1,0 +1,24 @@
+{
+  "category": "number-extension",
+  "editable_files": [
+    "extension-canonicalizer.h",
+    "extension-canonicalizer.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "extension-canonicalizer_test.cpp",
+  "hidden_test_sha256": "8b304610bc7bc2f371d5185b67abf1e446c8bfc497faddf94f8e1867101fffde",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "731ed9e8ea2f6b65de0aad4d0d4c881614a44dc5b530d564b52bd7c8ed5cbdf1",
+  "tags": [
+    "compile-repair",
+    "canonicalization",
+    "public-api",
+    "validation"
+  ],
+  "task_id": "charm-v1-extension-canonicalizer",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

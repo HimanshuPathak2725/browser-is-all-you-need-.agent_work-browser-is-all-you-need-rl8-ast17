@@ -1,0 +1,4 @@
+interface:
+  display_name: "Failure-Conditioned SFT Audit"
+  short_description: "Mine eval failures into verified SFT data"
+  default_prompt: "Use $audit-sft-data-quality to mine valid evaluation failures into verified SFT data and a held-out promotion decision."

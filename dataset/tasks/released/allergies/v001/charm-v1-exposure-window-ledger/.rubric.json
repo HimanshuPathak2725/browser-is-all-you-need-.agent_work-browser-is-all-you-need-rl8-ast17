@@ -1,0 +1,25 @@
+{
+  "category": "rolling-window-state",
+  "editable_files": [
+    "exposure-window-ledger.h",
+    "exposure-window-ledger.cpp",
+    "exposure-window-ledger_detail.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "exposure-window-ledger_test.cpp",
+  "hidden_test_sha256": "a98f9d1ce187c1a67ecdeb7bb9c390c381a1b396d7218012dcd5df4eda73514c",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "56b1c94ca38d2de01e9d414eccdc556cbbde55abce56c70e4720fc2b1a532fe6",
+  "tags": [
+    "public-api-repair",
+    "multi-file",
+    "deduplication",
+    "boundary"
+  ],
+  "task_id": "charm-v1-exposure-window-ledger",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

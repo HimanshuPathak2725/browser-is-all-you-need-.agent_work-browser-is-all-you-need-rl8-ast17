@@ -1,0 +1,23 @@
+{
+  "category": "idempotent-merge",
+  "editable_files": [
+    "mergeable-frequency.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "mergeable-frequency_test.cpp",
+  "hidden_test_sha256": "e470037fcd4b785e65ab72aa16af500ec79e64866dd0dc246ec3dc359b45d416",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "2638a4494dbed7d8d3f9c7994e46fb9309df0e78fcbf6f4207947252595f77f0",
+  "tags": [
+    "semantic-bug",
+    "atomicity",
+    "overflow",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-mergeable-frequency",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

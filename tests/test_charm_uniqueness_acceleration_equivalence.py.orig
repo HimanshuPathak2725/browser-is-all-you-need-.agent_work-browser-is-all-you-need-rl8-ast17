@@ -1,0 +1,49 @@
+from __future__ import annotations
+
+import importlib.util
+import re
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+ENTRYPOINT = ROOT / "scripts/charm_v1_repository_uniqueness_v4.py"
+CORE = ROOT / "scripts/charm_v1_repository_uniqueness_v2.py"
+
+
+def _load(name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_safe_token_index_matches_original_task_id_boundary_regex() -> None:
+    entry = _load("charm_uniqueness_v4_entry", ENTRYPOINT)
+    core = _load("charm_uniqueness_v4_core_test", CORE)
+    task_id = "charm-v1-offset-civil-clock"
+    indexed = entry.TokenPattern(task_id, core.token_set)
+    original = re.compile(rf"(?<![A-Za-z0-9_.-]){re.escape(task_id)}(?![A-Za-z0-9_.-])")
+    examples = (
+        task_id,
+        f'"task_id":"{task_id}"',
+        f"prefix {task_id} suffix",
+        f"x{task_id}",
+        f"{task_id}x",
+        "charm-v1-offset-civil-clockwise",
+        "unrelated",
+    )
+    assert [bool(indexed.search(value)) for value in examples] == [
+        bool(original.search(value)) for value in examples
+    ]
+
+
+def test_jaccard_cardinality_bound_is_mathematically_safe() -> None:
+    threshold = 0.92
+    for left_size in range(1, 200):
+        for right_size in range(1, 200):
+            impossible = min(left_size, right_size) / max(left_size, right_size) < threshold
+            maximum_jaccard = min(left_size, right_size) / max(left_size, right_size)
+            assert impossible == (maximum_jaccard < threshold)

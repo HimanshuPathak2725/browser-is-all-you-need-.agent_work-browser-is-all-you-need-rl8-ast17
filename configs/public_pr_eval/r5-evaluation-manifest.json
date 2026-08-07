@@ -1,0 +1,179 @@
+{
+  "schema_version": "r5-evaluation-reproduction-manifest-v1",
+  "classification": "public_pr_regression_diagnostic_only",
+  "task": {
+    "task_id": "fmtlib-fmt-large-time-point-overflow-v2",
+    "contract_path": "configs/public_pr_eval/r5-prompt.jsonl",
+    "contract_sha256": "9db4bbc4df06aed1cb87dca1026456f2cafa3973f15024fba41b3c912d5b22a7",
+    "model_prompt_sha256": "e097e497c4f67d4f0e816ea49ab357889f718a85cd6d782d7b90d83c84a586e4",
+    "editable_files": [
+      "include/fmt/chrono.h"
+    ],
+    "protected_files": [
+      "test/chrono-test.cc",
+      "include/fmt/format.h"
+    ],
+    "repository": {
+      "url": "https://github.com/fmtlib/fmt.git",
+      "base_commit": "ccc9ab7bf9c5aab0071708a0f65e3019bd96b8fe",
+      "reference_commit": "7f8d4191157025813f5fd520cb68738b3ee0fe69",
+      "reference_visibility": "evaluator_only",
+      "reference_patch_sha256": "73e0580e401763b2b1a8f396b245d7de4a20ae8726ca96e6a3d75e7aca53238e"
+    },
+    "permitted_use": "diagnostic_base_or_checkpoint_evaluation_only",
+    "training_eligibility": "forbidden"
+  },
+  "run": {
+    "run_id": "synthmem-v3-v1std-50ep-fmtlib-v2-20260807T043648Z",
+    "suite_mode": "fmtlib-demo",
+    "completed_at_utc": "2026-08-07T05:00:23.720182+00:00",
+    "controls": {
+      "attempts": 1,
+      "seed": 1701,
+      "temperature": 0.7,
+      "top_p": 1.0,
+      "max_completion_tokens": 32768,
+      "thinking_mode": "disabled",
+      "edit_format": "diff",
+      "response_protocol": "aider_diff_workspace_edit",
+      "feedback_disclosure": "none_single_turn_demo"
+    }
+  },
+  "model": {
+    "served_name": "glm47-synthmem-v3-v1std-50ep-public-pr",
+    "base_model_revision": "7dd20894a642a0aa287e9827cb1a1f7f91386b67",
+    "base_model_manifest_sha256": "ac1c2693a8d8724a6aa359eb7a6778d5dda59743b1b4c45ff92986d2d1e6cecc",
+    "verified_base_model_files": 178,
+    "training_run_id": "glm47-synth-mem-v3-v1std-50ep-20260803T023833Z",
+    "source_adapter_sha256": "5ca6a0cbede843e8c042ebb1004a80e85d85686974063cb9bd0540e236aab6ca",
+    "source_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+    "serving_adapter_sha256": "b1e0e5869498b67f500a589b3624b15efb869b6080a0e6ce861332a4e52a42d0",
+    "serving_adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e"
+  },
+  "environment": {
+    "evaluator_image_tag": "glm47-public-pr-gcp:a100-r5-v2",
+    "evaluator_image_id": "sha256:08bf71cd4e8d90091c3063f31a74448c55c06d211fd2b3dc2c74aa5ffb9c3138",
+    "base_image": "radixark/miles:latest-cu12@sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37",
+    "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "aider_environment_sha256": "979a6bf0e7c18057d066ca63c6997916c7df142e1044d606b60b1f8c2b54303a",
+    "platform": "linux/amd64",
+    "locale": "C.UTF-8",
+    "timezone": "UTC",
+    "runtime_network": "docker_network_none_verified_loopback_only",
+    "toolchain": {
+      "cc": "gcc-13",
+      "cxx": "g++-13",
+      "cmake": "3.27.9",
+      "generator": "Unix Makefiles"
+    },
+    "resource_limits": {
+      "cpu_cores": 8,
+      "memory_mib": 32768,
+      "disk_mib": 24576,
+      "command_timeout_seconds": 1800
+    },
+    "gcp": {
+      "project": "lifeandhalf-24122025",
+      "zone": "us-central1-a",
+      "instance": "glm47-synthmem-50ep-pr-eval",
+      "machine_type": "a2-ultragpu-4g",
+      "dlvm_image": "common-cu129-ubuntu-2204-nvidia-580-stage"
+    },
+    "gpu_inventory": {
+      "device_count": 4,
+      "device_name": "NVIDIA A100-SXM4-80GB",
+      "memory_mib_per_device": 81920,
+      "driver_version": "580.173.02",
+      "uuids": [
+        "GPU-bab8ce30-d28a-28ba-ed00-ff495819ccc7",
+        "GPU-df50e3ec-eb0f-1051-d0cf-2af256826da1",
+        "GPU-de2ac428-db77-a682-2cf2-e37a060daea7",
+        "GPU-61c2488d-d5cb-a198-4c9b-57c7e636f5f0"
+      ]
+    }
+  },
+  "evaluation_commands": {
+    "configure": {
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build-public-pr-eval",
+        "-DFMT_TEST=ON",
+        "-DFMT_DOC=OFF",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DFETCHCONTENT_BASE_DIR=.public-pr-eval-deps",
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+      ],
+      "timeout_seconds": 900
+    },
+    "build": {
+      "argv": [
+        "cmake",
+        "--build",
+        "build-public-pr-eval",
+        "--target",
+        "chrono-test",
+        "--parallel",
+        "2"
+      ],
+      "timeout_seconds": 1800
+    },
+    "test": {
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "build-public-pr-eval",
+        "-R",
+        "^chrono-test$",
+        "--output-on-failure"
+      ],
+      "timeout_seconds": 1800
+    },
+    "compile_probe": {
+      "argv": [
+        "g++-13",
+        "-std=c++11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-fsanitize=undefined",
+        "-fno-sanitize-recover=undefined",
+        "-Iinclude",
+        "{private_probe}",
+        "-o",
+        "{private_probe_binary}"
+      ],
+      "timeout_seconds": 900
+    },
+    "run_probe": {
+      "argv": [
+        "{private_probe_binary}"
+      ],
+      "timeout_seconds": 300
+    }
+  },
+  "repository_file_hashes": {
+    "configs/public_pr_eval/r5-prompt.jsonl": "9db4bbc4df06aed1cb87dca1026456f2cafa3973f15024fba41b3c912d5b22a7",
+    "configs/public_pr_eval/private_probes/fmt_large_time_point_probe.cpp": "35b51f0395f3ad4587e33d3a4d3c4ebdc9476d00bbda186b089d20021f413fb6",
+    "docker/public-pr-synthmem-gcp/Dockerfile": "ca8330c65a90a8a3de466840877dcf2243c283a6ee02f89ec0900a4c662e4889",
+    "scripts/gcp_public_pr_synthmem_50ep_eval.py": "8689b77165615d5b93d725cfa6a57137ac1fb0e89f4986dcc2a353b2cef07535",
+    "scripts/public_pr_repo_eval.py": "4209f51b4ac1983d4c3312f759f31ff4539fb5f538329af754bb9bb97213ecd8",
+    "scripts/validate_public_pr_eval.py": "8df1551df4df11c72db58e624260500a59e14363e702fa3916211c4c4d55dd9c"
+  },
+  "evaluator_receipts": {
+    "static_validation_sha256": "2f8cf3274d777e9afe030764772e1de457a2a470ca3295bbc45b2068bae286cc",
+    "prepared_suite_sha256": "f40a59cf77e604efe60f35e8fc9954c5c757a70c94880a112ae037d1a72c0043",
+    "oracle_replay_sha256": "03275fe21c8203c488a6f7175da6c6050d17490b70b6ac0ebee3eb766b0ce6c4"
+  },
+  "run_evidence": {
+    "run_receipt_sha256": "5e8584889e443f53e6f996ebf1f88af62557ad0e4e625fd28e8a1d9deb2b77c5",
+    "task_receipt_sha256": "3c48cea26afb819d795a298f7857621b164d8b6432e46755ad0d5ba53a101cef",
+    "diagnostics_sha256": "5c8857fe37ce4c4985d2056c0500b7ee9cfae96cbc3f63389c84f4c1bda95da6",
+    "candidate_patch_sha256": "8077084f29499ee53c79420e192de7a94150bddfd14ac2d57b12aa02c453b9a7",
+    "candidate_header_sha256": "6db298cd361180c707f29bf6a027ed9257dc47bd12f0406ba3b0b22cbf426ffe",
+    "failed_build_log_sha256": "16ca9153f93f7d6f4e4fdaad687404a079e8f66ab982c8f0d615da374c63464b",
+    "aider_log_sha256": "bb9b507db92b75b1d13ca5356a67b1376ad5b8fbeebdc1eb56f5022a08c0ff57"
+  }
+}

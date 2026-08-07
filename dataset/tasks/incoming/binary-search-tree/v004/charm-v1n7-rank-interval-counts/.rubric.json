@@ -1,0 +1,22 @@
+{
+  "category": "rank-interval-counts",
+  "editable_files": [
+    "rank-interval-counts.hpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "rank-interval-counts_test.cpp",
+  "hidden_test_sha256": "1378f3f52623f9d9473a93a577a7cf8b5abb6c38facad0b7ae9e642a8da9557c",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "391b1b1d0b9306b20dd67a27170523001f128f1b83a276f210a447a55e7b791e",
+  "tags": [
+    "rank",
+    "prefix-sum",
+    "invariant"
+  ],
+  "task_id": "charm-v1n7-rank-interval-counts",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

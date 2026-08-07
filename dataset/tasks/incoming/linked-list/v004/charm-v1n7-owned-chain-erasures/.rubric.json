@@ -1,0 +1,23 @@
+{
+  "category": "owned-chain-erasures",
+  "editable_files": [
+    "owned-chain-erasures.h",
+    "owned-chain-erasures.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "owned-chain-erasures_test.cpp",
+  "hidden_test_sha256": "44df72dff40020059990db2c32aa497f30e32bb35168276702105f1d5f0dd226",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d3007ee2c406bf1504d9424cdcc1d9c7d17984c9f7956051405213f5dcdd714f",
+  "tags": [
+    "unique-ptr",
+    "read-before-unlink",
+    "sanitizer"
+  ],
+  "task_id": "charm-v1n7-owned-chain-erasures",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

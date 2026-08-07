@@ -1,0 +1,22 @@
+{
+  "category": "stable-chain-partition",
+  "editable_files": [
+    "stable-chain-partition.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "stable-chain-partition_test.cpp",
+  "hidden_test_sha256": "def17ac3b9626d27f71a5985175d6e1e521d682cea9c728e337cd3b6be38fc11",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "294a5808c5ab9d09bd6cfc5a81104e6f62b9c9ac713d808a94ab1d16ccfdaec1",
+  "tags": [
+    "ownership",
+    "stable-partition",
+    "lifetime"
+  ],
+  "task_id": "charm-v1n7-stable-chain-partition",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "category": "ragged-decoding",
+  "editable_files": [
+    "ragged-square-decoder.hpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "ragged-square-decoder_test.cpp",
+  "hidden_test_sha256": "bb76cecf66735e39f77c8ec1af1e264e67938fb68577e6b61f67f0d1d1330b48",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "22fef4513078578c320acb1c56b6e7d24c7096744856596aa770cd42131a81ef",
+  "tags": [
+    "header-only",
+    "shape-validation",
+    "decoder",
+    "optional"
+  ],
+  "task_id": "charm-v1-ragged-square-decoder",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

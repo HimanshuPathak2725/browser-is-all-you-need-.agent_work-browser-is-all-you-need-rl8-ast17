@@ -1,0 +1,23 @@
+{
+  "category": "complete-house-solution-validator",
+  "editable_files": [
+    "complete-house-solution-validator.h",
+    "complete-house-solution-validator.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "complete-house-solution-validator_test.cpp",
+  "hidden_test_sha256": "ee635e79c91af1d8093ef5a72a527eae94be5671d5822c2c1abf7563a8e2b02a",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "cadb34a7a48a3854db601d81b586f8fe35201cd9d79f566a970cb57130a2f0ae",
+  "tags": [
+    "solution-validator",
+    "result-completion",
+    "bounded-output"
+  ],
+  "task_id": "charm-v1n7-complete-house-solution-validator",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

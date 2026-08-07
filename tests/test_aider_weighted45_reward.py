@@ -171,6 +171,53 @@ def test_weighted45_hidden_harness_returns_all_twenty_observed_checks(
     assert set(result.weighted45_evidence) == WEIGHTED45_HARNESS_CHECK_IDS
 
 
+def test_weighted45_hidden_harness_does_not_link_an_included_cpp_twice(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    exercise = tmp_path / "included-cpp"
+    (exercise / ".grader").mkdir(parents=True)
+    source = "int answer(){return 42;}\n"
+    (exercise / "answer.cpp").write_text(source, encoding="utf-8")
+    hidden = (
+        '#include "answer.cpp"\n'
+        "int main(){\n"
+        " if(answer()!=42) return 1;\n"
+        " if(answer()<0) return 2;\n"
+        " if(answer()>100) return 3;\n"
+        " if(answer()%2!=0) return 4;\n"
+        " if(answer()!=answer()) return 5;\n"
+        " return 0;\n}\n"
+    )
+    (exercise / ".grader" / "test.cpp").write_text(hidden, encoding="utf-8")
+    scripts: list[str] = []
+
+    def fake_stage(
+        _scratch: Path, script: str, *, image: str, timeout_s: int
+    ) -> subprocess.CompletedProcess[str]:
+        del image, timeout_s
+        scripts.append(script)
+        output = (
+            "GLM47_AIDER_WEIGHTED45_fixed:0\n"
+            if "GLM47_AIDER_SUITE=" in script
+            else ""
+        )
+        return subprocess.CompletedProcess(["fake"], 0, stdout=output, stderr="")
+
+    monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "fixed")
+    monkeypatch.setattr(harness_module, "_run_stage", fake_stage)
+    result = run_shadow_weighted45_tests(
+        exercise,
+        {"answer.cpp": source},
+        expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
+    )
+
+    syntax = next(script for script in scripts if "-fsyntax-only" in script)
+    link = next(script for script in scripts if ".grader/test.o -o" in script)
+    assert "answer.cpp" in syntax
+    assert "answer.cpp" not in link
+    assert result.status == "passed"
+
+
 def test_weighted45_reward_keeps_all_45_outcomes_and_intermediates(tmp_path: Path) -> None:
     (tmp_path / "example.h").write_text("#pragma once\nint answer();\n", encoding="utf-8")
     (tmp_path / "example.cpp").write_text(

@@ -1,0 +1,23 @@
+{
+  "category": "keyed-column-transposition",
+  "editable_files": [
+    "keyed-column-transposition.h",
+    "keyed-column-transposition.cpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "keyed-column-transposition_test.cpp",
+  "hidden_test_sha256": "75fe186e30148379bc93a3d960f2b241986f18240b48e442027e667ab1aca916",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "086675bf8ac71b8c2857fc6a04f4a2c0df122184f5e1a05f190ca4553c9ca3db",
+  "tags": [
+    "free-function",
+    "formatting",
+    "warning-clean"
+  ],
+  "task_id": "charm-v1n7-keyed-column-transposition",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

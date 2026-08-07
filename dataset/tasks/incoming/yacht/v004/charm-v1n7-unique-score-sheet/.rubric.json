@@ -1,0 +1,23 @@
+{
+  "category": "unique-score-sheet",
+  "editable_files": [
+    "unique-score-sheet.h",
+    "unique-score-sheet.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "unique-score-sheet_test.cpp",
+  "hidden_test_sha256": "fcf1088f0bbd3ab41551bac1dff7212f3cad97db70798e134840a5d29f23c8b7",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "0a2f27c2320517710ce94f7998ba9ae5e6044d17ffd52ab2e167b514168f0357",
+  "tags": [
+    "score-sheet",
+    "unique-category",
+    "boundaries"
+  ],
+  "task_id": "charm-v1n7-unique-score-sheet",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

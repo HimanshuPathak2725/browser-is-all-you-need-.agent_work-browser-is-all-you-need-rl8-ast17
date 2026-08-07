@@ -347,6 +347,13 @@ only RL runtime and service identities should receive access. The Git image
 explicitly excludes `rubrics/`; Modal and Lium consume only the controlled
 extracted asset path.
 
+The published package above is the historical schema-v1 archive. New source
+materialization requires a schema-v2 private archive with canonical
+`.reference/` solutions and mandatory C++17/C++20 oracle certification. The
+legacy archive is intentionally rejected by the new admission gate until that
+replacement artifact is independently reviewed and checksum-pinned. See
+[Aider Shadow-Task Oracle Certification](docs/aider-oracle-certification.md).
+
 | Stage | Dataset identity | Checkpoint or adapter |
 | --- | --- | --- |
 | SFT v1 | Source archive SHA-256 `2efe714c454de7ba1c5fd523f5849b3c6c9af65e8e5ca5bf4cf438017fb1e03a`; inner 401-row JSONL SHA-256 `2ddfe6966c828007f7d6c439e51bfaf07c8959dddc4423ceadb602dc3d49517b` | `glm47-runs:/glm47-aider-v1-sft-20260717T130336Z/checkpoints/sft_lora_r16/iter_0000009/adapter` |
@@ -476,9 +483,9 @@ synced separately if a web run is required.
 
 #### Modal shadow-data alternative
 
-The Modal path trains on up to 253 shadow tasks backed by controlled rubrics
-and hidden executable tests. The official fixed 26 remain external and
-evaluation-only. Prepare the pinned runtime-oracle corpus once per
+The Modal path trains on up to 253 shadow tasks backed by controlled rubrics,
+private canonical references, and hidden executable tests. The official fixed
+26 remain external and evaluation-only. Prepare the pinned runtime-oracle corpus once per
 `glm47-assets` volume:
 
 ```bash
@@ -502,8 +509,11 @@ modal run examples/modal/modal_app.py::aider_grpo \
 ```
 
 Rebuild from all 253 source tasks only when intentionally creating a new
-prepared dataset. In that case omit `--data-dir`; the builder performs the
-full per-task rubric and hidden-test validation once while materializing it.
+prepared dataset. In that case omit `--data-dir`; the builder requires all 253
+private references to pass the complete Weighted45 policy exactly three times
+under both C++17 and C++20 before materialization. Per-task receipts remain in
+the generated validation directory, while `.reference/` files are never copied
+into model-facing tasks or prompts.
 
 For the fixed-26 Modal evaluator, pass the expected task count and LoRA rank
 when they differ from the shadow defaults:

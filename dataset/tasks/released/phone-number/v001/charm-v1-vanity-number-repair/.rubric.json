@@ -1,0 +1,24 @@
+{
+  "category": "vanity-normalization",
+  "editable_files": [
+    "vanity-number-repair.h",
+    "vanity-number-repair.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "vanity-number-repair_test.cpp",
+  "hidden_test_sha256": "e157f8ad8ddc491cb322ee8c744972bc9f35933a74fb0a5a2bb5694684ca3b35",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "7b74a13dc38af2c2bd3b576fa510c1659b0d75c8d4b82b9829501ad32020d164",
+  "tags": [
+    "header-reconstruction",
+    "keypad",
+    "optional-plus",
+    "repair"
+  ],
+  "task_id": "charm-v1-vanity-number-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

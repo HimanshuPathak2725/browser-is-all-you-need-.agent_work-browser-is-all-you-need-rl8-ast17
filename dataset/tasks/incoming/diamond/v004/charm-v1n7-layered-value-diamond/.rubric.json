@@ -1,0 +1,22 @@
+{
+  "category": "layered-value-diamond",
+  "editable_files": [
+    "layered-value-diamond.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "layered-value-diamond_test.cpp",
+  "hidden_test_sha256": "08947e90e4c33db46c6a8acf099638ae15cec4580275591ed6bf95ebb670544b",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "3e6e6bbe844bca4d7e260fc5bac32e003d60bed17dbdafd2ab210ad8490e28e2",
+  "tags": [
+    "filled",
+    "layer-depth",
+    "deterministic"
+  ],
+  "task_id": "charm-v1n7-layered-value-diamond",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

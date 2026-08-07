@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import shutil
+from concurrent.futures import ThreadPoolExecutor
 from collections import Counter
 from collections.abc import Sequence
 from pathlib import Path
@@ -15,6 +16,14 @@ from typing import Iterable, Literal
 from .harness import WEIGHTED45_SUITE_COUNT, _instrument_weighted45_grader
 from .policy45 import WEIGHTED45_POLICY_VERSION
 from .schema import AiderPolyglotTask, AiderShadowRubric
+from .validator.oracle import (
+    OracleCertificationError,
+    OracleReceiptCache,
+    OracleValidationConfig,
+    certify_task_oracle,
+    load_reference_solution,
+    write_oracle_certification_report,
+)
 
 
 EXPECTED_SHADOW_TASKS = 253
@@ -175,14 +184,18 @@ def _validate_source_manifest(tasks_root: Path) -> tuple[Path, dict[str, object]
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("kind") != SOURCE_MANIFEST_KIND:
         raise ValueError(f"unexpected shadow manifest kind: {manifest.get('kind')!r}")
+    if manifest.get("schema_version") != 2:
+        raise ValueError("shadow manifest must use oracle-certified schema version 2")
     counts = manifest.get("counts")
     if not isinstance(counts, dict) or counts.get("tasks") != EXPECTED_SHADOW_TASKS:
         raise ValueError("shadow manifest does not bind exactly 253 tasks")
     contract = manifest.get("contract")
     if not isinstance(contract, dict) or contract.get("official_task_id_overlap") != []:
         raise ValueError("shadow manifest does not prove zero official task-ID overlap")
-    if contract.get("reference_answers_packaged") is not False:
-        raise ValueError("shadow manifest must exclude reference answers")
+    if contract.get("oracle_references_packaged") is not True:
+        raise ValueError("shadow manifest must contain private oracle references")
+    if contract.get("reference_answers_model_facing") is not False:
+        raise ValueError("shadow manifest must exclude references from model-facing tasks")
     return manifest_path, manifest
 
 
@@ -197,6 +210,12 @@ def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
         raise ValueError(f"task ID and directory disagree: {rubric.task_id} != {exercise.name}")
     if rubric.hidden_test_file in rubric.editable_files:
         raise ValueError(f"hidden test is editable: {exercise.name}")
+    _reference_files, reference_rules = load_reference_solution(exercise, rubric.editable_files)
+    failed_reference_rules = [rule.rule_id for rule in reference_rules if not rule.passed]
+    if failed_reference_rules:
+        raise ValueError(
+            f"invalid oracle reference package for {exercise.name}: {failed_reference_rules}"
+        )
     for name in rubric.editable_files:
         _assert_regular_file(exercise / name, exercise)
     hidden_test = exercise / rubric.hidden_test_file
@@ -214,6 +233,16 @@ def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
     if not instructions.is_file() or instructions.is_symlink() or (exercise / ".docs").is_symlink():
         raise ValueError(f"missing instructions: {exercise.name}")
     _assert_regular_file(exercise / "CMakeLists.txt", exercise)
+    provenance_path = exercise / ".provenance.json"
+    provenance_present = provenance_path.exists() or provenance_path.is_symlink()
+    if provenance_present:
+        _assert_regular_file(provenance_path, exercise)
+        try:
+            provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"invalid provenance JSON: {exercise.name}") from exc
+        if not isinstance(provenance, dict) or provenance.get("task_id") != rubric.task_id:
+            raise ValueError(f"provenance task ID mismatch: {exercise.name}")
 
     expected = {
         ".docs/instructions.md",
@@ -221,6 +250,8 @@ def _load_verified_rubric(exercise: Path) -> AiderShadowRubric:
         "CMakeLists.txt",
         rubric.hidden_test_file,
         *rubric.editable_files,
+        *(f".reference/{name}" for name in rubric.editable_files),
+        *([".provenance.json"] if provenance_present else []),
     }
     actual = {
         path.relative_to(exercise).as_posix()
@@ -256,6 +287,30 @@ def write_jsonl(path: Path, rows: Iterable[dict[str, object]]) -> Path:
     return path
 
 
+def _task_from_rubric(
+    exercise: Path,
+    rubric: AiderShadowRubric,
+    *,
+    split: Literal["train", "validation"] = "train",
+) -> AiderPolyglotTask:
+    return AiderPolyglotTask(
+        task_id=f"aider-shadow-cpp/{exercise.name}",
+        exercise=exercise.name,
+        split=split,
+        harness_kind="shadow_cpp17",
+        exercise_dir=f"shadow/{exercise.name}",
+        editable_files=rubric.editable_files,
+        prompt=build_aider_messages(exercise, rubric.editable_files),
+        source_revision=rubric.hidden_test_sha256,
+        family=rubric.family,
+        category=rubric.category,
+        tags=rubric.tags,
+        hidden_test_sha256=rubric.hidden_test_sha256,
+        source_prompt_sha256=rubric.source_prompt_sha256,
+        verification_gate=rubric.verification_gate,
+    )
+
+
 def _materialize_task(
     exercise: Path,
     rubric: AiderShadowRubric,
@@ -272,23 +327,7 @@ def _materialize_task(
     shutil.copy2(exercise / rubric.hidden_test_file, hidden_test)
     hidden_test.chmod(0o400)
 
-    prompt = build_aider_messages(exercise, rubric.editable_files)
-    task = AiderPolyglotTask(
-        task_id=f"aider-shadow-cpp/{exercise.name}",
-        exercise=exercise.name,
-        split=split,
-        harness_kind="shadow_cpp17",
-        exercise_dir=f"shadow/{exercise.name}",
-        editable_files=rubric.editable_files,
-        prompt=prompt,
-        source_revision=rubric.hidden_test_sha256,
-        family=rubric.family,
-        category=rubric.category,
-        tags=rubric.tags,
-        hidden_test_sha256=rubric.hidden_test_sha256,
-        source_prompt_sha256=rubric.source_prompt_sha256,
-        verification_gate=rubric.verification_gate,
-    )
+    task = _task_from_rubric(exercise, rubric, split=split)
     descriptor = task.write_json(output / "tasks" / split / f"{exercise.name}.json")
     return task, descriptor
 
@@ -382,6 +421,8 @@ def build_aider_polyglot_datasets(
     run_id: str | None = None,
     sort_by_size: bool = False,
     force: bool = False,
+    oracle_workers: int = 1,
+    oracle_cache_dir: str | Path | None = None,
 ) -> dict[str, Path]:
     """Validate all 253 tasks, then atomically materialize trainer-safe data."""
 
@@ -407,6 +448,8 @@ def build_aider_polyglot_datasets(
         raise ValueError(f"train_limit must be within 1..{len(rubrics)}")
     if monitor_limit < 1:
         raise ValueError("monitor_limit must be positive")
+    if oracle_workers < 1:
+        raise ValueError("oracle_workers must be positive")
     if explicit_split:
         assert train_task_ids is not None and monitor_task_ids is not None
         selected = _select_requested_rubrics(rubrics, train_task_ids, role="train")
@@ -425,6 +468,32 @@ def build_aider_polyglot_datasets(
         raise FileExistsError(
             f"{output} already exists and is not empty; pass force=True to replace it"
         )
+
+    oracle_config = OracleValidationConfig()
+    oracle_cache = OracleReceiptCache(oracle_cache_dir) if oracle_cache_dir else None
+
+    def certify(item: tuple[Path, AiderShadowRubric]):
+        exercise, rubric = item
+        return certify_task_oracle(
+            _task_from_rubric(exercise, rubric),
+            exercise,
+            rubric.hidden_test_file,
+            config=oracle_config,
+            cache=oracle_cache,
+        )
+
+    if oracle_workers == 1:
+        oracle_receipts = [certify(item) for item in rubrics]
+    else:
+        with ThreadPoolExecutor(max_workers=oracle_workers) as executor:
+            oracle_receipts = list(executor.map(certify, rubrics))
+    rejected_receipts = [
+        receipt for receipt in oracle_receipts if receipt.status != "certified"
+    ]
+    if rejected_receipts:
+        rejection_dir = output.parent / f"{output.name}.oracle-rejected"
+        write_oracle_certification_report(rejection_dir, oracle_receipts)
+        raise OracleCertificationError(rejected_receipts[0])
 
     with TemporaryDirectory(prefix=f".{output.name}-preparing-", dir=output.parent) as temporary:
         staging = Path(temporary)
@@ -452,10 +521,13 @@ def build_aider_polyglot_datasets(
 
         write_jsonl(staging / "grpo" / "train.jsonl", train_rows)
         write_jsonl(staging / "eval" / "train_monitor.jsonl", monitor_rows)
+        oracle_report = write_oracle_certification_report(
+            staging / "validation" / "oracle", oracle_receipts
+        )
         source_manifest_sha256 = sha256_path(manifest_path)
         data_manifest = {
             "kind": DATASET_KIND,
-            "schema_version": 5,
+            "schema_version": 6,
             "profile": profile,
             "run_id": run_id,
             "source_root": str(source),
@@ -486,6 +558,16 @@ def build_aider_polyglot_datasets(
                 "raw_tier_formula": "0.3*N_passed-0.5",
                 "normalization_weight": 6.54,
             },
+            "oracle_contract": {
+                "required": True,
+                "status": oracle_report.status,
+                "validator_version": "oracle-v1",
+                "config_sha256": oracle_config.config_sha256,
+                "standards": list(oracle_config.standards),
+                "runs_per_standard": oracle_config.runs_per_standard,
+                "certified_tasks": oracle_report.certified_count,
+                "report_sha256": oracle_report.report_sha256,
+            },
             "counts": {
                 "available_shadow": len(rubrics),
                 "train": len(train_rows),
@@ -507,6 +589,7 @@ def build_aider_polyglot_datasets(
             "files": {
                 "grpo_train": "grpo/train.jsonl",
                 "train_monitor": "eval/train_monitor.jsonl",
+                "oracle_report": "validation/oracle/report.json",
             },
         }
         (staging / "manifest.json").write_text(
@@ -523,4 +606,5 @@ def build_aider_polyglot_datasets(
         "grpo_train": output / "grpo" / "train.jsonl",
         "eval": output / "eval" / "train_monitor.jsonl",
         "manifest": output / "manifest.json",
+        "oracle_report": output / "validation" / "oracle" / "report.json",
     }

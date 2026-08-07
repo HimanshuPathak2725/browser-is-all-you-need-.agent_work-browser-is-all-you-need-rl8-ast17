@@ -1,0 +1,22 @@
+{
+  "category": "scaled-safe-division",
+  "editable_files": [
+    "scaled-safe-division.hpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "scaled-safe-division_test.cpp",
+  "hidden_test_sha256": "a0cd5cbaaf4121841116046b37b3ecfdbf9186c4ea81bad43e66e85b654881ea",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "f211cdc29b292f376e7884d2e63bf74a95a437bd72fa3e15552bb1eee824315e",
+  "tags": [
+    "division",
+    "epsilon",
+    "public-api"
+  ],
+  "task_id": "charm-v1n7-scaled-safe-division",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

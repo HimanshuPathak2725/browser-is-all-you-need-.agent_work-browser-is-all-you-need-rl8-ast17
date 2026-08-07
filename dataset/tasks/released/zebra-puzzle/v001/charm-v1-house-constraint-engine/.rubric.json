@@ -1,0 +1,24 @@
+{
+  "category": "unique-csp",
+  "editable_files": [
+    "house-constraint-engine.h",
+    "house-constraint-engine.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "house-constraint-engine_test.cpp",
+  "hidden_test_sha256": "6efe818c06ecdcacbf0ecb0ae8900ea00b301a70e69c33f0543c11766c4d0834",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "aace24b46090f822c1c4f99d78f3c27f6454d54ec6a408617afe697c8a8c1eb9",
+  "tags": [
+    "runtime-repair",
+    "backtracking",
+    "constraints",
+    "header-extension"
+  ],
+  "task_id": "charm-v1-house-constraint-engine",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

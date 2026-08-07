@@ -1,0 +1,23 @@
+{
+  "category": "optimal-assignment",
+  "editable_files": [
+    "scorecard-assignment.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "scorecard-assignment_test.cpp",
+  "hidden_test_sha256": "c72c73fee912507ca286fd52253c31d52595463133b64e5c5a86c783e56805e1",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "3332779961b26508ea5b03842a1a72e1b441388d1ba9b162bd4f06040ca5e3e9",
+  "tags": [
+    "calibration",
+    "no-change",
+    "backtracking",
+    "tie-break"
+  ],
+  "task_id": "charm-v1-scorecard-assignment",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

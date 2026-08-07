@@ -1,0 +1,133 @@
+# Objective
+
+Correct chrono formatting for `std::chrono::time_point<std::chrono::system_clock,
+Duration>` when `Duration` can represent calendar instants outside the range of the
+clock's native duration. The implementation must solve the general conversion problem;
+it must not special-case the example date or hardcode formatted output.
+
+# Failure reproduction
+
+On this 64-bit Linux evaluator, the following C++11 value must format as
+`3000-01-01` with the format string `{:%Y-%m-%d}`:
+
+```cpp
+using time_point = std::chrono::time_point<std::chrono::system_clock,
+                                           std::chrono::milliseconds>;
+time_point value{std::chrono::seconds(32503680000LL)};
+```
+
+The current implementation narrows through the native `system_clock::duration` before
+producing calendar fields. That intermediate conversion can overflow even when the
+source duration and the platform calendar conversion can represent the requested date.
+
+# Required behavior
+
+- Format the reproduction value as exactly `3000-01-01`.
+- Support other large positive and negative epochs without a native-duration overflow.
+- Preserve ordinary dates, negative epochs, and fractional seconds.
+- Preserve integral, floating-point, mixed-representation, and coarse-duration behavior.
+- Preserve local-time formatting when the platform and configured C++ library expose it.
+- When `FMT_SAFE_DURATION_CAST` is enabled, a checked same-category duration conversion
+  that is not representable must throw `fmt::format_error`; it must never wrap.
+- Keep existing overflow rejection and error messages compatible unless the corrected
+  checked-conversion path requires the documented format error.
+
+# Compatibility and invariants
+
+Preserve all public APIs and the repository's C++11 compatibility. Keep conversions
+generic over duration representation and period. Do not introduce undefined signed
+overflow, implementation-specific integer-width assumptions, global state, or a
+platform-only shortcut. Existing thread safety, locale behavior, and formatting of
+normal chrono values must remain unchanged.
+
+# Editable scope
+
+Modify only `include/fmt/chrono.h`. Do not modify tests, CMake files, documentation,
+generated files, vendored dependencies, or any other repository path. Do not modify
+public API signatures. Do not hardcode the supplied epoch, year, or expected text.
+
+# Validation expectations
+
+The evaluator performs a warning-clean C++11 compile, the upstream chrono test target,
+independent large-date and negative-epoch probes, and undefined-behavior sanitizer
+execution. It also checks the checked-cast exception path and verifies that every path
+outside the one editable production header is byte-identical to the evaluator baseline.
+
+# Response contract
+
+Work directly in the supplied repository using Aider whole-file editing. Make the
+smallest coherent production change that satisfies the complete contract. Do not return
+prose in place of an edit, and do not create tests, patches, helper files, or build files.
+
+# Implementation instructions for this demo lane
+
+The only model-editable production file is `include/fmt/chrono.h`. The evaluator
+also applies C++ regression tests in `test/chrono-test.cc`, but that `.cpp` file is
+not editable by the model and must remain untouched by your response. Treat those
+tests as the expected behavior specification for the header fix.
+
+The broken setup is this exact conversion path: formatting
+`std::chrono::time_point<std::chrono::system_clock, Duration>` narrows through the
+native `std::chrono::system_clock::duration` before calendar conversion. For wide or
+coarse `Duration` values such as milliseconds at year 3000, that intermediate native
+duration conversion can signed-overflow before `gmtime` or `localtime` receives a
+valid `time_t`. The fix must remove that native-duration narrowing path.
+
+Required changes in `include/fmt/chrono.h`:
+
+1. Add a `detail::is_same_arithmetic_type<Rep1, Rep2>` helper that distinguishes
+   integral-to-integral and floating-to-floating duration conversions from mixed
+   integer/floating conversions.
+2. Add `detail::fmt_duration_cast<To>(duration)` overloads. For same arithmetic
+   categories, route through `safe_duration_cast::safe_duration_cast<To>` when
+   `FMT_SAFE_DURATION_CAST` is enabled, and throw
+   `fmt::format_error("cannot format duration")` on conversion error. For mixed
+   integer/floating conversions, keep the standard `std::chrono::duration_cast`
+   fallback because the safe cast helper does not support that category.
+3. Add `detail::to_time_t(time_point<system_clock, Duration>)`. It must convert
+   `time_point.time_since_epoch()` directly to `std::chrono::duration<std::time_t>`
+   using `fmt_duration_cast` and return `.count()`. Do not call
+   `std::chrono::system_clock::to_time_t` from this helper.
+4. Change the `gmtime` overload for `system_clock` time points to be templated on
+   `Duration` and call `detail::to_time_t(time_point)`.
+5. In the local-time overload, change the conversion of
+   `std::chrono::current_zone()->to_sys(time)` to use `detail::to_time_t(...)`
+   instead of `std::chrono::system_clock::to_time_t(...)`.
+6. In `write_fractional_seconds`, replace raw `std::chrono::duration_cast` calls
+   used for whole-second subtraction and subsecond precision conversion with
+   `fmt_duration_cast`.
+7. Remove the old `fmt_safe_duration_cast` helper and replace its callers with the
+   unified `fmt_duration_cast` helper.
+8. In `get_milliseconds`, use `fmt_duration_cast` for the common seconds type, whole
+   seconds, millisecond remainder, and non-safe fallback branch.
+9. In `chrono_formatter::on_duration_value`, collapse the macro-specific branch into
+   a single `fmt_duration_cast<seconds>(std::chrono::duration<rep, Period>(val))`
+   conversion.
+10. In `formatter<time_point<system_clock, Duration>>`, keep fractional-second
+    handling but replace the nested raw duration casts with `detail::fmt_duration_cast`.
+    Most importantly, do not call
+    `gmtime(std::chrono::time_point_cast<std::chrono::seconds>(val))`; pass `val`
+    directly to `gmtime(val)`. This is the root bug fix.
+11. In `formatter<local_time<Duration>>`, mirror the same pattern: use
+    `detail::fmt_duration_cast` for subsecond math and call `localtime(val)` directly
+    instead of casting the time point to seconds first.
+
+Evaluator `.cpp` behavior checks, already supplied outside the editable scope:
+
+- `test/chrono-test.cc` checks that a millisecond system-clock time point at Unix
+  epoch second `32503680000` formats as exactly `3000-01-01`.
+- When `FMT_SAFE_DURATION_CAST` is enabled, it checks that an unrepresentable extreme
+  same-category duration conversion throws `fmt::format_error` with the expected
+  duration-formatting failure path instead of wrapping or silently succeeding.
+
+Executable benchmark passing requires all of these to hold: only
+`include/fmt/chrono.h` changes, CMake configure succeeds, `chrono-test` builds,
+`chrono-test` passes, the independent warning-clean C++11 UBSan probe compiles,
+and the probe exits successfully.
+
+Demo baseline scoring is also recorded for analysis. If the executable oracle passes,
+the demo baseline is pass even if your implementation uses different helper names or a
+different but correct structure. If the executable oracle fails, the demo baseline still
+counts as pass when at least 9 of the 11 listed PR-mechanism checks are present and the
+edited header is not too divergent from the reference shape. This weaker demo baseline
+is diagnostic; the full benchmark pass label still comes only from executable success.

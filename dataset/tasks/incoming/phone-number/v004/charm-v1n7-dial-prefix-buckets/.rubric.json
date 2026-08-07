@@ -1,0 +1,23 @@
+{
+  "category": "dial-prefix-buckets",
+  "editable_files": [
+    "dial-prefix-buckets.h",
+    "dial-prefix-buckets.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "dial-prefix-buckets_test.cpp",
+  "hidden_test_sha256": "62bc781f5f0d4d0026e212e8ab594050bd60dbbb896daa924d998b6a1cfc63c8",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "27fbd8dae2044aa7c6c1c96cc579371a2a2099667b03886fc645f4254afd1286",
+  "tags": [
+    "prefix",
+    "grouping",
+    "constructor-state-alternative"
+  ],
+  "task_id": "charm-v1n7-dial-prefix-buckets",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

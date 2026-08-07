@@ -1,0 +1,24 @@
+{
+  "category": "attendance-transaction",
+  "editable_files": [
+    "attendance-transaction-repair.h",
+    "attendance-transaction-repair.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "attendance-transaction-repair_test.cpp",
+  "hidden_test_sha256": "6ad69d04ab642be266e7447d17132c286acb3a0ad6e8582fc6637da26b8f53a2",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "1598cd767779dd86e43917ae3a6844df7c2ddb03dea7f1bf3a3986e4d2a0392e",
+  "tags": [
+    "compile-repair",
+    "atomic-batch",
+    "header-extension",
+    "duplicates"
+  ],
+  "task_id": "charm-v1-attendance-transaction-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

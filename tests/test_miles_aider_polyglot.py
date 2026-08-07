@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
+import glm47_posttraining.aider_polyglot.dataset as dataset_module
 import glm47_posttraining.aider_polyglot.harness as harness_module
 import glm47_posttraining.integrations.miles_aider_polyglot as integration_module
 from glm47_posttraining.aider_polyglot.dataset import (
@@ -20,6 +21,19 @@ from glm47_posttraining.aider_polyglot.harness import run_aider_tests, run_shado
 from glm47_posttraining.aider_polyglot.parser import AiderResponseError, parse_whole_file_response
 from glm47_posttraining.aider_polyglot.reward import compute_aider_reward
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
+from glm47_posttraining.aider_polyglot.schema import WEIGHTED45_CHECK_IDS
+from glm47_posttraining.aider_polyglot.validator.oracle.oracle_receipt import (
+    OracleCertificationReceipt,
+    OracleEnvironment,
+    OracleInputBinding,
+    OracleRuleResult,
+    OracleRunReceipt,
+    SHA256_ZERO,
+    canonical_sha256,
+    compute_certification_sha256,
+)
+from glm47_posttraining.aider_polyglot.validator.oracle.oracle_runner import OracleCertificationError
+from glm47_posttraining.aider_polyglot.validator.oracle.oracle_rules import ORACLE_RULES
 from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
 
@@ -50,6 +64,7 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
         slug = f"exercise-{index:03d}"
         exercise = practice / slug
         (exercise / ".docs").mkdir(parents=True)
+        (exercise / ".reference").mkdir()
         (exercise / ".docs" / "instructions.md").write_text(
             f"# Introduction\n\n# {slug}\n\nImplement answer {index}.\n", encoding="utf-8"
         )
@@ -59,6 +74,12 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
         (exercise / header).write_text("#pragma once\nint answer();\n", encoding="utf-8")
         (exercise / source).write_text(
             f'#include "{header}"\nint answer() {{ return 0; }}\n', encoding="utf-8"
+        )
+        (exercise / ".reference" / header).write_text(
+            "#pragma once\nint answer();\n", encoding="utf-8"
+        )
+        (exercise / ".reference" / source).write_text(
+            f'#include "{header}"\nint answer() {{ return {index}; }}\n', encoding="utf-8"
         )
         test_bytes = (
             f'#include "{header}"\nint main() {{\n'
@@ -78,8 +99,9 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
             "hidden_test_file": test,
             "hidden_test_sha256": hashlib.sha256(test_bytes.encode()).hexdigest(),
             "language": "cpp",
-            "reference_answer_packaged": False,
-            "schema_version": 1,
+            "reference_answer_packaged": True,
+            "reference_answer_model_facing": False,
+            "schema_version": 2,
             "source_prompt_sha256": hashlib.sha256(slug.encode()).hexdigest(),
             "tags": ["cpp", "aider-whole-edit"],
             "task_id": slug,
@@ -89,14 +111,83 @@ def _make_shadow_tree(tmp_path: Path) -> Path:
         (exercise / ".rubric.json").write_text(json.dumps(rubric), encoding="utf-8")
     manifest = {
         "kind": "aider-polyglot-cpp-shadow-rubrics",
+        "schema_version": 2,
         "counts": {"tasks": EXPECTED_SHADOW_TASKS},
         "contract": {
             "official_task_id_overlap": [],
-            "reference_answers_packaged": False,
+            "oracle_references_packaged": True,
+            "reference_answers_model_facing": False,
         },
     }
     (root / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
     return root
+
+
+def _unit_oracle_receipt(task: AiderPolyglotTask, *_args, config, **_kwargs):
+    checks = {check_id: True for check_id in WEIGHTED45_CHECK_IDS}
+    checks_sha256 = canonical_sha256(dict(sorted(checks.items())))
+    runs = tuple(
+        OracleRunReceipt(
+            standard=standard,
+            run_index=run_index,
+            reward=1.0,
+            normalized_percentage=100.0,
+            reason="correct",
+            infrastructure_error=False,
+            harness_status="passed",
+            tests_passed=5,
+            tests_total=5,
+            checks=checks,
+            checks_sha256=checks_sha256,
+            duration_ms=0,
+        )
+        for standard in config.standards
+        for run_index in range(1, config.runs_per_standard + 1)
+    )
+    rules = tuple(
+        OracleRuleResult(
+            rule_id=definition.rule_id,
+            rule_version=definition.version,
+            passed=True,
+            severity=definition.severity,
+            observed="unit pass",
+            expected=definition.description,
+            evidence="deterministic unit fixture",
+            remediation=definition.remediation,
+        )
+        for definition in ORACLE_RULES
+    )
+    receipt = OracleCertificationReceipt(
+        task_id=task.task_id,
+        status="certified",
+        config=config,
+        config_sha256=config.config_sha256,
+        input_binding=OracleInputBinding(
+            task_descriptor_sha256=canonical_sha256(task.model_dump(mode="json")),
+            starter_tree_sha256="1" * 64,
+            reference_tree_sha256="2" * 64,
+            hidden_test_sha256=task.hidden_test_sha256 or SHA256_ZERO,
+            source_prompt_sha256=task.source_prompt_sha256,
+        ),
+        environment=OracleEnvironment(
+            python_version="unit",
+            platform="unit",
+            compiler="unit",
+            sandbox_backend="unit",
+            sandbox_unshare_net="unit",
+        ),
+        runs=runs,
+        rules=rules,
+        certification_sha256=SHA256_ZERO,
+    )
+    return receipt.model_copy(
+        update={"certification_sha256": compute_certification_sha256(receipt)}
+    )
+
+
+@pytest.fixture(autouse=True)
+def _stub_dataset_oracle(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(dataset_module, "certify_task_oracle", _unit_oracle_receipt)
 
 
 def test_whole_file_parser_accepts_sft_and_public_environment_prefixes() -> None:
@@ -474,7 +565,13 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert manifest["kind"] == DATASET_KIND
     assert manifest["counts"] == {"available_shadow": 253, "monitor": 2, "train": 3}
     assert manifest["split_contract"]["official_26"] == "external fixed evaluation only"
-    assert manifest["schema_version"] == 5
+    assert manifest["schema_version"] == 6
+    assert manifest["oracle_contract"]["status"] == "certified"
+    assert manifest["oracle_contract"]["certified_tasks"] == 253
+    assert manifest["oracle_contract"]["standards"] == ["c++17", "c++20"]
+    oracle_report = json.loads(paths["oracle_report"].read_text(encoding="utf-8"))
+    assert oracle_report["certified_count"] == 253
+    assert oracle_report["rejected_count"] == 0
     assert manifest["reward_contract"] == {
         "checks_per_tier": 5,
         "hidden_suite_partitions": 5,
@@ -491,6 +588,7 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert (materialized / ".grader" / "test.cpp").is_file()
     assert not (materialized / "CMakeLists.txt").exists()
     assert not any(materialized.glob("*_test.cpp"))
+    assert not (materialized / ".reference").exists()
     assert [message.role for message in first.prompt] == [
         "system",
         "user",
@@ -507,6 +605,48 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert "Use the above instructions to modify the supplied files:" in final
     assert final.rstrip().endswith("including any appropriate path.")
     assert all("_test.cpp" not in message.content for message in first.prompt)
+    assert all(".reference" not in message.content for message in first.prompt)
+
+
+def test_dataset_builder_rejects_and_reports_any_failed_oracle(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = _make_shadow_tree(tmp_path)
+
+    def reject_one(task: AiderPolyglotTask, *args, config, **kwargs):
+        receipt = _unit_oracle_receipt(task, *args, config=config, **kwargs)
+        if task.exercise != "exercise-017":
+            return receipt
+        failed_rule = receipt.rules[7].model_copy(
+            update={
+                "passed": False,
+                "observed": "reward=0.98",
+                "evidence": "oracle did not achieve the required endpoint",
+            }
+        )
+        rejected = receipt.model_copy(
+            update={
+                "status": "rejected",
+                "rules": (*receipt.rules[:7], failed_rule, *receipt.rules[8:]),
+                "certification_sha256": SHA256_ZERO,
+            }
+        )
+        return rejected.model_copy(
+            update={"certification_sha256": compute_certification_sha256(rejected)}
+        )
+
+    monkeypatch.setattr(dataset_module, "certify_task_oracle", reject_one)
+    output = tmp_path / "prepared"
+    with pytest.raises(OracleCertificationError, match="exercise-017"):
+        build_aider_polyglot_datasets(source, output, train_limit=3)
+
+    assert not output.exists()
+    rejection_report = json.loads(
+        (tmp_path / "prepared.oracle-rejected" / "report.json").read_text(encoding="utf-8")
+    )
+    assert rejection_report["status"] == "rejected"
+    assert rejection_report["rejected_count"] == 1
+    assert rejection_report["failed_rule_counts"] == {"ORC-012": 1}
 
 
 def test_dataset_builder_validates_source_before_replacing_output(tmp_path: Path) -> None:

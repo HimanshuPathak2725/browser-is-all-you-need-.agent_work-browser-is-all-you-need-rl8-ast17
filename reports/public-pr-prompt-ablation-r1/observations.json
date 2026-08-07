@@ -1,0 +1,95 @@
+{
+  "classification": "retrospective_n1_observational_not_causal",
+  "controlled_fields_for_first_three_runs": {
+    "attempts": 1,
+    "edit_format": "diff",
+    "seed": 1701,
+    "temperature": 0.7,
+    "top_p": 1.0
+  },
+  "runs": [
+    {
+      "candidate_changed_lines": 46,
+      "first_root_failures": [
+        "detail::to_time_t was called but not declared before use",
+        "formatter specializations outside detail used unqualified fmt_duration_cast"
+      ],
+      "mechanism_status_counts": {
+        "missing": 3,
+        "partial": 1,
+        "present": 8
+      },
+      "prompt_bytes": 11210,
+      "prompt_lines": 211,
+      "prompt_sha256": "443e4fe72cc4960881d2718821e7f4cf3cb00100080f0b64677b1d02025fdf77",
+      "run_id": "synthmem-v3-v1std-50ep-fmtlib-demo-20260806T093247Z",
+      "workflow_instruction_count": 0
+    },
+    {
+      "candidate_changed_lines": 60,
+      "first_root_failures": [
+        "portable fallback functions were incorrectly replaced by function-pointer aliases",
+        "helpers were defined outside detail while consumers used detail qualification",
+        "the generic gmtime overload used Duration without its template declaration"
+      ],
+      "mechanism_status_counts": {
+        "missing": 5,
+        "partial": 1,
+        "present": 6
+      },
+      "prompt_bytes": 11627,
+      "prompt_lines": 220,
+      "prompt_sha256": "3301c3d3b384e60b75f61e77daed3a6e5c17dd7680c0a8714004128f85d302d4",
+      "run_id": "synthmem-v3-v1std-50ep-fmtlib-demo-r2-20260806T112254Z",
+      "workflow_instruction_count": 0
+    },
+    {
+      "candidate_changed_lines": 83,
+      "first_root_failures": [
+        "include guard became unterminated",
+        "helper namespace and consumer qualification disagreed",
+        "obsolete helper and incomplete call-site migration remained"
+      ],
+      "mechanism_status_counts": {
+        "missing": 5,
+        "partial": 4,
+        "present": 3
+      },
+      "prompt_bytes": 17379,
+      "prompt_lines": 226,
+      "prompt_sha256": "e097e497c4f67d4f0e816ea49ab357889f718a85cd6d782d7b90d83c84a586e4",
+      "run_id": "synthmem-v3-v1std-50ep-fmtlib-v2-20260807T043648Z",
+      "workflow_instruction_count": 38
+    },
+    {
+      "candidate_changed_lines": 0,
+      "control_difference": "not directly comparable to the three single-task diff runs",
+      "edit_format": "whole",
+      "first_root_failures": [
+        "no production-file change was produced"
+      ],
+      "mechanism_status_counts": {
+        "missing": 9,
+        "partial": 3,
+        "present": 0
+      },
+      "prompt_bytes": 10484,
+      "prompt_lines": 116,
+      "prompt_sha256": "e5275d8a66f1fa6fd0e86c8ab46dffbd57de4b5b60f3bf740edca12befe55",
+      "run_id": "synthmem-v3-v1std-50ep-public-pr-r5-20260807T041715Z",
+      "workflow_instruction_count": 38
+    }
+  ],
+  "schema_version": "public-pr-prompt-ablation-observations-v1",
+  "selected_prompt": {
+    "attempts": 2,
+    "initial_temperature": 0.7,
+    "jsonl_sha256": "01d2015df04766726b778948997be9d34aa48cba1e78c002d92429b582e0765c",
+    "profile": "baseline_preserving_compiler_repair_v1",
+    "prompt_bytes": 13717,
+    "prompt_lines": 234,
+    "prompt_sha256": "0069f527919eda1a6f8d5c2ed178858fcc2498b91c6efb4cea6aa44379c21d6c",
+    "repair_temperature": 0.2
+  },
+  "task_id": "fmtlib-fmt-large-time-point-overflow-v2"
+}

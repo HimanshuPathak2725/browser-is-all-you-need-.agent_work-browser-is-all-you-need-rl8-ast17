@@ -1,0 +1,3 @@
+#include "string-rule-score.h"
+
+std::optional<int> charm::v1n7::yacht::score_string_rule(std::string_view rule,const std::array<int,5>& dice){std::array<int,7> counts{};int sum=0;for(int die:dice){if(die<1||die>6)return std::nullopt;++counts[die];sum+=die;}if(rule=="sum")return sum;if(rule=="all-even")return std::all_of(dice.begin(),dice.end(),[](int d){return d%2==0;})?sum:0;if(rule=="three-match")return *std::max_element(counts.begin(),counts.end())>=3?sum:0;if(rule=="full-run"){std::set<int> faces(dice.begin(),dice.end());return faces==std::set<int>({1,2,3,4,5})||faces==std::set<int>({2,3,4,5,6})?30:0;}return std::nullopt;}

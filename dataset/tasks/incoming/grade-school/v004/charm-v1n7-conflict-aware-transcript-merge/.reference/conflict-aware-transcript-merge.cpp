@@ -1,0 +1,3 @@
+#include "conflict-aware-transcript-merge.h"
+
+std::optional<std::vector<charm::v1n7::grade_school::TranscriptRow>> charm::v1n7::grade_school::merge_identical_transcripts(const std::vector<charm::v1n7::grade_school::TranscriptRow>& left,const std::vector<charm::v1n7::grade_school::TranscriptRow>& right){std::map<std::string,TranscriptRow> rows;for(const auto* source:{&left,&right})for(const auto& row:*source){if(row.id.empty()||row.grade<1||row.grade>12||row.score<0||row.score>100)return std::nullopt;auto [it,inserted]=rows.emplace(row.id,row);if(!inserted&&(it->second.grade!=row.grade||it->second.score!=row.score))return std::nullopt;}std::vector<TranscriptRow> out;for(const auto& item:rows)out.push_back(item.second);return out;}

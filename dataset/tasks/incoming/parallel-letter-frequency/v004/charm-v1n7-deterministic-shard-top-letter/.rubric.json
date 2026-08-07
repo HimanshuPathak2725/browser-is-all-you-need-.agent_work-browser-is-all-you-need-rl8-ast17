@@ -1,0 +1,23 @@
+{
+  "category": "deterministic-shard-top-letter",
+  "editable_files": [
+    "deterministic-shard-top-letter.h",
+    "deterministic-shard-top-letter.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "deterministic-shard-top-letter_test.cpp",
+  "hidden_test_sha256": "e8c5e8b4f93c33737359381febbcf0b771a50a7307b2320bc58940ace7c266bd",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "6e61cc67a3afde968c109b2b6087711ed497c70fec9b87152ba5c1a2c6311173",
+  "tags": [
+    "array-count",
+    "deterministic-reduce",
+    "zero-worker"
+  ],
+  "task_id": "charm-v1n7-deterministic-shard-top-letter",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

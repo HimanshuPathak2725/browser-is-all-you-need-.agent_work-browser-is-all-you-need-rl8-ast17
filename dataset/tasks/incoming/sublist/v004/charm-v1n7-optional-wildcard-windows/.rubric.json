@@ -1,0 +1,22 @@
+{
+  "category": "optional-wildcard-windows",
+  "editable_files": [
+    "optional-wildcard-windows.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "optional-wildcard-windows_test.cpp",
+  "hidden_test_sha256": "dfabd1f6a676441a03e97bb3fd3c883f0d8a3d0d7394142fa3b5c77e0b6931dc",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "cb74a43afffcc3485ffd4eb87beea9ed89deeae4b2fb9d613f6befdb398cfdf1",
+  "tags": [
+    "wildcard",
+    "window",
+    "repeated-pattern"
+  ],
+  "task_id": "charm-v1n7-optional-wildcard-windows",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

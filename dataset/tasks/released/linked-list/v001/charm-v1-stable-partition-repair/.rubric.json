@@ -1,0 +1,24 @@
+{
+  "category": "stable-node-partition",
+  "editable_files": [
+    "stable-partition-repair.h",
+    "stable-partition-repair.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "stable-partition-repair_test.cpp",
+  "hidden_test_sha256": "bce6f81f46534c5a44551e50e4a581375c6c7a9a7143d7ec18e9a0c9215ecba1",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "293043cb1157c6e0094636ff422743233bc98e541134f9a64f4f2a454b00f34a",
+  "tags": [
+    "compile-repair",
+    "node-identity",
+    "unique-ptr",
+    "stability"
+  ],
+  "task_id": "charm-v1-stable-partition-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

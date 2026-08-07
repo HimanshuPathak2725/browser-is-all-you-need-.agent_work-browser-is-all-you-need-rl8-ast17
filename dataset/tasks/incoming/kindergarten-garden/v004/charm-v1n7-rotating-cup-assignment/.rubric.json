@@ -1,0 +1,22 @@
+{
+  "category": "rotating-cup-assignment",
+  "editable_files": [
+    "rotating-cup-assignment.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "rotating-cup-assignment_test.cpp",
+  "hidden_test_sha256": "f63bcfe82ea7efb1dc7b2540918c13c17408e473c3b84e87bf493de4a6131555",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4e1f3745fd7fe2f627b1e535720b9c4fa7f6b8e0fe8bba35a1680b7ca54de275",
+  "tags": [
+    "rotation",
+    "mapping",
+    "invalid-input"
+  ],
+  "task_id": "charm-v1n7-rotating-cup-assignment",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

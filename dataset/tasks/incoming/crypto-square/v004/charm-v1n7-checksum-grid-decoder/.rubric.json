@@ -1,0 +1,22 @@
+{
+  "category": "checksum-grid-decoder",
+  "editable_files": [
+    "checksum-grid-decoder.hpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "checksum-grid-decoder_test.cpp",
+  "hidden_test_sha256": "b7ed07f0f29f6778e19f179cf1fed22c1c658c29b0cdf16eed8cbf16e0282c1d",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "521025a84e67a32f5607d203d87a10a7a5d559dc099b7a40b057f9083b469b67",
+  "tags": [
+    "decoder",
+    "checksum",
+    "shape"
+  ],
+  "task_id": "charm-v1n7-checksum-grid-decoder",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

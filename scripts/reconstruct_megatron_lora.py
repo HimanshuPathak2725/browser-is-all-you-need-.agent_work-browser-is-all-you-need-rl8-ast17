@@ -144,6 +144,38 @@ def _native_paths(template_dir: Path) -> list[Path]:
     return [indexed[index] for index in sorted(indexed)]
 
 
+def _ep_native_paths(
+    template_dir: Path,
+    *,
+    expert_parallel_size: int,
+) -> dict[int, Path]:
+    """Return an exact TP4/EP topology keyed by EP rank."""
+    indexed: dict[int, Path] = {}
+    tp_by_ep: dict[int, int] = {}
+    for path in template_dir.glob("adapter_megatron_tp*_pp0_ep*.pt"):
+        match = EP_NATIVE_RE.fullmatch(path.name)
+        if match is None:
+            continue
+        tp_rank, ep_rank = (int(value) for value in match.groups())
+        if ep_rank in indexed:
+            raise ValueError(f"duplicate EP-native shard rank: {ep_rank}")
+        indexed[ep_rank] = path
+        tp_by_ep[ep_rank] = tp_rank
+    expected = set(range(expert_parallel_size))
+    if set(indexed) != expected:
+        raise FileNotFoundError(
+            "source-native EP shards are incomplete: "
+            f"expected={sorted(expected)}, actual={sorted(indexed)}"
+        )
+    expected_topology = {ep_rank: ep_rank % 4 for ep_rank in expected}
+    if tp_by_ep != expected_topology:
+        raise ValueError(
+            "source-native EP shard topology differs: "
+            f"expected={expected_topology}, actual={tp_by_ep}"
+        )
+    return indexed
+
+
 def _load_json(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -196,9 +228,15 @@ def _validate_template_bundle(template_dir: Path, native_paths: list[Path]) -> d
 def _validate_source_native_template_bundle(
     template_dir: Path,
     native_paths: list[Path],
+    *,
+    complete_native_paths: list[Path] | None = None,
 ) -> dict[str, Any]:
     """Bind a complete unmerged HF + TP-native checkpoint without a fake merge."""
-    required = [template_dir / ADAPTER_MODEL, template_dir / ADAPTER_CONFIG, *native_paths]
+    required = [
+        template_dir / ADAPTER_MODEL,
+        template_dir / ADAPTER_CONFIG,
+        *(complete_native_paths or native_paths),
+    ]
     for path in required:
         if not path.is_file():
             raise FileNotFoundError(f"incomplete source-native template adapter: {path}")
@@ -1052,7 +1090,17 @@ def reconstruct_adapter(
             f"source adapter SHA-256 mismatch: {source_sha256} != {expected_source_sha256.lower()}"
         )
 
-    native_paths = _native_paths(template_dir)
+    source_ep_native_paths: dict[int, Path] = {}
+    try:
+        native_paths = _native_paths(template_dir)
+    except FileNotFoundError:
+        if not source_native_template or expert_parallel_size is None:
+            raise
+        source_ep_native_paths = _ep_native_paths(
+            template_dir,
+            expert_parallel_size=expert_parallel_size,
+        )
+        native_paths = [source_ep_native_paths[tp_rank] for tp_rank in range(4)]
     tp_size = len(native_paths)
     template_config = _load_json(template_dir / ADAPTER_CONFIG)
     source_native_bundle: dict[str, Any] | None = None
@@ -1061,6 +1109,11 @@ def reconstruct_adapter(
         source_native_bundle = _validate_source_native_template_bundle(
             template_dir,
             native_paths,
+            complete_native_paths=(
+                [source_ep_native_paths[index] for index in sorted(source_ep_native_paths)]
+                if source_ep_native_paths
+                else None
+            ),
         )
         output_rank = int(source_native_bundle["rank"])
         rank_block_size = int(source_native_bundle["rank_block_size"])
@@ -1132,6 +1185,62 @@ def reconstruct_adapter(
             "tensor_bytes_exact": True,
         }
     assert experts_per_shard is not None
+    source_ep_template_proof: dict[str, Any] | None = None
+    if source_ep_native_paths:
+        source_ep_states: dict[int, Mapping[str, Any]] = {}
+        source_ep_shards: dict[str, Any] = {}
+        for ep_rank, native_path in sorted(source_ep_native_paths.items()):
+            template_native = _load_torch_state(native_path)
+            inferred = _infer_experts_per_shard(template_native)
+            if inferred != experts_per_shard:
+                raise ValueError(
+                    f"source-native EP shard expert count differs at ep={ep_rank}"
+                )
+            reconstructed = reconstruct_native_state(
+                template_hf,
+                template_native,
+                tp_rank=ep_rank % tp_size,
+                tp_size=tp_size,
+                rank_block_size=rank_block_size,
+                experts_per_shard=experts_per_shard,
+                rank_layout=RANK_LAYOUT_TP_MAJOR,
+                expert_index_start=ep_rank * experts_per_shard,
+            )
+            tensor_count, tensor_bytes = _states_exact(template_native, reconstructed)
+            expected_digest = tensor_content_sha256(template_native)
+            actual_digest = tensor_content_sha256(reconstructed)
+            if expected_digest != actual_digest:
+                raise ValueError(
+                    f"source-native EP canonical digest mismatch: {native_path.name}"
+                )
+            source_ep_states[ep_rank] = template_native
+            source_ep_shards[native_path.name] = {
+                "template_file_sha256": sha256_path(native_path),
+                "tensor_content_sha256": expected_digest,
+                "tensor_count": tensor_count,
+                "tensor_bytes": tensor_bytes,
+                "value_exact": True,
+                "tensor_bytes_exact": True,
+            }
+        source_ep_template_proof = {
+            "status": "passed",
+            "all_source_ep_native_tensors_value_exact": True,
+            "all_source_ep_native_tensor_bytes_exact": True,
+            "shards": source_ep_shards,
+            "source_hf_roundtrip": prove_ep_hf_roundtrip(
+                template_hf,
+                source_ep_states,
+                tp_size=tp_size,
+                expert_parallel_size=expert_parallel_size,
+                experts_per_shard=experts_per_shard,
+                rank_block_size=rank_block_size,
+                rank_layout=RANK_LAYOUT_TP_MAJOR,
+                native_filenames_by_ep={
+                    ep_rank: path.name
+                    for ep_rank, path in sorted(source_ep_native_paths.items())
+                },
+            ),
+        }
     represented_expert_count = tp_size * experts_per_shard
     template_expert_coverage = audit_expert_coverage(
         template_hf,
@@ -1253,6 +1362,8 @@ def reconstruct_adapter(
     }
     if source_native_bundle is not None:
         template_receipt["source_native_bundle"] = source_native_bundle
+        if source_ep_template_proof is not None:
+            template_receipt["source_ep_native_proof"] = source_ep_template_proof
     else:
         assert merge_manifest is not None
         template_receipt["merge_manifest_sha256"] = sha256_path(template_dir / MERGE_MANIFEST)

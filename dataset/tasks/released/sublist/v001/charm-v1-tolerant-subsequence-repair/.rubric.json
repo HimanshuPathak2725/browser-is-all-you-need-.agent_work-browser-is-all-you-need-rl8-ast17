@@ -1,0 +1,24 @@
+{
+  "category": "approximate-subsequence",
+  "editable_files": [
+    "tolerant-subsequence-repair.h",
+    "tolerant-subsequence-repair.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "tolerant-subsequence-repair_test.cpp",
+  "hidden_test_sha256": "3e05b21553e2e2e844a6634fc5030d1b1c8bf025d9f71376c6a7ff6d2a243477",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "b6e6549c90ca11782460143094dd3d4513331fbc4c591115f45754a834767fc7",
+  "tags": [
+    "semantic-repair",
+    "overflow",
+    "greedy",
+    "header-extension"
+  ],
+  "task_id": "charm-v1-tolerant-subsequence-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

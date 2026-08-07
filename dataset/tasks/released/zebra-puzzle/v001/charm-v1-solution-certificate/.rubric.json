@@ -1,0 +1,23 @@
+{
+  "category": "certificate-verification",
+  "editable_files": [
+    "solution-certificate.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "solution-certificate_test.cpp",
+  "hidden_test_sha256": "66c5cae4e2af1e8eeb627ef9e1cddd1f6aaebe78f9f628aff4e18ef912ef81c2",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e87774ff5ff15c2b8a8e94e2737a535a27e3ed4e3c967db64e7272c2304d2373",
+  "tags": [
+    "semantic-bug",
+    "verification",
+    "stable-index",
+    "cpp-only"
+  ],
+  "task_id": "charm-v1-solution-certificate",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

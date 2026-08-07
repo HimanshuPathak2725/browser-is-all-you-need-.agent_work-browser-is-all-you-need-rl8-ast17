@@ -1,0 +1,23 @@
+{
+  "category": "elapsed-counter",
+  "editable_files": [
+    "wrapped-elapsed-counter.hpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "wrapped-elapsed-counter_test.cpp",
+  "hidden_test_sha256": "146b4b8dbfdd47bd0a30f62f6b49ef568034688d56b2a6ac9de206ad89eba9c3",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "c6fedcf5f07643a00c15fecc5f1d50ee069a144bbe32a85174a6d599c1d50123",
+  "tags": [
+    "header-only",
+    "wrap-count",
+    "overflow",
+    "optional"
+  ],
+  "task_id": "charm-v1-wrapped-elapsed-counter",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

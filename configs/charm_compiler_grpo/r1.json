@@ -1,0 +1,84 @@
+{
+  "schema_version": "charm-compiler-guided-grpo-config-v1",
+  "decision": "READY_FOR_8XH100_CANARY",
+  "clean_room_source": {
+    "selected_manifest": "artifacts/charm-task-generation-v1/v1-20260803T193513Z/sft-ready-v5-20260804T033850Z/independent-audit/selected-manifest.json",
+    "selected_manifest_sha256": "d09f853003d3a003a33994ba327c47ccdfeef509d4552ac750c1f7f607768be4",
+    "task_count": 51,
+    "independent_audit_required": true,
+    "post_generation_admission_required": true,
+    "post_generation_uniqueness_required": true
+  },
+  "dataset": {
+    "root": "artifacts/charm-compiler-grpo/r1/data",
+    "manifest_sha256": "de4bd2526327dc5a222df426b9fc986a3c6bf4c051b04e767450d412fa469fbb",
+    "train_jsonl_sha256": "a4ea9d320a127b4be36ad1aaeb4054df18b73a3a0250a4c2e209f23fc0b73ca8",
+    "mechanism_monitor_jsonl_sha256": "40340b89676fadf0c42fd0725fbce2197857fd8a269243686cc23273342fc7ef",
+    "mechanism_matrix_sha256": "c12e0a744b71b2fbd0457d7b1be5584b6890c8990e020f50305ff80df7854f40",
+    "gradient_task_count": 36,
+    "gradient_prompt_group_count": 114,
+    "monitor_task_count": 12,
+    "monitor_prompt_group_count": 41,
+    "prompt_variants": [
+      "short",
+      "medium",
+      "detailed",
+      "repair"
+    ],
+    "same_prompt_within_grpo_group": true,
+    "train_monitor_task_overlap": 0,
+    "reference_answers_packaged": false
+  },
+  "executable_oracle": {
+    "receipt": "artifacts/charm-compiler-grpo/r1/executable-oracle-receipt.json",
+    "receipt_sha256": "dbaa7af807ba1020822f75ccc8e6b0a5ba45e8afaf9971cd9a3c712d2c175ec4",
+    "sandbox_image": "charm-v1-clang-tsan:20260803-10",
+    "starter_rejected_count": 48,
+    "reference_passed_count": 48,
+    "private_logs_disclosed": false
+  },
+  "compiler_guided_inference": {
+    "initial_candidates": 4,
+    "repair_turns_per_candidate": 1,
+    "initial_temperature": 0.7,
+    "repair_temperature": 0.2,
+    "base_seed": 1701,
+    "selection": "full executable pass first, then deterministic reward",
+    "public_compiler_feedback_only": true,
+    "private_failure_feedback": "redacted"
+  },
+  "grpo": {
+    "epochs": 3,
+    "rollout_batch_size": 19,
+    "rollout_updates": 18,
+    "samples_per_prompt": 8,
+    "global_batch_size": 152,
+    "rollout_temperature": 0.7,
+    "reward": "glm47_posttraining.integrations.miles_aider_polyglot.reward_func",
+    "rollout_validator": "glm47_posttraining.integrations.miles_aider_polyglot.validate_aider_rollout_batch",
+    "dataset_builder": "glm47_posttraining.integrations.miles_charm_compiler_grpo"
+  },
+  "canonical_training_hardware": {
+    "gpu_count": 8,
+    "gpu_model": "NVIDIA H100 80GB",
+    "tensor_parallel": 4,
+    "pipeline_parallel": 1,
+    "expert_parallel": 8,
+    "expert_tensor_parallel": 1,
+    "current_4xa100_vm_supported": false
+  },
+  "heldout_evaluation": {
+    "r5_prompt_sha256": "9db4bbc4df06aed1cb87dca1026456f2cafa3973f15024fba41b3c912d5b22a7",
+    "r5_prompt_training_eligible": false,
+    "reference_patch_training_eligible": false,
+    "private_probe_training_eligible": false,
+    "run_count_after_training": 1,
+    "mechanism_count": 12
+  },
+  "gpu_job_concurrency": {
+    "policy": "single_gpu_heavy_job_per_host",
+    "lock_file": "/tmp/glm47-gpu-heavy.lock",
+    "cpu_only_preparation_may_overlap": true,
+    "simultaneous_grpo_and_eval": false
+  }
+}

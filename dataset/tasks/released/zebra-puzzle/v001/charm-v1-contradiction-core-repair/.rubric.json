@@ -1,0 +1,24 @@
+{
+  "category": "minimal-conflict",
+  "editable_files": [
+    "contradiction-core-repair.h",
+    "contradiction-core-repair.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "contradiction-core-repair_test.cpp",
+  "hidden_test_sha256": "69e670a3480ea1b0e56c5d566e38d60a1e483ad567c2d3debd91bdf42a9180f3",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d72913ea7acd4197b88aa5bd2f6cd009a2ab0c09bc3cb7b8961d4598cdefcb50",
+  "tags": [
+    "boundary",
+    "minimal-core",
+    "determinism",
+    "header-edit"
+  ],
+  "task_id": "charm-v1-contradiction-core-repair",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

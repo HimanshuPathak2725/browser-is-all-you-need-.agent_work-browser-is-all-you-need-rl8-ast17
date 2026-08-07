@@ -1,0 +1,22 @@
+{
+  "category": "partitioned-posting-sum",
+  "editable_files": [
+    "partitioned-posting-sum.hpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "partitioned-posting-sum_test.cpp",
+  "hidden_test_sha256": "63ded67ee6a966e61d448d40d031e4ecaf8a32a4f9a4e2e4203d050ab23e467a",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "ce77db00ca2f722cba5a92627ffdbe38093c7f09e1bef7c6a22ec8a117d72591",
+  "tags": [
+    "thread-safe",
+    "async",
+    "overflow"
+  ],
+  "task_id": "charm-v1n7-partitioned-posting-sum",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

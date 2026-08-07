@@ -478,7 +478,15 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--run-id")
     build.add_argument("--sort-by-size", action="store_true")
     build.add_argument("--filter-train-oracle-full-marks", action="store_true")
-    build.add_argument("--oracle-filter-workers", type=int, default=8)
+    build.add_argument(
+        "--oracle-workers",
+        "--oracle-filter-workers",
+        dest="oracle_workers",
+        type=int,
+        default=8,
+        help="parallel workers for mandatory C++17/C++20 oracle certification",
+    )
+    build.add_argument("--oracle-cache-dir")
     build.add_argument("--force", action="store_true")
     image = subparsers.add_parser("build-image")
     image.add_argument("--image", default=DEFAULT_AIDER_DOCKER_IMAGE)
@@ -530,6 +538,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         run_id=args.run_id,
         sort_by_size=args.sort_by_size,
         force=args.force,
+        oracle_workers=args.oracle_workers,
+        oracle_cache_dir=args.oracle_cache_dir,
     )
     print(json.dumps({key: str(path) for key, path in paths.items()}, indent=2, sort_keys=True))
 

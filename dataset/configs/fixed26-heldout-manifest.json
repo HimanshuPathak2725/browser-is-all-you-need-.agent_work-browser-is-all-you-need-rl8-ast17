@@ -1,0 +1,295 @@
+{
+  "aider_commit": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+  "benchmark": "Aider Polyglot C++ fixed26",
+  "eval_set_version": "fixed26-contract-v2",
+  "excluded_from_generation_and_training": true,
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "role": "external-evaluation-only-holdout",
+  "schema_version": "charm-fixed26-heldout-manifest-v1",
+  "source_run_receipts": [
+    {
+      "path": "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a1/run_receipt.json",
+      "run_id": "glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a1",
+      "sha256": "46eb8805485b23a1bf37b3207ab220ae6fcc16a299dca6a46dd7e1619843741c"
+    },
+    {
+      "path": "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a2/run_receipt.json",
+      "run_id": "glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a2",
+      "sha256": "9d57729cf0f4ec0f01491596b2a7e20cac86fe1bdbe4a813ad7d0841dad5cd5f"
+    },
+    {
+      "path": "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a3/run_receipt.json",
+      "run_id": "glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a3",
+      "sha256": "714170c472ecab75fba12e6267d744197dbbf25d51cb1353d5cd264702507d9c"
+    },
+    {
+      "path": "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a4/run_receipt.json",
+      "run_id": "glm47-synthmem-100ep-fixed26-st4-20260731T114924Z-a4",
+      "sha256": "0961e1f4a139c2c1d3e1cc28a2f3359573474cf7334b5ac6e44fe075e9f245c1"
+    }
+  ],
+  "task_count": 26,
+  "tasks": [
+    {
+      "frozen_prompt_sha256": "fe66de314418461eb1501ee5ea81e07fa30be6c699d809fa8fb8f8bf83aacf9b",
+      "original_prompt_sha256": "082c4a397183b21c36963c34fec9818c8ad33339dab7ed2d4097e42fbed28b58",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "all-your-base",
+      "test_file": "all_your_base_test.cpp",
+      "test_sha256": "58c7d05e6eaa314346388159cd980886f4b2108bb6f47523a9270bb4e86ce4a3",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "45bd52fffb876f73e0bc00eee0346f8b5e4ff7df4e627367a3b0cf33efeca24a",
+      "original_prompt_sha256": "90b620aa23a92e538dd1654ca72ba48a932a653e9806708d8c482e685e0551ec",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "allergies",
+      "test_file": "allergies_test.cpp",
+      "test_sha256": "1eb815ad37a6792bba827c994d0db4cc0edaa57c4428271bef002901e43da798",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "130ae84dca29927b614b6a7939b9aa6456c22283f16f34572a3a40147d612cce",
+      "original_prompt_sha256": "ad0c5ba4f4feaf16a2b0224b6da0f521fcfc683c30b57d2d061feab02a936535",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "bank-account",
+      "test_file": "bank_account_test.cpp",
+      "test_sha256": "3696b9383f62ab639ad0a26610410fb662b6b927f2fe1dee956b849ff8dcf5c8",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "2f1d0baf071032cf174dc7a365567b10c49271281d34626b10d867eecbe3afec",
+      "original_prompt_sha256": "103ea444961a5ecd8c0afec176ece97d006e05574725a41dd284b266a09531ad",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "binary-search-tree",
+      "test_file": "binary_search_tree_test.cpp",
+      "test_sha256": "79ff6a886a42d7691ec0240f9ea08191016f1042a752da9c2809a3da24c361e5",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "8501cd0234269a91f04d4c0c8aa1f7a1ee7896db4fd365a2743c5928df769134",
+      "original_prompt_sha256": "9032880507316b54b8fecebb2a9e7e34cfb04a3e430e8a3488fba2050b6466ed",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "circular-buffer",
+      "test_file": "circular_buffer_test.cpp",
+      "test_sha256": "e96c023cf3ac88ded69a5306655cb4b9097da219642fcb99b58d84bdf59f8e80",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "878669626ebe9c4e368e358e79e2ad94ab95dec3760a74afdce9869b14c9fe37",
+      "original_prompt_sha256": "65338ed438fa4f485cacc0dcc6fb75aa0c15ef2613e12a0762f7a3e99f09cf7d",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "clock",
+      "test_file": "clock_test.cpp",
+      "test_sha256": "beb75d18d0db5458d7c6e38f506b503a497a6200c0169d2bdc6a913df8254d69",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "32d74988f93a781b3b27fc6750f4f41bcdf7b4d462904389d409e9ad606063fb",
+      "original_prompt_sha256": "60949140b676a34a7884c23fe931fa9e40e0710e2acc66d9f0303a8fcdb261cc",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "complex-numbers",
+      "test_file": "complex_numbers_test.cpp",
+      "test_sha256": "0bb911210fddcfe066825d5b562ca6efbf21d45386e62aebfd4693ad1b82897b",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "e29180eb18038f1a08d4644ebd96473611347047c8958ebc00ca7571ece55625",
+      "original_prompt_sha256": "1c64e2087dfbcfc0fafe2aa84009c24967c55d2533379e190ff5cc8aef987a63",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "crypto-square",
+      "test_file": "crypto_square_test.cpp",
+      "test_sha256": "3770199d92bda7e4551742ac2d5a30a1970318f18f92f29088f9704a6e67a676",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "ce7fe9496fec60c825795f3d1aaf3534f4abb3ecf7a506720b5cf47171b8a23e",
+      "original_prompt_sha256": "ff20bbc2d91cf1ffb8b35ffbe4715867a8e0fdec29a83bf8d9ef8a18da2d9d68",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "diamond",
+      "test_file": "diamond_test.cpp",
+      "test_sha256": "235fc2baac052df9b1efd981d93924b37a738dc85e5b056547a78eeb8840da3f",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "ffe687063cba8152035fd35c859651f8d28d44db8ec5967b39e7145883360d74",
+      "original_prompt_sha256": "289bfe2a6471256fd95171707a3a432b7af35ee1b63c01dfa2cf1a613f3118b4",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "dnd-character",
+      "test_file": "dnd_character_test.cpp",
+      "test_sha256": "0b90c2acf77f99986d73b5559e694a06627a53acf6034acf8c4b461ba7125f56",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "a5091b4e100fa80f65fbdefe6f60fd0afbb1f59a4960bd6cd2ac8c27dfdaad0e",
+      "original_prompt_sha256": "41be679e435364e98ee71647be589530b2f3ee593185e627c973fd107f9794a7",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "gigasecond",
+      "test_file": "gigasecond_test.cpp",
+      "test_sha256": "84c71cf09c62390ae799d6ea456ce1770f9b30051dcf3ebf26f0b26c58888f26",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "f913000d110e10de2f182ee1470765fbca95d916a8cf2735b379fc05fbf58001",
+      "original_prompt_sha256": "8dc7133cd5f0564717108757c27ad96ebadf44f03b5fde5c35b826aaeb0b4e0f",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "grade-school",
+      "test_file": "grade_school_test.cpp",
+      "test_sha256": "3a6f4266831b6d31b022e764bed44d1c02cfa10f7629f91053c02e0d53b29871",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "b2904fa9d65d1f52e5b9f03910bf5e1b4ddeb9894db1b2fcc6ee3b71275251e3",
+      "original_prompt_sha256": "0deebfb40706725b72884a95230b3f3a84ed8a16652eb0fdd405ce5516ceacbc",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "kindergarten-garden",
+      "test_file": "kindergarten_garden_test.cpp",
+      "test_sha256": "1a35fe4528cf3577739c95df36daafac894e5e554cf51481ebf8c475f683bcfd",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "5ba39908e24ea536f97d30951cc18030b044c1e14e3bc26260412f3d19207cf7",
+      "original_prompt_sha256": "69017232ff2b4335ec2ab79bc7470e2d86fa059c3aec2ea4ff51c512142b46e1",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "knapsack",
+      "test_file": "knapsack_test.cpp",
+      "test_sha256": "9eca89078382ca62d666bba13de27a616dccac9a93b4634cb8935ea2db020cfd",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "9b53497f95e577e867b4045009a6c42d5d480e1c00a9878a367dc5e1598a2cf6",
+      "original_prompt_sha256": "97b802c9c2f4dc8505d7b0051694ec747c250c72ad62ac13786c15049f6c95c6",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "linked-list",
+      "test_file": "linked_list_test.cpp",
+      "test_sha256": "c63f3a714e7796868842f74e48aa2d4bc9e6ba9ddfbe2eaba4aa55cf6fc46633",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "cd96a78630ddc4b18da3d97fc2e52af6b4ba2ef8627afbaca6621f6722df5bba",
+      "original_prompt_sha256": "7fe0003115d9d10a589579c6a7eae523278e09a89bc9f967243ed2679ff1144d",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "meetup",
+      "test_file": "meetup_test.cpp",
+      "test_sha256": "2eda2b18b6fb6bf7bd5aa3785b64493a699d6d31a026a3964f8605005f87a83a",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "241b469203880134a8931c9df45f838a817a37430df5f02267ee3cf2ebf57ba5",
+      "original_prompt_sha256": "2a1c8f08bb586707242baca8ff7f4973233f2a83f2673a3bcda583990c499d86",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "parallel-letter-frequency",
+      "test_file": "parallel_letter_frequency_test.cpp",
+      "test_sha256": "9f0625d18d5ad5a04136c92d3064456a3c3e9e7847f4810f0c75f6d9db49ea5e",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "6f06b35f9f78708451c8b5aab69cfeb2f72333abcafff5cd769b59f71d4b1506",
+      "original_prompt_sha256": "8db797c5f8e9c0efbb8c805ddefca892f764b4f3a72dff65c037f4bffb92b1cb",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "perfect-numbers",
+      "test_file": "perfect_numbers_test.cpp",
+      "test_sha256": "fa206f8feaa1f8aa63986db34fc96458b30ab0325c0855fd6659ab7cbcb50be3",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "688f8b8082ed60ea107cbddd6f0418ab512df3ab8c13db5ab39436987a41df3b",
+      "original_prompt_sha256": "ca1e2c1c43454c151e519a2f784439621c243bb2824715c69a8e0904abc473a5",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "phone-number",
+      "test_file": "phone_number_test.cpp",
+      "test_sha256": "12aa1d8ef503b67d9be8a6d1b8bc858eabcc88af3db916821ec25dcb3709fee5",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "c5aa7eb5b38e0434a9f9893384837bdd303eec532d343d43d412954b9514a328",
+      "original_prompt_sha256": "159a9bda6a12590da669cc838f7203bd98096cd9df7ef02a11e50381413a71a5",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "queen-attack",
+      "test_file": "queen_attack_test.cpp",
+      "test_sha256": "af1f9888860b997aaf1473e07fd03c3bbb6bfc653301bb6c8c91a0a3f86f4d75",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "b2750750beea61e12bd1828720d21718771bde4b809a62582361be11cc68b2f7",
+      "original_prompt_sha256": "bbb01d54e892de555eb900b3b93fd3645ad7fcfd09eace353fb6b81e768c4310",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "robot-name",
+      "test_file": "robot_name_test.cpp",
+      "test_sha256": "a61980d1065cad95bba9e8042e46fca8890b782367767a2a0e4b9c856de58fd5",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "d6a3c9b9aefec380d03ce84ab85ffaf50340fb25acf76194f087ebf4b44397a6",
+      "original_prompt_sha256": "5154666b09c794db3ea85d1bc76a1e8d0ceb036179717efb878e7afa642013bb",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "space-age",
+      "test_file": "space_age_test.cpp",
+      "test_sha256": "9362253be5bc92f9cd4d2e5cee817e9d44ba5a812632304d73c1a81a48d3f216",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "9d5dff44082c7bac9e5ea721a58723f15d353cf9084885a98f7f00390c92bfb3",
+      "original_prompt_sha256": "a738351bf8fc8e0a1c790329230a1eb8b25683c13006018f106e86498384ddab",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "spiral-matrix",
+      "test_file": "spiral_matrix_test.cpp",
+      "test_sha256": "406cce0e7cf16487fdd12df030bbf5fcfe57aeb36078c8eb13b16c1f8267239e",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "c5d6288f605c24821622010fc8f9813b5e03f8761fe7274dcc7907d6460e5500",
+      "original_prompt_sha256": "d0e7c47c2d86fb068f35283ae2ff8609069e7c042e78376f7b5536ee5320e2fe",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "sublist",
+      "test_file": "sublist_test.cpp",
+      "test_sha256": "7120a4a2fa383db1f2f0184c5cb58c46960b39458d37bb3965dfb382ed4f0d00",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "6c648bd61b3584393de929b14ab5b63fac6773144feffa2230e634b13566a343",
+      "original_prompt_sha256": "d70d3ee85423118f3ebb1287c501890ec4735a77c8082eab415788142b2bc3b6",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "yacht",
+      "test_file": "yacht_test.cpp",
+      "test_sha256": "45af93cc50b53cddf26115d4bbf0c03e3e61939b4c7979d0eb670f8937bbacbb",
+      "unexplained_deterministic_requirements": 0
+    },
+    {
+      "frozen_prompt_sha256": "2e747c8282a3ed9bbd1629987886a55cf697d9b94e0bdf1eb66ebc1eee4801f6",
+      "original_prompt_sha256": "475239352eed823e34a2677b65d861d58e0ca37a7da9ae399141c0c95758a8e6",
+      "prompt_test_classification": "prompt_test_aligned",
+      "review_disposition": "reviewed_allowlist",
+      "task_id": "zebra-puzzle",
+      "test_file": "zebra_puzzle_test.cpp",
+      "test_sha256": "2b95fb480833ad730748e742145f1789b9eddafc300b977baba80663b3443c9e",
+      "unexplained_deterministic_requirements": 0
+    }
+  ],
+  "trial_count": 4
+}

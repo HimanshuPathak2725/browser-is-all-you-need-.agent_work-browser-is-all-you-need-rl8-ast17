@@ -1,0 +1,282 @@
+#!/usr/bin/env python3
+"""Issue a fail-closed CHARM V1 Step-1 scope and evidence receipt."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import subprocess
+import tempfile
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TOPICS = (
+    "Allergies", "Bank Account", "Binary Search Tree", "Circular Buffer",
+    "Clock", "Complex Numbers", "Crypto Square", "Diamond", "Grade School",
+    "Kindergarten Garden", "Linked List", "Parallel Letter Frequency",
+    "Phone Number", "Spiral Matrix", "Sublist", "Yacht", "Zebra Puzzle",
+)
+
+
+def canonical(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode()
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def bind(path: Path) -> dict[str, str]:
+    if not path.is_file():
+        raise FileNotFoundError(path)
+    return {"path": str(path.resolve()), "sha256": sha256(path)}
+
+
+def load(path: Path) -> dict[str, Any]:
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise ValueError(f"expected JSON object: {path}")
+    return value
+
+
+def tree_sha256(root: Path) -> str:
+    digest = hashlib.sha256()
+    for path in sorted(
+        item
+        for item in root.rglob("*")
+        if item.is_file() and "__pycache__" not in item.parts and item.suffix != ".pyc"
+    ):
+        digest.update(path.relative_to(root).as_posix().encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def task_tree_sha256(root: Path) -> str:
+    files = {
+        path.relative_to(root).as_posix(): path.read_text(encoding="utf-8")
+        for path in sorted(root.rglob("*")) if path.is_file()
+    }
+    return hashlib.sha256(canonical(files)).hexdigest()
+
+
+def registry_reconciliation() -> dict[str, Any]:
+    reservation = load(ROOT / "dataset/registry/task_id_reservations.json")
+    task = load(ROOT / "dataset/registry/task_registry.json")
+    topic = load(ROOT / "dataset/registry/topic_registry.json")
+    release = load(ROOT / "dataset/registry/release_registry.json")
+    api = load(ROOT / "dataset/registry/api_registry.json")
+    fingerprint = load(ROOT / "dataset/registry/fingerprint_registry.json")
+    invalidation_path = ROOT / "dataset/registry/release_invalidations.json"
+    invalidation = load(invalidation_path)
+    entries = reservation.get("entries", {})
+    slot_claims = reservation.get("slot_claims", {})
+    permanent_ids = set(task.get("entries", {}))
+    topic_ids = {
+        task_id for row in topic.get("entries", {}).values()
+        for task_id in row.get("task_ids", [])
+    }
+    releases = release.get("releases", {})
+    release_ids = {
+        task_id for row in releases.values() for task_id in row.get("task_ids", [])
+    }
+    set_checks = {
+        "task_registry": set(task.get("entries", {})) == ids,
+        "topic_registry": topic_ids == ids,
+        "release_registry": release_ids == ids,
+        "api_registry": set(api.get("entries", {})) == ids,
+        "fingerprint_registry": set(fingerprint.get("entries", {})) == ids,
+    }
+    invalidation_ids = set(invalidation.get("task_ids", []))
+    invalidation_ok = (
+        invalidation.get("decision") == "PASS"
+        and invalidation.get("corrective_status") == "rejected_tombstone"
+        and invalidation.get("task_count") == 51
+        and invalidation_ids == ids
+        and invalidation.get("reservation_registry_after_sha256") == sha256(
+            ROOT / "dataset/registry/task_id_reservations.json"
+        )
+        and all(row.get("state") == "rejected_tombstone" for row in entries.values())
+    )
+    root_failures = []
+    for task_id, row in task.get("entries", {}).items():
+        root = Path(str(row.get("root_path", "")))
+        if not root.is_dir() or task_tree_sha256(root) != row.get("task_tree_sha256"):
+            root_failures.append(task_id)
+    jsonl_failures = []
+    for release_id, row in releases.items():
+        root = Path(str(row.get("release_root", "")))
+        train = root / "train.jsonl"
+        try:
+            rows = [json.loads(line) for line in train.read_text(encoding="utf-8").splitlines() if line.strip()]
+            projected_ids = {item.get("task_id") for item in rows}
+            if len(rows) != row.get("task_count") or projected_ids != set(row.get("task_ids", [])) or sha256(train) != row.get("train_jsonl_sha256"):
+                jsonl_failures.append(release_id)
+        except (OSError, UnicodeError, json.JSONDecodeError):
+            jsonl_failures.append(release_id)
+    passed = (
+        all(set_checks.values())
+        and invalidation_ok
+        and not root_failures
+        and not jsonl_failures
+    )
+    return {
+        "decision": "PASS" if passed else "FAIL",
+        "reservation_revision": reservation.get("revision"),
+        "permanent_task_count": len(ids),
+        "reservation_state_counts": dict(sorted(Counter(row.get("state") for row in entries.values()).items())),
+        "registry_identity_checks": set_checks,
+        "release_invalidation_reconciled": invalidation_ok,
+        "release_invalidation_registry": bind(invalidation_path),
+        "task_root_failures": root_failures,
+        "release_jsonl_failures": jsonl_failures,
+        "prior_failed_step1_receipt": bind(ROOT / "artifacts/charm-task-generation-v1/v1-20260803T193513Z/v1_scope_and_evidence_receipt.json"),
+        "prior_lineage_not_reused_by_fresh_plan": True,
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--proposal-plan", required=True, type=Path)
+    parser.add_argument("--curriculum-plan", required=True, type=Path)
+    parser.add_argument("--dependency-manifest", required=True, type=Path)
+    parser.add_argument("--materialization-manifest", required=True, type=Path)
+    parser.add_argument("--dependency-preflight", required=True, type=Path)
+    parser.add_argument("--exact-package-preflight", required=True, type=Path)
+    parser.add_argument("--generation-owner-source", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    if args.output.exists():
+        raise FileExistsError(f"refusing to overwrite Step-1 receipt: {args.output}")
+    plan = load(args.proposal_plan)
+    curriculum = load(args.curriculum_plan)
+    dependencies = load(args.dependency_manifest)
+    manifest = load(args.materialization_manifest)
+    dependency_preflight = load(args.dependency_preflight)
+    exact_preflight = load(args.exact_package_preflight)
+    generation_owner_sha256 = sha256(args.generation_owner_source)
+    manifest_tasks = manifest.get("tasks", [])
+    owner_provenance_ok = (
+        isinstance(manifest_tasks, list)
+        and len(manifest_tasks) == 51
+        and all(
+            isinstance(row, dict)
+            and isinstance(row.get("provenance"), dict)
+            and row["provenance"].get("owner_source_sha256") == generation_owner_sha256
+            for row in manifest_tasks
+        )
+    )
+    proposals = plan.get("proposals", [])
+    topic_counts = Counter(row.get("topic") for row in proposals if isinstance(row, dict))
+    task_ids = [row.get("task_id") for row in proposals if isinstance(row, dict)]
+    identity_ok = (
+        plan.get("schema_version") == "charm-v1-proposal-plan-v1"
+        and plan.get("protocol_id") == "task-generation-v1"
+        and len(proposals) == 51
+        and tuple(topic_counts) == TOPICS
+        and all(topic_counts[topic] == 3 for topic in TOPICS)
+        and len(set(task_ids)) == 51
+        and manifest.get("proposal_plan_sha256") == hashlib.sha256(canonical(plan)).hexdigest()
+        and dependencies.get("task_count") == 51
+        and curriculum.get("authorized_task_count") == 51
+        and owner_provenance_ok
+    )
+    preflight_ok = (
+        dependency_preflight.get("decision") == "PASS"
+        and dependency_preflight.get("tasks_passed") == 51
+        and exact_preflight.get("decision") == "PASS"
+        and exact_preflight.get("tasks_passed") == 51
+    )
+    audit_root = ROOT / "updated task/audit-sft-data-quality"
+    evidence_paths = [
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/DETAILED_POSTRUN_AUDIT.md",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/VALIDATOR_V4_SPEC.md",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/AUDIT_SUMMARY.json",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/failure-ledger/attempt_ledger.csv",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/failure-ledger/mechanism_summary.json",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/dataset_shape_audit.json",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/training_dynamics_audit.json",
+        ROOT / "artifacts/synthmem-v3-modal-eval4-20260803T054055Z/postrun-audit/receipt_consistency_audit.json",
+        ROOT / "artifacts/luna-cleanroom-evals/campaign-pass2-8x-20260801T100237Z/eight-run-metrics.json",
+        ROOT / "artifacts/luna-cleanroom-evals/campaign-pass2-8x-20260801T100237Z/task-frequency.json",
+    ]
+    evidence = [bind(path) for path in evidence_paths]
+    previous_best = bind(ROOT / "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/failure-ledger/attempt_ledger.csv")
+    recovery = load(ROOT / "artifacts/charm-task-generation-v1/recovered-previous-best-20260731/RECOVERY_RECEIPT.json")
+    evidence_ok = recovery.get("decision") == "PASS" and len(evidence) == 10 and audit_root.is_dir()
+    reconciliation = registry_reconciliation()
+    source_paths = {
+        "builder": ROOT / ".agents/skills/charm-skill/scripts/build_v1_tasks.py",
+        "reservation": ROOT / ".agents/skills/charm-skill/scripts/reserve_v1_task_ids.py",
+        "uniqueness": ROOT / "scripts/charm_v1_repository_uniqueness_v4.py",
+        "recovery_owner": args.generation_owner_source,
+        "exact_preflight_owner": ROOT / "scripts/charm_v1_manifest_reference_sweep.py",
+        "validator": ROOT / ".agents/skills/charm-skill/scripts/validate_generation_readiness.py",
+        "tokenizer": ROOT / "dataset/configs/glm47-flash-tokenizer-manifest.json",
+        "chat_template": ROOT / "dataset/configs/glm47-flash-chat-template.jinja",
+        "whole_file_parser": ROOT / "src/glm47_posttraining/aider_polyglot/parser.py",
+        "feedback_policy": ROOT / "scripts/charm_v1_redacted_feedback.py",
+        "environment": ROOT / "dataset/configs/charm-v1-cpp17-environment.json",
+    }
+    source_bindings = {name: bind(path) for name, path in source_paths.items()}
+    environment = load(source_paths["environment"])
+    environment_ok = isinstance(environment.get("image_reference"), str) and "@sha256:" in environment["image_reference"]
+    checks = {
+        "exact_topic_and_task_shape": identity_ok,
+        "frozen_owner_provenance_binding": owner_provenance_ok,
+        "failure_and_previous_best_evidence": evidence_ok,
+        "operator_audit_tree": audit_root.is_dir(),
+        "registry_and_existing_release_identity_reconciliation": reconciliation["decision"] == "PASS",
+        "digest_pinned_environment": environment_ok,
+        "all_51_dependency_and_exact_package_preflight": preflight_ok,
+        "generation_projection_only_authority": True,
+    }
+    failed = sorted(name for name, passed in checks.items() if not passed)
+    revision = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True, capture_output=True, check=True).stdout.strip()
+    receipt = {
+        "schema_version": 2,
+        "kind": "charm-task-generation-v1-scope-and-evidence-receipt",
+        "protocol_id": "task-generation-v1",
+        "step": 1,
+        "step_name": "resolve-scope-authority-evidence-and-dependencies",
+        "decision": "PASS" if not failed else "not_completed",
+        "hard_failure_ids": failed,
+        "repository_root": str(ROOT),
+        "repository_revision": revision,
+        "generation_batch_id": plan.get("generation_batch_id"),
+        "generation_session_id": plan.get("generation_session_id"),
+        "topic_registry": {"topics": list(TOPICS), "topic_count": 17, "tasks_per_topic": 3, "planned_task_count": 51},
+        "authority": {"generation": True, "validation": True, "owner_remediation": True, "projection": True, "attempted_sft_admission": True, "training": False, "canary_execution": False, "checkpoint_promotion": False, "deployment": False},
+        "checks": checks,
+        "failure_evidence": evidence,
+        "previous_best_attempt_ledger": previous_best,
+        "audit_skill_tree": {"path": str(audit_root.resolve()), "sha256": tree_sha256(audit_root)},
+        "registry_reconciliation": reconciliation,
+        "frozen_inputs": {"proposal_plan": bind(args.proposal_plan), "curriculum_plan": bind(args.curriculum_plan), "dependency_manifest": bind(args.dependency_manifest), "materialization_manifest": bind(args.materialization_manifest), "dependency_preflight": bind(args.dependency_preflight), "exact_package_preflight": bind(args.exact_package_preflight)},
+        "source_bindings": source_bindings,
+        "environment": {"image_reference": environment.get("image_reference"), "cpp_standard": "c++17", "strict_flags": environment.get("candidate_flags"), "sanitizer_flags": environment.get("sanitizer_flags")},
+        "status_ladder": {"failure_evidence": "bound", "generation_admission": "not_started", "task_proof": "not_started", "independent_audit": "not_started", "projection": "not_started", "training_admission": "not_started", "consumer_verification": "not_started"},
+        "next_action": "freeze_curriculum_then_run_uniqueness_and_atomic_reservation" if not failed else "stop_and_remediate_step1",
+    }
+    atomic = canonical(receipt)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, name = tempfile.mkstemp(prefix=f".{args.output.name}.", dir=args.output.parent)
+    temporary = Path(name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(atomic); handle.flush(); os.fsync(handle.fileno())
+        os.replace(temporary, args.output)
+    finally:
+        temporary.unlink(missing_ok=True)
+    print(json.dumps({"decision": receipt["decision"], "hard_failure_ids": failed}, sort_keys=True))
+    return 0 if not failed else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

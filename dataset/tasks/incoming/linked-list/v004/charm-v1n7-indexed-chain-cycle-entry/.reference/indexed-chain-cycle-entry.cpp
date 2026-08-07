@@ -1,0 +1,3 @@
+#include "indexed-chain-cycle-entry.h"
+
+std::optional<std::optional<std::size_t>> charm::v1n7::linked_list::indexed_chain_cycle_entry(const std::vector<int>& next,int head){if(head<-1||head>=static_cast<int>(next.size()))return std::nullopt;for(int link:next)if(link<-1||link>=static_cast<int>(next.size()))return std::nullopt;if(head==-1)return std::optional<std::size_t>{};auto step=[&](int x){return x<0?-1:next[static_cast<std::size_t>(x)];};int slow=head,fast=head;do{slow=step(slow);fast=step(step(fast));if(slow<0||fast<0)return std::optional<std::size_t>{};}while(slow!=fast);slow=head;while(slow!=fast){slow=step(slow);fast=step(fast);}return std::optional<std::size_t>{static_cast<std::size_t>(slow)};}

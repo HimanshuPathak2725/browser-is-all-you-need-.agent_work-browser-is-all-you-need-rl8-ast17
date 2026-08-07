@@ -1,0 +1,25 @@
+{
+  "category": "idempotent-transactions",
+  "editable_files": [
+    "idempotent-cent-ledger.h",
+    "idempotent-cent-ledger.cpp",
+    "idempotent-cent-ledger_detail.cpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "idempotent-cent-ledger_test.cpp",
+  "hidden_test_sha256": "9e4753db21a3cfdfaa2a565f4b5aaf1de5743ecc07f045ab258e68e159e95fcc",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "1ede95fc96b71abec4d1800cc2005a7514cbc161bc20ee4c8abdaeabd308a389",
+  "tags": [
+    "header-repair",
+    "multi-file",
+    "overflow",
+    "atomicity"
+  ],
+  "task_id": "charm-v1-idempotent-cent-ledger",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

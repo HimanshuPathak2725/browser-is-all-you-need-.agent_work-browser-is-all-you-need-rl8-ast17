@@ -1,0 +1,23 @@
+{
+  "category": "conflict-aware-transcript-merge",
+  "editable_files": [
+    "conflict-aware-transcript-merge.h",
+    "conflict-aware-transcript-merge.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "conflict-aware-transcript-merge_test.cpp",
+  "hidden_test_sha256": "f188e3f03fc50bf68314f842dacdf6102d0a920ee561313e9baec2bc84443236",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d55cc6a2fa85df8353f9c59c0bf1fd05e3506b95d30f8d209f5792763492f99a",
+  "tags": [
+    "merge",
+    "duplicate-invariant",
+    "header-self-contained"
+  ],
+  "task_id": "charm-v1n7-conflict-aware-transcript-merge",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}
