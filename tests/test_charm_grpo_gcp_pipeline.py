@@ -137,15 +137,17 @@ def test_preprojected_bridge_accepts_only_generic_immutable_eval_split(
         )
 
 
-def test_heldout_evaluator_can_bind_new_adapter_without_changing_old_defaults() -> None:
+def test_heldout_evaluator_uses_immutable_checkpoint_profiles() -> None:
     text = (
         REPO_ROOT / "scripts/gcp_public_pr_synthmem_50ep_eval.py"
     ).read_text(encoding="utf-8")
-    assert "expected_adapter_model_sha256: str = SOURCE_ADAPTER_SHA256" in text
-    assert "expected_training_run_id: str = TRAINING_RUN_ID" in text
+    assert 'DEFAULT_CHECKPOINT_PROFILE = "synthmem-v1-ep50"' in text
+    assert "checkpoints/sft_lora_r16/iter_0000649" in text
+    assert "4acb7f23c295f45380155c5d9ee6bc59422262f0cb51f0c02f7e550d405b575a" in text
     assert '"--expected-adapter-model-sha256"' in text
     assert '"--expected-training-run-id"' in text
-    assert '"training_run_id": args.expected_training_run_id' in text
+    assert '"training_run_id": training_run_id' in text
+    assert '"checkpoint_identity": checkpoint_profile' in text
 
 
 def test_shell_entrypoint_does_not_enable_errexit() -> None:

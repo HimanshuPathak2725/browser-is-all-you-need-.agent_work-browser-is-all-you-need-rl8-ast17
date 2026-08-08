@@ -1,5 +1,10 @@
 # SynthMem 50-epoch public-PR evaluation on GCP
 
+> Historical lane: this document preserves the SynthMem-v3 procedure. The current
+> SynthMem-v1 epoch-50 thinking-on lane is
+> [public-pr-synthmem-v1-ep50-thinking-gcp-eval.md](public-pr-synthmem-v1-ep50-thinking-gcp-eval.md).
+>
+
 This lane evaluates the exact `SynthMem-v3-v1std-50ep` checkpoint. For the next controlled experiment, use `SUITE=fmtlib-compact-repair-bestof4`. It remains one evaluation task, generates up to four isolated candidates, gives each failing candidate at most one sanitized compiler-feedback repair turn, and stops at the first executable pass. The historical `fmtlib-demo`, `fmtlib-compiler-repair`, and three-task `full` lanes remain available as frozen ablations. The run uses one `a2-ultragpu-4g` VM with four full NVIDIA A100 80 GB GPUs and SGLang tensor parallelism 4.
 
 This is diagnostic public-patch evaluation only. The PRs and their fixes are

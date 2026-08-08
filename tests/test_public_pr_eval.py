@@ -488,7 +488,7 @@ def test_failure_diagnostics_compare_candidate_to_reference(tmp_path: Path) -> N
     assert (tmp_path / "diagnostics/candidate-production.patch").is_file()
 
 
-def test_demo_baseline_can_pass_on_checklist_without_executable_oracle(
+def test_demo_baseline_rejects_checklist_without_executable_oracle(
     tmp_path: Path,
 ) -> None:
     repo = tmp_path / "repo"
@@ -545,9 +545,10 @@ def test_demo_baseline_can_pass_on_checklist_without_executable_oracle(
         row, repo, score, tmp_path / "baseline-diagnostics", aider_returncode=0
     )
     assert receipt["passed"] is False
-    assert receipt["demo_baseline"]["passed"] is True
-    assert receipt["demo_baseline"]["reason"] == "checklist_similarity_baseline_passed"
-    assert receipt["demo_baseline"]["present_checklist_items"] == 9
+    assert receipt["demo_baseline"]["passed"] is False
+    assert receipt["demo_baseline"]["reason"] == "executable_oracle_failed"
+    assert receipt["demo_baseline"]["textual_hints"]["present"] == 9
+    assert receipt["demo_baseline"]["textual_hints"]["status"] == "diagnostic_only"
 
 
 def test_gcp_lane_is_exactly_bound_and_offline() -> None:
@@ -576,10 +577,10 @@ def test_gcp_lane_is_exactly_bound_and_offline() -> None:
     assert '"repair_temperature": 0.2' in runtime
     assert "repair_model_settings=repair_settings" in runtime
     assert '"edit_format": "diff"' in runtime
-    assert 'choices=sorted(SUITES), default="fmtlib-demo"' in runtime
+    assert 'default="fmtlib-verified-mechanisms-thinking"' in runtime
     assert "write_model_settings(" in runtime
     assert 'temperature=float(suite_config.get("repair_temperature", 0.7))' in runtime
-    assert 'SUITE="${SUITE:-fmtlib-demo}"' in launcher
+    assert 'SUITE="${SUITE:-fmtlib-verified-mechanisms-thinking}"' in launcher
     assert '--suite "${SUITE}"' in launcher
     assert "--network none" in launcher
     assert "--gpus all" in launcher

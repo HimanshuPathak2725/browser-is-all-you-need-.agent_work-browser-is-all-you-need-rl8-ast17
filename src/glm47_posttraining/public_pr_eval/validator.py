@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
+from .mechanism_contract import mechanism_contract_findings
+
 
 SCHEMA_VERSION = "public-pr-repo-eval-v2"
 CLASSIFICATION = "public_pr_regression_diagnostic_only"
@@ -529,6 +531,9 @@ def _validate_hidden(
         "a deterministic evaluator-only plausible-wrong mutation is required",
     )
 
+    for rule_id, message in mechanism_contract_findings(row, repo_root):
+        findings.append(Finding(rule_id, "critical", message))
+
 
 def _validate_run_policy(row: dict[str, Any], findings: list[Finding]) -> None:
     policy = _object(row.get("run_policy"))
@@ -549,9 +554,10 @@ def _validate_run_policy(row: dict[str, Any], findings: list[Finding]) -> None:
         and (single_candidate or best_of_four)
         and policy.get("temperature") == 0.7
         and policy.get("top_p") == 1.0
-        and policy.get("max_completion_tokens") == 32768,
+        and policy.get("max_completion_tokens") == 32768
+        and policy.get("thinking_mode") in {"disabled", "enabled"},
         "PPR-RUN-001",
-        "attempt count, seed, decoding, and token limit must match an approved contract",
+        "attempt count, seed, decoding, token limit, and thinking mode must match an approved contract",
     )
     status_feedback_ok = (
         policy.get("attempt_2_feedback") == EXACT_FEEDBACK

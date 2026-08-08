@@ -11,6 +11,7 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
+from glm47_posttraining.public_pr_eval.fmt_verified_contract import upgrade_thinking_row
 from glm47_posttraining.public_pr_eval.validator import (
     BASELINE_REPAIR_INSTRUCTION_IDS,
     BASELINE_REPAIR_PROMPT_PROFILE,
@@ -35,7 +36,7 @@ IMAGE = (
     "sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37"
 )
 
-FMT_PR_SOLUTION_CHECKLIST = [
+LEGACY_FMT_PR_SOLUTION_CHECKLIST = [
     {
         "id": "fmt-duration-cast-helper",
         "change": "Add detail::fmt_duration_cast<>",
@@ -178,6 +179,12 @@ FMT_PR_SOLUTION_CHECKLIST = [
             "localtime(std::chrono::time_point_cast<std::chrono::seconds>(val))",
         ],
     },
+]
+
+
+FMT_PR_SOLUTION_CHECKLIST = [
+    {**copy.deepcopy(item), "verifier_id": item["id"]}
+    for item in LEGACY_FMT_PR_SOLUTION_CHECKLIST
 ]
 
 
@@ -1168,7 +1175,7 @@ def tasks() -> list[dict[str, Any]]:
             },
         ),
     ]
-    rows[0]["diagnostic_checklist"] = copy.deepcopy(FMT_PR_SOLUTION_CHECKLIST)
+    rows[0]["diagnostic_checklist"] = copy.deepcopy(LEGACY_FMT_PR_SOLUTION_CHECKLIST)
     return rows
 
 
@@ -1491,6 +1498,34 @@ def demo_fmtlib_compact_bestof4_tasks() -> list[dict[str, Any]]:
     return [row]
 
 
+def demo_fmtlib_compact_bestof4_thinking_tasks() -> list[dict[str, Any]]:
+    """Emit the compact best-of-four contract with GLM thinking enabled."""
+    row = copy.deepcopy(demo_fmtlib_compact_bestof4_tasks()[0])
+    row["run_policy"]["thinking_mode"] = "enabled"
+    row["harness_instructions"]["thinking_mode"] = "enabled"
+    row["harness_instructions"]["thinking_request"] = {
+        "transport": "openai_chat_completions_extra_body",
+        "field": "chat_template_kwargs.enable_thinking",
+        "value": True,
+    }
+    row["demo_contract"] = {
+        **row["demo_contract"],
+        "schema_version": "public-pr-compact-repair-bestof4-thinking-demo-v1",
+        "claim_template": (
+            "One task was evaluated with thinking enabled, up to four isolated "
+            "candidates, and at most one sanitized compiler-repair turn per candidate."
+        ),
+    }
+    return [row]
+
+
+def demo_fmtlib_verified_mechanism_tasks() -> list[dict[str, Any]]:
+    """Emit the thinking-on v6 lane with compile-gated mechanism evidence."""
+
+    row = demo_fmtlib_compact_bestof4_thinking_tasks()[0]
+    return [upgrade_thinking_row(row, LEGACY_FMT_PR_SOLUTION_CHECKLIST)]
+
+
 def demo_fmtlib_compiler_repair_tasks() -> list[dict[str, Any]]:
     row = copy.deepcopy(tasks()[0])
     generic_prompt = row["model_input"]["messages"][0]["content"]
@@ -1545,7 +1580,7 @@ def demo_fmtlib_compiler_repair_tasks() -> list[dict[str, Any]]:
         ],
     }
     baseline = demo_fmtlib_single_turn_tasks()[0]
-    row["diagnostic_checklist"] = copy.deepcopy(FMT_PR_SOLUTION_CHECKLIST)
+    row["diagnostic_checklist"] = copy.deepcopy(LEGACY_FMT_PR_SOLUTION_CHECKLIST)
     row["required_header_changes"] = copy.deepcopy(
         baseline["required_header_changes"]
     )
@@ -1610,7 +1645,7 @@ def demo_fmtlib_single_turn_tasks() -> list[dict[str, Any]]:
         "max_completion_tokens": 32768,
         "thinking_mode": "disabled",
     }
-    row["diagnostic_checklist"] = copy.deepcopy(FMT_PR_SOLUTION_CHECKLIST)
+    row["diagnostic_checklist"] = copy.deepcopy(LEGACY_FMT_PR_SOLUTION_CHECKLIST)
     row["required_header_changes"] = [
         {
             "id": "same-arithmetic-dispatch",
@@ -1751,6 +1786,16 @@ def main() -> int:
         action="store_true",
         help="emit the compact one-task best-of-four compiler-repair contract",
     )
+    parser.add_argument(
+        "--demo-fmtlib-compact-bestof4-thinking",
+        action="store_true",
+        help="emit the compact best-of-four contract with GLM thinking enabled",
+    )
+    parser.add_argument(
+        "--demo-fmtlib-verified-mechanisms",
+        action="store_true",
+        help="emit the thinking-on v6 contract with compile-gated mechanisms",
+    )
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite evaluation JSONL: {args.output}")
@@ -1759,10 +1804,16 @@ def main() -> int:
         args.demo_fmtlib_single_turn,
         args.demo_fmtlib_compiler_repair,
         args.demo_fmtlib_compact_bestof4,
+        args.demo_fmtlib_compact_bestof4_thinking,
+        args.demo_fmtlib_verified_mechanisms,
     )
     if sum(bool(mode) for mode in modes) > 1:
         raise ValueError("select only one demo output mode")
-    if args.demo_fmtlib_compact_bestof4:
+    if args.demo_fmtlib_verified_mechanisms:
+        selected = demo_fmtlib_verified_mechanism_tasks()
+    elif args.demo_fmtlib_compact_bestof4_thinking:
+        selected = demo_fmtlib_compact_bestof4_thinking_tasks()
+    elif args.demo_fmtlib_compact_bestof4:
         selected = demo_fmtlib_compact_bestof4_tasks()
     elif args.demo_fmtlib_compiler_repair:
         selected = demo_fmtlib_compiler_repair_tasks()

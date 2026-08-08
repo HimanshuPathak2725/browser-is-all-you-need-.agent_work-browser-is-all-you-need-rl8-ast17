@@ -87,17 +87,104 @@ SUITES = {
             "single-task compact fmtlib best-of-four compiler-repair demo"
         ),
     },
+    "fmtlib-compact-repair-bestof4-thinking": {
+        "task_jsonl": Path(
+            "/opt/public-pr-eval/configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v5.jsonl"
+        ),
+        "task_jsonl_sha256": "db8de1a51420ba5424f1799ea15e81adeaadaeb3dcd6331ce94412d98c223202",
+        "prepared_root": Path("/opt/public-pr-prepared/demo-fmtlib-v5"),
+        "oracle_receipt": Path(
+            "/opt/public-pr-oracles/demo-fmtlib-v5/oracle-replay.json"
+        ),
+        "static_validation": Path(
+            "/opt/public-pr-prepared/demo-fmtlib-v5/static-validation.json"
+        ),
+        "edit_format": "diff",
+        "attempts": 2,
+        "candidate_seeds": [1701, 1702, 1703, 1704],
+        "initial_temperature": 0.7,
+        "repair_temperature": 0.2,
+        "thinking_enabled": True,
+        "description": (
+            "single-task thinking-on compact fmtlib best-of-four compiler-repair demo"
+        ),
+    },
+    "fmtlib-verified-mechanisms-thinking": {
+        "task_jsonl": Path(
+            "/opt/public-pr-eval/configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl"
+        ),
+        "task_jsonl_sha256": "a8c59421d38ea2dbdf0bca6168398c590d9497cdd0acdbced9d0377c8725746f",
+        "prepared_root": Path("/opt/public-pr-prepared/demo-fmtlib-v6"),
+        "oracle_receipt": Path(
+            "/opt/public-pr-oracles/demo-fmtlib-v6/oracle-replay.json"
+        ),
+        "static_validation": Path(
+            "/opt/public-pr-prepared/demo-fmtlib-v6/static-validation.json"
+        ),
+        "edit_format": "diff",
+        "attempts": 2,
+        "candidate_seeds": [1701, 1702, 1703, 1704],
+        "initial_temperature": 0.7,
+        "repair_temperature": 0.2,
+        "thinking_enabled": True,
+        "description": (
+            "single-task thinking-on fmtlib best-of-four with compile-gated "
+            "named mechanism verification"
+        ),
+    },
 }
 AIDER_FREEZE = Path("/opt/public-pr-prepared/aider-pip-freeze.txt")
 BASE_MODEL_REVISION = "7dd20894a642a0aa287e9827cb1a1f7f91386b67"
-TRAINING_RUN_ID = "glm47-synth-mem-v3-v1std-50ep-20260803T023833Z"
-SOURCE_ADAPTER_SHA256 = (
-    "5ca6a0cbede843e8c042ebb1004a80e85d85686974063cb9bd0540e236aab6ca"
-)
-EXPECTED_SOURCE_TENSORS = 9_741
-EXPECTED_LAYER_47_TENSORS = 207
-EXPECTED_SERVING_TENSORS = 9_534
-MODEL_NAME = "glm47-synthmem-v3-v1std-50ep-public-pr"
+CHECKPOINT_PROFILES: dict[str, dict[str, object]] = {
+    "synthmem-v1-ep50": {
+        "training_run_id": "glm47-synth-memorization-v1-100ep-20260731T071000Z",
+        "checkpoint_path": "checkpoints/sft_lora_r16/iter_0000649",
+        "epoch": 50,
+        "optimizer_iteration": 649,
+        "source_adapter_sha256": "4acb7f23c295f45380155c5d9ee6bc59422262f0cb51f0c02f7e550d405b575a",
+        "serving_adapter_sha256": "6de1aeba533a5bfef26a73286fc32b47f403c022bd7467e2b3dc32cf18a35f48",
+        "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+        "model_name": "glm47-synthmem-v1-ep50-public-pr",
+        "source_tensor_count": 9_741,
+        "layer_47_tensor_count": 207,
+        "serving_tensor_count": 9_534,
+        "lora_rank": 16,
+        "lora_alpha": 32,
+        "training_task_count": 260,
+        "sequence_length": 4_096,
+        "global_batch_size": 20,
+        "training_gpu_topology": "8x NVIDIA H100",
+        "optimizer_updates_per_epoch": 13,
+        "step_649_metrics": {
+            "loss": 0.000027910614625928666,
+            "gradient_norm": 0.0021414729699963087,
+            "learning_rate": 0.00011743214109250993,
+            "step_time_seconds": 6.9253,
+            "training_tflops": 26.7814,
+            "effective_tokens_per_gpu_second": 960.2933,
+        },
+        "training_data_manifest_sha256": "afec0d05d5c1f9460ac9b2ed4e65aea69775b49639c7ae727f3660308ae1b8b8",
+        "training_jsonl_sha256": "3472d76169e52bd0859c181d63de24a060c4c7f2d3d8a004ceb6090498f1ddc1",
+        "training_source_commit": "6188070622895021d1c340ad31939e888c514396",
+        "matched_fixed26_suite": "glm47-synthmem-v1-ep50-fixed26-v2-v4matched-eval4-20260804T084520Z",
+    },
+    "synthmem-v3-v1std-ep50": {
+        "training_run_id": "glm47-synth-mem-v3-v1std-50ep-20260803T023833Z",
+        "checkpoint_path": "checkpoints/sft_lora_r16/iter_0001299",
+        "epoch": 50,
+        "optimizer_iteration": 1_299,
+        "source_adapter_sha256": "5ca6a0cbede843e8c042ebb1004a80e85d85686974063cb9bd0540e236aab6ca",
+        "serving_adapter_sha256": None,
+        "adapter_config_sha256": "0bd6d85f88fc42fefa52627b3c261f1ad58bb2c9519332ae8034dd5dffe2498e",
+        "model_name": "glm47-synthmem-v3-v1std-50ep-public-pr",
+        "source_tensor_count": 9_741,
+        "layer_47_tensor_count": 207,
+        "serving_tensor_count": 9_534,
+        "lora_rank": 16,
+        "lora_alpha": 32,
+    },
+}
+DEFAULT_CHECKPOINT_PROFILE = "synthmem-v1-ep50"
 API_KEY = "local-public-pr-eval"
 RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,159}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -240,23 +327,50 @@ def verify_evaluator_receipts(suite: dict[str, object]) -> dict[str, object]:
         raise RuntimeError(
             "base/reference/plausible-wrong oracle replay is not bound PASS"
         )
+    expected_thinking_mode = (
+        "enabled" if bool(suite.get("thinking_enabled", False)) else "disabled"
+    )
+    contract_rows = [
+        json.loads(line)
+        for line in task_jsonl.read_text(encoding="utf-8").splitlines()
+        if line
+    ]
+    if not contract_rows or any(
+        row.get("run_policy", {}).get("thinking_mode") != expected_thinking_mode
+        for row in contract_rows
+    ):
+        raise RuntimeError(
+            "task contract thinking mode does not match the selected runtime suite"
+        )
     return {
         "static_validation_sha256": sha256_path(static_validation),
         "oracle_replay_sha256": sha256_path(oracle_receipt),
         "prepared_suite_sha256": sha256_path(prepared_root / "prepared-suite.json"),
+        "thinking_mode": expected_thinking_mode,
     }
 
 
 def prepare_serving_adapter(
     adapter_path: Path,
-    expected_config_sha256: str,
     destination: Path,
     *,
-    expected_adapter_model_sha256: str = SOURCE_ADAPTER_SHA256,
-    expected_training_run_id: str = TRAINING_RUN_ID,
+    profile: dict[str, object],
 ) -> tuple[Path, dict[str, object]]:
     import torch
 
+    expected_training_run_id = str(profile["training_run_id"])
+    expected_source_sha256 = validate_sha256(
+        str(profile["source_adapter_sha256"]), "profile source adapter"
+    )
+    expected_config_sha256 = validate_sha256(
+        str(profile["adapter_config_sha256"]), "profile adapter config"
+    )
+    expected_serving_value = profile.get("serving_adapter_sha256")
+    expected_serving_sha256 = (
+        validate_sha256(str(expected_serving_value), "profile serving adapter")
+        if expected_serving_value is not None
+        else None
+    )
     read_exact_marker(
         adapter_path / ".training-run-id", expected_training_run_id, "training run"
     )
@@ -264,49 +378,55 @@ def prepare_serving_adapter(
     config_path = adapter_path / "adapter_config.json"
     if not model_path.is_file() or not config_path.is_file():
         raise FileNotFoundError("50-epoch adapter is incomplete")
-    config_sha = validate_sha256(
-        expected_config_sha256, "expected-adapter-config-sha256"
-    )
     observed_model_sha = sha256_path(model_path)
     observed_config_sha = sha256_path(config_path)
-    model_sha = validate_sha256(
-        expected_adapter_model_sha256, "expected-adapter-model-sha256"
-    )
-    if observed_model_sha != model_sha or observed_config_sha != config_sha:
+    if (
+        observed_model_sha != expected_source_sha256
+        or observed_config_sha != expected_config_sha256
+    ):
         raise RuntimeError(
-            "adapter bytes do not match the explicit source/config bindings"
+            "adapter bytes do not match the immutable checkpoint profile"
         )
 
     log("loading and converting the trainer adapter for SGLang serving")
     state = torch.load(model_path, map_location="cpu", weights_only=True, mmap=True)
     layer_47 = [key for key in state if ".layers.47." in key]
     if (
-        len(state) != EXPECTED_SOURCE_TENSORS
-        or len(layer_47) != EXPECTED_LAYER_47_TENSORS
+        len(state) != int(profile["source_tensor_count"])
+        or len(layer_47) != int(profile["layer_47_tensor_count"])
     ):
         raise RuntimeError(
-            "adapter tensor structure does not match the recorded 50-epoch run"
+            "adapter tensor structure does not match the immutable checkpoint profile"
         )
     filtered = {key: value for key, value in state.items() if ".layers.47." not in key}
-    if len(filtered) != EXPECTED_SERVING_TENSORS:
+    if len(filtered) != int(profile["serving_tensor_count"]):
         raise RuntimeError("serving tensor count mismatch")
     destination.mkdir(parents=True, exist_ok=False)
-    torch.save(filtered, destination / "adapter_model.bin")
+    serving_model_path = destination / "adapter_model.bin"
+    torch.save(filtered, serving_model_path)
     shutil.copy2(config_path, destination / "adapter_config.json")
+    serving_sha256 = sha256_path(serving_model_path)
+    if (
+        expected_serving_sha256 is not None
+        and serving_sha256 != expected_serving_sha256
+    ):
+        raise RuntimeError("converted serving adapter digest mismatch")
     return destination, {
         "source_adapter_sha256": observed_model_sha,
         "source_adapter_config_sha256": observed_config_sha,
         "source_tensor_count": len(state),
         "removed_layer_47_tensor_count": len(layer_47),
         "serving_tensor_count": len(filtered),
-        "serving_adapter_sha256": sha256_path(destination / "adapter_model.bin"),
+        "serving_adapter_sha256": serving_sha256,
         "serving_adapter_config_sha256": sha256_path(
             destination / "adapter_config.json"
         ),
     }
 
 
-def server_command(model_path: Path, port: int, lora_rank: int) -> list[str]:
+def server_command(
+    model_path: Path, port: int, lora_rank: int, model_name: str
+) -> list[str]:
     return [
         "python3",
         "-m",
@@ -324,7 +444,7 @@ def server_command(model_path: Path, port: int, lora_rank: int) -> list[str]:
         "--max-running-requests",
         "8",
         "--served-model-name",
-        MODEL_NAME,
+        model_name,
         "--api-key",
         API_KEY,
         "--host",
@@ -374,8 +494,8 @@ def wait_for_server(process: subprocess.Popen[str], log_path: Path, port: int) -
     raise TimeoutError("SGLang did not become healthy within 1,800 seconds")
 
 
-def load_adapter(adapter: Path, port: int) -> str:
-    payload = json.dumps({"lora_name": MODEL_NAME, "lora_path": str(adapter)}).encode()
+def load_adapter(adapter: Path, port: int, model_name: str) -> str:
+    payload = json.dumps({"lora_name": model_name, "lora_path": str(adapter)}).encode()
     for endpoint in ("/load_lora_adapter", "/v1/load_lora_adapter"):
         request = urllib.request.Request(
             f"http://127.0.0.1:{port}{endpoint}",
@@ -398,13 +518,15 @@ def load_adapter(adapter: Path, port: int) -> str:
 
 def write_model_settings(
     path: Path,
+    model_name: str,
+    thinking_enabled: bool,
     edit_format: str,
     *,
     temperature: float = 0.7,
     seed: int = 1701,
 ) -> None:
     path.write_text(
-        f"""- name: openai/{MODEL_NAME}
+        f"""- name: openai/{model_name}
   edit_format: {edit_format}
   use_repo_map: false
   use_temperature: true
@@ -413,6 +535,9 @@ def write_model_settings(
     max_tokens: 32768
     temperature: {temperature}
     top_p: 1.0
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: {str(thinking_enabled).lower()}
     seed: {seed}
 """,
         encoding="utf-8",
@@ -426,18 +551,26 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--expected-model-manifest-sha256", required=True)
     result.add_argument("--expected-adapter-config-sha256", required=True)
     result.add_argument(
+        "--checkpoint-profile",
+        choices=sorted(CHECKPOINT_PROFILES),
+        default=DEFAULT_CHECKPOINT_PROFILE,
+        help="immutable adapter/checkpoint identity profile",
+    )
+    result.add_argument(
         "--expected-adapter-model-sha256",
-        default=SOURCE_ADAPTER_SHA256,
-        help="explicit adapter_model.bin digest (defaults to the frozen 50-epoch adapter)",
+        help="optional assertion; must equal the selected profile",
     )
     result.add_argument(
         "--expected-training-run-id",
-        default=TRAINING_RUN_ID,
-        help="exact .training-run-id marker (defaults to the frozen 50-epoch run)",
+        help="optional assertion; must equal the selected profile",
     )
     result.add_argument("--output-root", type=Path, required=True)
     result.add_argument("--run-id", required=True)
-    result.add_argument("--suite", choices=sorted(SUITES), default="fmtlib-demo")
+    result.add_argument(
+        "--suite",
+        choices=sorted(SUITES),
+        default="fmtlib-verified-mechanisms-thinking",
+    )
     result.add_argument("--port", type=int, default=8000)
     result.add_argument("--lora-rank", type=int, default=16)
     return result
@@ -447,6 +580,46 @@ def main() -> int:
     args = parser().parse_args()
     run_id = validate_run_id(args.run_id)
     suite_config = SUITES[args.suite]
+    checkpoint_profile = dict(CHECKPOINT_PROFILES[args.checkpoint_profile])
+    training_run_id = validate_run_id(str(checkpoint_profile["training_run_id"]))
+    source_adapter_sha256 = validate_sha256(
+        str(checkpoint_profile["source_adapter_sha256"]), "profile source adapter"
+    )
+    adapter_config_sha256 = validate_sha256(
+        str(checkpoint_profile["adapter_config_sha256"]), "profile adapter config"
+    )
+    model_name = str(checkpoint_profile["model_name"])
+    thinking_enabled = bool(suite_config.get("thinking_enabled", False))
+    if (
+        validate_sha256(
+            args.expected_adapter_config_sha256,
+            "expected-adapter-config-sha256",
+        )
+        != adapter_config_sha256
+    ):
+        raise RuntimeError(
+            "caller adapter config digest does not match the checkpoint profile"
+        )
+    if (
+        args.expected_adapter_model_sha256 is not None
+        and validate_sha256(
+            args.expected_adapter_model_sha256,
+            "expected-adapter-model-sha256",
+        )
+        != source_adapter_sha256
+    ):
+        raise RuntimeError(
+            "caller adapter model digest does not match the checkpoint profile"
+        )
+    if (
+        args.expected_training_run_id is not None
+        and validate_run_id(args.expected_training_run_id) != training_run_id
+    ):
+        raise RuntimeError(
+            "caller training run ID does not match the checkpoint profile"
+        )
+    if args.lora_rank != int(checkpoint_profile["lora_rank"]):
+        raise RuntimeError("LoRA rank does not match the checkpoint profile")
     task_jsonl = suite_config["task_jsonl"]
     prepared_root = suite_config["prepared_root"]
     if not isinstance(task_jsonl, Path) or not isinstance(prepared_root, Path):
@@ -468,29 +641,31 @@ def main() -> int:
     evaluator_receipts = verify_evaluator_receipts(suite_config)
     serving, conversion = prepare_serving_adapter(
         args.adapter_path,
-        args.expected_adapter_config_sha256,
         Path("/tmp") / f"{run_id}-serving-adapter",
-        expected_adapter_model_sha256=args.expected_adapter_model_sha256,
-        expected_training_run_id=validate_run_id(args.expected_training_run_id),
+        profile=checkpoint_profile,
     )
     candidate_seeds = [
         int(seed) for seed in suite_config.get("candidate_seeds", [1701])
     ]
     settings_by_seed: dict[int, Path] = {}
     repair_settings_by_seed: dict[int, Path] = {}
+    settings_root = destination / "model-settings"
+    settings_root.mkdir()
     for seed in candidate_seeds:
-        candidate_settings = Path("/tmp") / f"{run_id}-model-settings-{seed}.yml"
-        candidate_repair_settings = (
-            Path("/tmp") / f"{run_id}-repair-model-settings-{seed}.yml"
-        )
+        candidate_settings = settings_root / f"candidate-{seed}.yml"
+        candidate_repair_settings = settings_root / f"repair-{seed}.yml"
         write_model_settings(
             candidate_settings,
+            model_name,
+            thinking_enabled,
             str(suite_config["edit_format"]),
             temperature=float(suite_config.get("initial_temperature", 0.7)),
             seed=seed,
         )
         write_model_settings(
             candidate_repair_settings,
+            model_name,
+            thinking_enabled,
             str(suite_config["edit_format"]),
             temperature=float(suite_config.get("repair_temperature", 0.7)),
             seed=seed,
@@ -506,21 +681,23 @@ def main() -> int:
         try:
             log("launching SGLang with tensor parallelism 4")
             process = subprocess.Popen(
-                server_command(args.model_path, args.port, args.lora_rank),
+                server_command(
+                    args.model_path, args.port, args.lora_rank, model_name
+                ),
                 stdout=log_handle,
                 stderr=subprocess.STDOUT,
                 text=True,
             )
             wait_for_server(process, log_path, args.port)
             log("loading the converted LoRA adapter")
-            load_receipt = load_adapter(serving, args.port)
+            load_receipt = load_adapter(serving, args.port, model_name)
             log(f"running {suite_config['description']} through Aider")
             suite = evaluate_suite_with_aider(
                 task_jsonl,
                 prepared_root,
                 destination / "evaluation",
                 aider_python="/opt/aider-venv/bin/python",
-                model=MODEL_NAME,
+                model=model_name,
                 model_settings=settings,
                 api_base=f"http://127.0.0.1:{args.port}/v1",
                 api_key=API_KEY,
@@ -538,14 +715,23 @@ def main() -> int:
                     process.kill()
 
     receipt = {
-        "schema_version": "synthmem-50ep-public-pr-gcp-evaluation-v1",
+        "schema_version": "synthmem-50ep-public-pr-gcp-evaluation-v2",
         "status": "complete",
         "classification": "public_pr_regression_diagnostic_only",
         "run_id": run_id,
-        "training_run_id": args.expected_training_run_id,
+        "training_run_id": training_run_id,
+        "inference_request": {
+            "thinking_enabled": thinking_enabled,
+            "transport": "openai_chat_completions_extra_body",
+            "field": "chat_template_kwargs.enable_thinking",
+            "value": thinking_enabled,
+            "configured_in": "aider_model_settings.extra_params.extra_body",
+        },
+        "checkpoint_profile": args.checkpoint_profile,
+        "checkpoint_identity": checkpoint_profile,
         "base_model_revision": BASE_MODEL_REVISION,
         "base_model_file_manifest": model_manifest,
-        "model": MODEL_NAME,
+        "model": model_name,
         "gcp": {
             "project": os.environ["GCP_PROJECT"],
             "zone": os.environ["GCP_ZONE"],
@@ -569,6 +755,7 @@ def main() -> int:
         "repair_temperature": float(suite_config.get("repair_temperature", 0.7)),
         "model_settings_sha256": sha256_path(settings),
         "repair_model_settings_sha256": sha256_path(repair_settings),
+        "model_settings_directory": str(settings_root.relative_to(destination)),
         "model_settings_by_seed_sha256": {
             str(seed): sha256_path(path)
             for seed, path in sorted(settings_by_seed.items())

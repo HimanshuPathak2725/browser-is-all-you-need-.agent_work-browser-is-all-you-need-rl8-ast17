@@ -14,6 +14,12 @@ import time
 from pathlib import Path
 from typing import Any, Iterable
 
+from .mechanism_scoring import (
+    build_compile_gate_ready,
+    structure_summary,
+    textual_hint_summary,
+    verified_mechanism_summary,
+)
 from .validator import (
     COMPILER_FEEDBACK_MODE,
     EXACT_FEEDBACK,
@@ -159,6 +165,7 @@ def _expand_argv(argv: list[str], repo: Path, probe: Path) -> list[str]:
     replacements = {
         "{private_probe}": str(probe),
         "{private_probe_binary}": str(binary),
+        "{mechanism_probe}": str(repo / PRIVATE_DIR / "mechanism-probe.cpp"),
         "{repository}": str(repo),
     }
     return [replacements.get(value, value) for value in argv]
@@ -195,6 +202,10 @@ def run_command_specs(
             timed_out = True
             output = (exc.stdout or "") + (exc.stderr or "")
             returncode = 124
+        except OSError as exc:
+            timed_out = False
+            output = f"{type(exc).__name__}: {exc}\n"
+            returncode = 127
         log_path = log_dir / f"{index:02d}-{spec['name']}.log"
         log_path.write_text(output, encoding="utf-8", errors="replace")
         receipts.append(
@@ -212,7 +223,7 @@ def run_command_specs(
             f"command {index}/{len(specs)} done: {spec['name']} "
             f"rc={returncode} elapsed={receipts[-1]['duration_seconds']}s"
         )
-        if returncode != 0:
+        if returncode != 0 and not bool(spec.get("continue_on_failure")):
             break
     return receipts
 
@@ -234,7 +245,10 @@ def compiler_feedback_for_attempt(
     failed = next(
         (
             command
-            for command in score.get("build_commands", [])
+            for command in (
+                *score.get("build_commands", []),
+                *score.get("mechanism_commands", []),
+            )
             if int(command.get("returncode", 0)) != 0
         ),
         None,
@@ -303,7 +317,7 @@ def compiler_feedback_for_attempt(
 
 
 def _failed_command(score: dict[str, Any]) -> tuple[str, dict[str, Any] | None]:
-    for stage, key in (("build", "build_commands"), ("probe", "probe_commands")):
+    for stage, key in (("build", "build_commands"), ("mechanism", "mechanism_commands"), ("probe", "probe_commands")):
         for command in score.get(key, []):
             if command.get("returncode") != 0:
                 return stage, command
@@ -321,6 +335,8 @@ def _failure_class(score: dict[str, Any]) -> str:
     name = str(command["name"]).lower()
     if stage == "probe":
         return "independent_probe_compile_failure" if "compile" in name else "independent_probe_runtime_failure"
+    if stage == "mechanism":
+        return "mechanism_compile_failure" if "compile" in name else "mechanism_probe_failure"
     if "configure" in name:
         return "configure_failure"
     if "build" in name or "compile" in name:
@@ -372,6 +388,7 @@ def _evaluate_solution_checklist(row: dict[str, Any], repo: Path) -> list[dict[s
         results.append(
             {
                 "id": str(item.get("id", "")),
+                "verifier_id": str(item.get("verifier_id", "")),
                 "change": str(item.get("change", "")),
                 "purpose": str(item.get("purpose", "")),
                 "path": path,
@@ -395,46 +412,39 @@ def _demo_baseline_summary(
     files: list[dict[str, Any]],
     checklist: list[dict[str, Any]],
 ) -> dict[str, Any]:
-    policy = row.get("demo_evaluation_policy", {})
-    if not isinstance(policy, dict):
-        policy = {}
-    minimum_present = int(policy.get("minimum_present_checklist_items", 9))
-    minimum_similarity = float(policy.get("minimum_line_similarity_ratio", 0.75))
-    present = sum(1 for item in checklist if item.get("status") == "present")
-    partial = sum(1 for item in checklist if item.get("status") == "partial")
-    missing = sum(1 for item in checklist if item.get("status") == "missing")
+    textual_hints = textual_hint_summary(checklist)
     minimum_file_similarity = (
         min(float(item.get("line_similarity_ratio", 0.0)) for item in files)
         if files
         else 0.0
     )
-    mechanism_passed = (
-        bool(checklist)
-        and present >= minimum_present
-        and minimum_file_similarity >= minimum_similarity
-    )
     executable_passed = bool(score.get("passed"))
-    passed = executable_passed or mechanism_passed
     if executable_passed:
         reason = "executable_oracle_passed"
-    elif mechanism_passed:
-        reason = "checklist_similarity_baseline_passed"
     else:
-        reason = "below_demo_baseline"
+        verified = score.get("verified_mechanisms", {})
+        reason = (
+            str(verified.get("reason"))
+            if verified.get("status") == "unavailable"
+            else "executable_oracle_failed"
+        )
     return {
-        "schema_version": "public-pr-demo-baseline-v1",
-        "passed": passed,
+        "schema_version": "public-pr-demo-baseline-v2",
+        "passed": executable_passed,
         "reason": reason,
         "executable_oracle_passed": executable_passed,
-        "mechanism_baseline_passed": mechanism_passed,
-        "minimum_present_checklist_items": minimum_present,
-        "minimum_line_similarity_ratio": minimum_similarity,
-        "present_checklist_items": present,
-        "partial_checklist_items": partial,
-        "missing_checklist_items": missing,
-        "total_checklist_items": len(checklist),
+        "textual_hints": textual_hints,
+        "structural_mechanisms": score.get(
+            "structural_mechanisms", {"status": "not_configured"}
+        ),
+        "verified_mechanisms": score.get(
+            "verified_mechanisms", {"status": "not_configured"}
+        ),
         "minimum_observed_line_similarity_ratio": round(minimum_file_similarity, 6),
-        "interpretation_limit": "demo baseline is diagnostic and weaker than the executable oracle; benchmark pass claims must use score.passed",
+        "interpretation_limit": (
+            "textual hints, structural checks, and reference similarity are diagnostic; "
+            "only the executable oracle can pass the candidate"
+        ),
     }
 
 
@@ -526,7 +536,7 @@ def write_attempt_diagnostics(
         row["task_id"], {"defect": "unknown", "reference_mechanism": "unknown"}
     )
     receipt = {
-        "schema_version": "public-pr-model-attempt-diagnostics-v1",
+        "schema_version": "public-pr-model-attempt-diagnostics-v2",
         "classification": "public_pr_regression_diagnostic_only",
         "task_id": row["task_id"],
         "passed": score["passed"],
@@ -566,13 +576,36 @@ def write_attempt_diagnostics(
         f"{item['forbidden_count']} | {item['purpose']} |"
         for item in checklist
     )
+    hints = demo_baseline["textual_hints"]
+    structural = demo_baseline["structural_mechanisms"]
+    verified = demo_baseline["verified_mechanisms"]
+    structural_line = (
+        f"{structural.get('valid', 0)}/{structural.get('total', 0)} "
+        f"structure checks valid (diagnostic only)"
+        if structural.get("status") == "complete"
+        else str(structural.get("status", "not_configured"))
+    )
+    if verified.get("status") == "unavailable":
+        verified_line = (
+            "UNAVAILABLE — " + str(verified.get("reason", "compile_gate_failed"))
+        )
+    elif verified.get("status") in {"complete", "incomplete"}:
+        verified_line = (
+            f"{verified.get('verified', 0)}/{verified.get('applicable_total', 0)} "
+            f"applicable mechanisms verified; "
+            f"{verified.get('platform_gated', 0)} platform-gated/unverified"
+        )
+    else:
+        verified_line = str(verified.get("status", "not_configured"))
     checklist_section = (
-        "\n## PR solution checklist\n\n"
-        f"Demo baseline: **{'PASS' if demo_baseline['passed'] else 'FAIL'}** "
-        f"(`{demo_baseline['present_checklist_items']}/"
-        f"{demo_baseline['total_checklist_items']}` present, "
-        f"minimum similarity `{demo_baseline['minimum_observed_line_similarity_ratio']}`).\n\n"
-        "| Check | Status | Required substrings | Forbidden substrings present | Purpose |\n"
+        "\n## Mechanism evidence\n\n"
+        f"- Textual hints: `{hints['present']}/{hints['total']}` present "
+        f"(diagnostic only; partial `{hints['partial']}`, missing `{hints['missing']}`).\n"
+        f"- Structurally valid: `{structural_line}`.\n"
+        f"- Executable verified: `{verified_line}`.\n"
+        f"- Final result: **{'PASS' if score['passed'] else 'FAIL'}**.\n\n"
+        "### Textual hint checklist\n\n"
+        "| Check | Hint status | Required substrings | Forbidden substrings present | Purpose |\n"
         "| --- | --- | ---: | ---: | --- |\n"
         f"{checklist_rows}\n"
         if checklist
@@ -585,7 +618,7 @@ def write_attempt_diagnostics(
 - Aider return code: `{aider_returncode}`
 - First failed evaluator command: `{command_summary}`
 - Exact upstream production match: `{exact_reference}`
-- Demo baseline result: **{'PASS' if demo_baseline['passed'] else 'FAIL'}** (`{demo_baseline['reason']}`)
+- Final result: **{'PASS' if demo_baseline['passed'] else 'FAIL'}** (`{demo_baseline['reason']}`)
 
 ## Upstream defect and correction
 
@@ -622,14 +655,44 @@ def write_suite_diagnostics(output_root: Path, receipts: list[dict[str, Any]]) -
         "These tasks are public-patch diagnostics and are not clean generalization evidence.",
         "Executable oracle results are authoritative; upstream patch similarity is diagnostic.",
         "",
-        "| Task | Pass@1 | Pass@2 | Final failure class | Exact upstream patch |",
-        "| --- | ---: | ---: | --- | ---: |",
+        "| Task | Pass@1 | Pass@2 | Textual hints (diagnostic) | "
+        "Structural (diagnostic) | Executable verified | Final failure class | "
+        "Exact upstream patch |",
+        "| --- | ---: | ---: | ---: | ---: | --- | --- | ---: |",
     ]
     for receipt in receipts:
         final = receipt["attempts"][-1]["diagnostics"]
+        baseline = final.get("demo_baseline", {})
+        hints = baseline.get("textual_hints", {})
+        structure = baseline.get("structural_mechanisms", {})
+        verified = baseline.get("verified_mechanisms", {})
+        hints_cell = (
+            f"{hints.get('present', 0)}/{hints.get('total', 0)}"
+            if hints.get("status") == "diagnostic_only"
+            else "not configured"
+        )
+        structure_cell = (
+            f"{structure.get('valid', 0)}/{structure.get('total', 0)}"
+            if structure.get("status") == "complete"
+            else str(structure.get("status", "not configured"))
+        )
+        if verified.get("status") == "unavailable":
+            verified_cell = (
+                "UNAVAILABLE — "
+                + str(verified.get("reason", "compile_gate_failed"))
+            )
+        elif verified.get("status") in {"complete", "incomplete"}:
+            verified_cell = (
+                f"{verified.get('verified', 0)}/"
+                f"{verified.get('applicable_total', 0)} applicable; "
+                f"{verified.get('platform_gated', 0)} gated"
+            )
+        else:
+            verified_cell = str(verified.get("status", "not configured"))
         lines.append(
             f"| `{receipt['task_id']}` | {receipt['pass_at_1']} | "
-            f"{receipt['pass_at_2']} | `{final['failure_class']}` | "
+            f"{receipt['pass_at_2']} | {hints_cell} | {structure_cell} | "
+            f"{verified_cell} | `{final['failure_class']}` | "
             f"{final['exact_upstream_reference_match']} |"
         )
     lines.extend(
@@ -699,11 +762,28 @@ def prepare_task(
     private_dir.mkdir(parents=True, exist_ok=False)
     probe = private_dir / "probe.cpp"
     shutil.copy2(source_probe, probe)
+    mechanism_probe_sha256 = None
+    mechanism_config = row["hidden_validation"].get("mechanism_verification")
+    if isinstance(mechanism_config, dict):
+        mechanism_binding = mechanism_config.get("probe", {})
+        source_mechanism_probe = repo_root / str(mechanism_binding.get("path", ""))
+        expected_mechanism_sha256 = str(mechanism_binding.get("sha256", ""))
+        if (
+            not source_mechanism_probe.is_file()
+            or sha256_path(source_mechanism_probe) != expected_mechanism_sha256
+        ):
+            raise EvaluationError(
+                f"mechanism probe digest mismatch: {row['task_id']}"
+            )
+        mechanism_probe = private_dir / "mechanism-probe.cpp"
+        shutil.copy2(source_mechanism_probe, mechanism_probe)
+        mechanism_probe_sha256 = sha256_path(mechanism_probe)
     with (destination / ".git" / "info" / "exclude").open(
         "a", encoding="utf-8"
     ) as exclude:
         exclude.write(
             f"/{BUILD_DIR}/\n/{DEPENDENCY_DIR}/\n/{PRIVATE_DIR}/probe-bin\n"
+            f"/{PRIVATE_DIR}/mechanism-probe-*\n"
         )
 
     _git(destination, "config", "user.name", "Public PR Evaluator")
@@ -757,6 +837,7 @@ def prepare_task(
         "overlay_patch_sha256": sha256_bytes(overlay_patch),
         "overlay_file_manifest_sha256": sha256_bytes(file_manifest),
         "private_probe_sha256": sha256_path(probe),
+        "mechanism_probe_sha256": mechanism_probe_sha256,
         "dependency_file_manifest_sha256": sha256_bytes(dependency_manifest),
         "provision_commands": provision,
     }
@@ -834,43 +915,79 @@ def score_candidate(
             "FETCHCONTENT_FULLY_DISCONNECTED": "ON",
         }
     )
+    hidden = row["hidden_validation"]
+    mechanism_config = hidden.get("mechanism_verification")
     build_receipts: list[dict[str, Any]] = []
     probe_receipts: list[dict[str, Any]] = []
+    mechanism_receipts: list[dict[str, Any]] = []
     if scope_passed:
         build_receipts = run_command_specs(
             repo,
-            row["hidden_validation"]["build_commands"],
+            hidden["build_commands"],
             probe=probe,
             log_dir=output_dir / "build",
             environment=environment,
         )
+        if isinstance(mechanism_config, dict) and build_compile_gate_ready(
+            mechanism_config, build_receipts
+        ):
+            mechanism_receipts = run_command_specs(
+                repo,
+                mechanism_config.get("commands", []),
+                probe=probe,
+                log_dir=output_dir / "mechanisms",
+                environment=environment,
+            )
         if build_receipts and build_receipts[-1]["returncode"] == 0:
             probe_receipts = run_command_specs(
                 repo,
-                row["hidden_validation"]["probe_commands"],
+                hidden["probe_commands"],
                 probe=probe,
                 log_dir=output_dir / "probe",
                 environment=environment,
             )
     build_passed = bool(build_receipts) and build_receipts[-1]["returncode"] == 0
     probe_passed = bool(probe_receipts) and probe_receipts[-1]["returncode"] == 0
-    passed = scope_passed and build_passed and probe_passed
+    structure = structure_summary(row, repo)
+    verified = verified_mechanism_summary(
+        row,
+        scope_passed=scope_passed,
+        build_receipts=build_receipts,
+        mechanism_receipts=mechanism_receipts,
+        structure=structure,
+    )
+    checklist = _evaluate_solution_checklist(row, repo)
+    textual_hints = textual_hint_summary(checklist)
+    mechanism_required = bool(
+        isinstance(mechanism_config, dict)
+        and mechanism_config.get("required_for_pass") is True
+    )
+    mechanism_gate_passed = not mechanism_required or verified.get("status") == "complete"
+    passed = scope_passed and build_passed and probe_passed and mechanism_gate_passed
     receipt = {
-        "schema_version": "public-pr-repo-candidate-score-v2",
+        "schema_version": "public-pr-repo-candidate-score-v3",
         "task_id": row["task_id"],
         "passed": passed,
+        "final_result": "PASS" if passed else "FAIL",
         "scope_passed": scope_passed,
         "allowed_paths": allowed,
         "changed_paths": observed,
         "build_passed": build_passed,
         "probe_passed": probe_passed,
+        "mechanism_gate_required": mechanism_required,
+        "mechanism_gate_passed": mechanism_gate_passed,
+        "textual_hints": textual_hints,
+        "structural_mechanisms": structure,
+        "verified_mechanisms": verified,
         "build_commands": build_receipts,
         "probe_commands": probe_receipts,
+        "mechanism_commands": mechanism_receipts,
     }
     _write_json(output_dir / "score.json", receipt)
     _progress(
         f"score {row['task_id']}: {'PASS' if passed else 'FAIL'} "
-        f"build={build_passed} probe={probe_passed}"
+        f"build={build_passed} probe={probe_passed} "
+        f"mechanisms={verified.get('status')}"
     )
     return receipt
 
@@ -1148,11 +1265,19 @@ def _candidate_rank(receipt: dict[str, Any]) -> tuple[int, ...]:
     final = receipt["attempts"][-1]["score"]
     commands = [
         *final.get("build_commands", []),
+        *final.get("mechanism_commands", []),
         *final.get("probe_commands", []),
     ]
     completed = sum(int(item.get("returncode", 1) == 0) for item in commands)
+    verified = int(final.get("verified_mechanisms", {}).get("verified", 0))
+    executable_gates = sum(
+        int(bool(final.get(name)))
+        for name in ("build_passed", "probe_passed", "mechanism_gate_passed")
+    )
     return (
         int(bool(final.get("passed"))),
+        executable_gates,
+        verified,
         int(bool(final.get("probe_passed"))),
         int(bool(final.get("build_passed"))),
         int(bool(final.get("scope_passed"))),

@@ -12,15 +12,17 @@ set -euo pipefail
 : "${GCP_INSTANCE:?set the GCP instance name for the receipt}"
 : "${GCP_DLVM_IMAGE:?set the resolved exact DLVM image name for the receipt}"
 
-IMAGE_NAME="${IMAGE_NAME:-glm47-public-pr-gcp:a100-r1}"
-SUITE="${SUITE:-fmtlib-demo}"
+IMAGE_NAME="${IMAGE_NAME:-glm47-public-pr-gcp:synthmem-v1-ep50-thinking-v6}"
+SUITE="${SUITE:-fmtlib-verified-mechanisms-thinking}"
+CHECKPOINT_PROFILE="${CHECKPOINT_PROFILE:-synthmem-v1-ep50}"
+DOCKERFILE="${DOCKERFILE:-docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile}"
 
 test -f "${MODEL_DIR}/.source-revision"
 test -f "${ADAPTER_DIR}/.training-run-id"
 mkdir -p "${RESULT_DIR}"
 
 sudo docker build --progress=plain \
-  --file docker/public-pr-synthmem-gcp/Dockerfile \
+  --file "${DOCKERFILE}" \
   --tag "${IMAGE_NAME}" \
   .
 EVAL_IMAGE_ID="$(sudo docker image inspect --format '{{.Id}}' "${IMAGE_NAME}")"
@@ -46,8 +48,10 @@ sudo docker run --rm \
   --expected-adapter-config-sha256 "${ADAPTER_CONFIG_SHA256}" \
   --output-root /results \
   --run-id "${RUN_ID}" \
-  --suite "${SUITE}"
+  --suite "${SUITE}" \
+  --checkpoint-profile "${CHECKPOINT_PROFILE}"
 
 echo "Suite: ${SUITE}"
 echo "Result: ${RESULT_DIR}/runs/${RUN_ID}/run-receipt.json"
 echo "Diagnosis: ${RESULT_DIR}/runs/${RUN_ID}/evaluation/diagnostic-report.md"
+echo "Checkpoint profile: ${CHECKPOINT_PROFILE}"
