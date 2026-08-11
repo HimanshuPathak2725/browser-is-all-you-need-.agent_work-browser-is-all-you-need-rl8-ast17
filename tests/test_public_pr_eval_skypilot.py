@@ -15,6 +15,9 @@ HOST_SETUP_PATH = REPO_ROOT / "scripts/gcp_public_pr_eval_host_setup.sh"
 DOCKERFILE_PATH = (
     REPO_ROOT / "docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile"
 )
+RUNTIME_OVERLAY_DOCKERFILE_PATH = (
+    REPO_ROOT / "docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile.runtime-overlay"
+)
 SKYPILOT_PATH = REPO_ROOT / "eval_h100_v8.yaml"
 
 
@@ -38,6 +41,7 @@ def test_runtime_preserves_a100_tp4_defaults() -> None:
     parser = runtime.parser()
 
     assert parser.get_default("tensor_parallel_size") == 4
+    assert parser.get_default("data_parallel_size") == 1
     assert parser.get_default("expected_gpu_count") == 4
     assert parser.get_default("expected_gpu_model") == "A100"
     assert parser.get_default("expected_gpu_memory_mib") == 80_000
@@ -63,13 +67,43 @@ def test_runtime_accepts_eight_h100s_and_rejects_topology_mismatch(
         runtime.gpu_inventory(4, "A100", 80_000)
 
 
-def test_sglang_tp8_preserves_glm_lora_flags() -> None:
+def test_model_parallelism_contract_requires_attention_head_divisibility(
+    tmp_path: Path,
+) -> None:
     runtime = _load_runtime()
-    command = runtime.server_command(
-        Path("/models/GLM-4.7-Flash"), 8000, 16, "glm47-synthmem-v1-ep50", 8
+    (tmp_path / "config.json").write_text(
+        '{"num_attention_heads": 20}\n', encoding="utf-8"
     )
 
-    assert command[command.index("--tp-size") + 1] == "8"
+    assert runtime.model_parallelism_contract(tmp_path, 4) == {
+        "num_attention_heads": 20,
+        "tensor_parallel_size": 4,
+        "attention_heads_per_tp_rank": 5,
+    }
+    with pytest.raises(
+        RuntimeError,
+        match="tensor parallel size 8 does not divide.*20 attention heads",
+    ):
+        runtime.model_parallelism_contract(tmp_path, 8)
+
+
+def test_sglang_tp4_dp2_preserves_glm_lora_flags() -> None:
+    runtime = _load_runtime()
+    command = runtime.server_command(
+        Path("/models/GLM-4.7-Flash"),
+        8000,
+        16,
+        "glm47-synthmem-v1-ep50",
+        4,
+        2,
+        Path("/tmp/serving-adapter"),
+    )
+
+    assert command[command.index("--tp-size") + 1] == "4"
+    assert command[command.index("--dp-size") + 1] == "2"
+    assert command[command.index("--lora-paths") + 1] == (
+        "glm47-synthmem-v1-ep50=/tmp/serving-adapter"
+    )
     assert command[command.index("--tool-call-parser") + 1] == "glm47"
     assert command[command.index("--reasoning-parser") + 1] == "glm45"
     assert "--experts-shared-outer-loras" in command
@@ -93,6 +127,7 @@ def test_shell_profiles_are_parameterized_and_syntax_valid() -> None:
     assert 'EXPECTED_GPU_MODEL="${EXPECTED_GPU_MODEL:-A100}"' in host_setup
     assert "This script accepts no arguments" in host_setup
     assert 'TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-4}"' in launcher
+    assert 'DATA_PARALLEL_SIZE="${DATA_PARALLEL_SIZE:-1}"' in launcher
     assert 'BUILD_IMAGE="${BUILD_IMAGE:-1}"' in launcher
     assert 'GCP_MACHINE_TYPE="$(basename "$(metadata_value instance/machine-type)")"' in launcher
     assert "GCP_MACHINE_TYPE=a2-ultragpu-4g" not in launcher
@@ -110,6 +145,21 @@ def test_runtime_only_copy_does_not_invalidate_oracle_layer() -> None:
     assert dockerfile.count(runtime_copy) == 1
     assert dockerfile.index(runtime_copy) > dockerfile.index("verify-oracles")
     assert dockerfile.index(runtime_copy) > dockerfile.index("pip freeze")
+
+
+def test_runtime_overlay_preserves_the_verified_evaluator_parent() -> None:
+    dockerfile = RUNTIME_OVERLAY_DOCKERFILE_PATH.read_text(encoding="utf-8")
+
+    assert (
+        "sha256:a3567f523b8e8df09fd13848b510d48a4888dd1c06d8db1f765d7de3fe2e145a"
+        in dockerfile
+    )
+    assert "FROM ${BASE_EVALUATOR_IMAGE}" in dockerfile
+    assert dockerfile.count(
+        "COPY scripts/gcp_public_pr_synthmem_50ep_eval.py "
+        "scripts/gcp_public_pr_synthmem_50ep_eval.py"
+    ) == 1
+    assert "\nRUN " not in dockerfile
 
 
 def test_skypilot_h100_task_binds_assets_results_and_runtime_profile() -> None:
@@ -135,15 +185,16 @@ def test_skypilot_h100_task_binds_assets_results_and_runtime_profile() -> None:
         'export RESULT_DIR="${HOME}/glm47-results-store/'
         'glm47-public-pr-eval/results"' in run
     )
-    assert "synthmem-v1-ep50-thinking-v8-h100-tp8" in setup
+    assert "synthmem-v1-ep50-thinking-v8-h100-tp4-dp2-r2-20260811" in setup
     assert 'export BUILD_IMAGE=0' in run
     assert (
-        "sha256:a3567f523b8e8df09fd13848b510d48a4888dd1c06d8db1f765d7de3fe2e145a" in setup
+        "sha256:64cd3818b0a15cd9ff317095d5f09cafdad8a399fd346bf96f2557f31c7aa883" in setup
     )
-    assert 'export TENSOR_PARALLEL_SIZE=8' in run
+    assert 'export TENSOR_PARALLEL_SIZE=4' in run
+    assert 'export DATA_PARALLEL_SIZE=2' in run
     assert 'export EXPECTED_GPU_COUNT=8' in run
     assert 'export EXPECTED_GPU_MODEL=H100' in run
-    assert 'export EXECUTION_PROFILE="gcp-skypilot-h100-tp8"' in run
+    assert 'export EXECUTION_PROFILE="gcp-skypilot-h100-tp4-dp2"' in run
     assert 'export PROVISIONER="skypilot"' in run
     assert 'export CHECKPOINT_PROFILE="synthmem-v1-ep50"' in run
     assert 'export SUITE="fmtlib-final-cleanup-verified-mechanisms-thinking"' in run

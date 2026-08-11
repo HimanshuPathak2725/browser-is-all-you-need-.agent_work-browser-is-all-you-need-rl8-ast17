@@ -45,7 +45,7 @@ setup: |
     https://us-central1-docker.pkg.dev
   unset ACCESS_TOKEN
   sudo docker pull \
-    us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp8@sha256:a3567f523b8e8df09fd13848b510d48a4888dd1c06d8db1f765d7de3fe2e145a
+    us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp4-dp2-r2-20260811@sha256:64cd3818b0a15cd9ff317095d5f09cafdad8a399fd346bf96f2557f31c7aa883
 
 run: |
   set -euo pipefail
@@ -61,15 +61,16 @@ run: |
   export RESULT_DIR="${HOME}/glm47-results-store/glm47-public-pr-eval/results"
   export CHECKPOINT_PROFILE="synthmem-v1-ep50"
   export SUITE="fmtlib-final-cleanup-verified-mechanisms-thinking"
-  export IMAGE_NAME="us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp8@sha256:a3567f523b8e8df09fd13848b510d48a4888dd1c06d8db1f765d7de3fe2e145a"
-  export DOCKERFILE="docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile"
+  export IMAGE_NAME="us-central1-docker.pkg.dev/lifeandhalf-24122025/w8-biayn/glm47-public-pr-eval:synthmem-v1-ep50-thinking-v8-h100-tp4-dp2-r2-20260811@sha256:64cd3818b0a15cd9ff317095d5f09cafdad8a399fd346bf96f2557f31c7aa883"
+  export DOCKERFILE="docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile.runtime-overlay"
   export BUILD_IMAGE=0
 
-  export TENSOR_PARALLEL_SIZE=8
+  export TENSOR_PARALLEL_SIZE=4
+  export DATA_PARALLEL_SIZE=2
   export EXPECTED_GPU_COUNT=8
   export EXPECTED_GPU_MODEL=H100
   export EXPECTED_GPU_MEMORY_MIB=80000
-  export EXECUTION_PROFILE="gcp-skypilot-h100-tp8"
+  export EXECUTION_PROFILE="gcp-skypilot-h100-tp4-dp2"
   export PROVISIONER="skypilot"
   export GCP_PROJECT="lifeandhalf-24122025"
 

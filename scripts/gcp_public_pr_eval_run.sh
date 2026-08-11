@@ -14,6 +14,7 @@ CHECKPOINT_PROFILE="${CHECKPOINT_PROFILE:-synthmem-v1-ep50}"
 DOCKERFILE="${DOCKERFILE:-docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile}"
 BUILD_IMAGE="${BUILD_IMAGE:-1}"
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-4}"
+DATA_PARALLEL_SIZE="${DATA_PARALLEL_SIZE:-1}"
 EXPECTED_GPU_COUNT="${EXPECTED_GPU_COUNT:-4}"
 EXPECTED_GPU_MODEL="${EXPECTED_GPU_MODEL:-A100}"
 EXPECTED_GPU_MEMORY_MIB="${EXPECTED_GPU_MEMORY_MIB:-80000}"
@@ -93,6 +94,7 @@ sudo docker run --rm \
   --suite "${SUITE}" \
   --checkpoint-profile "${CHECKPOINT_PROFILE}" \
   --tensor-parallel-size "${TENSOR_PARALLEL_SIZE}" \
+  --data-parallel-size "${DATA_PARALLEL_SIZE}" \
   --expected-gpu-count "${EXPECTED_GPU_COUNT}" \
   --expected-gpu-model "${EXPECTED_GPU_MODEL}" \
   --expected-gpu-memory-mib "${EXPECTED_GPU_MEMORY_MIB}" \
@@ -105,3 +107,4 @@ echo "Diagnosis: ${RESULT_DIR}/runs/${RUN_ID}/evaluation/diagnostic-report.md"
 echo "Checkpoint profile: ${CHECKPOINT_PROFILE}"
 echo "Execution profile: ${EXECUTION_PROFILE}"
 echo "Tensor parallel size: ${TENSOR_PARALLEL_SIZE}"
+echo "Data parallel size: ${DATA_PARALLEL_SIZE}"

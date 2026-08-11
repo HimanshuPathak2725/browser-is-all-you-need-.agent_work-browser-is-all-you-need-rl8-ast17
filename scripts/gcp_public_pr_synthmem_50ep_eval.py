@@ -357,6 +357,29 @@ def gpu_inventory(
     return inventory
 
 
+def model_parallelism_contract(
+    model_path: Path, tensor_parallel_size: int
+) -> dict[str, int]:
+    config_path = model_path / "config.json"
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    num_attention_heads = config.get("num_attention_heads")
+    if not isinstance(num_attention_heads, int) or num_attention_heads <= 0:
+        raise RuntimeError("base-model config has no valid num_attention_heads")
+    if num_attention_heads % tensor_parallel_size != 0:
+        raise RuntimeError(
+            "tensor parallel size "
+            f"{tensor_parallel_size} does not divide the model's "
+            f"{num_attention_heads} attention heads"
+        )
+    return {
+        "num_attention_heads": num_attention_heads,
+        "tensor_parallel_size": tensor_parallel_size,
+        "attention_heads_per_tp_rank": (
+            num_attention_heads // tensor_parallel_size
+        ),
+    }
+
+
 def verify_evaluator_receipts(suite: dict[str, object]) -> dict[str, object]:
     task_jsonl = suite["task_jsonl"]
     task_jsonl_sha256 = str(suite["task_jsonl_sha256"])
@@ -488,8 +511,10 @@ def server_command(
     lora_rank: int,
     model_name: str,
     tensor_parallel_size: int = 4,
+    data_parallel_size: int = 1,
+    preloaded_adapter: Path | None = None,
 ) -> list[str]:
-    return [
+    command = [
         "python3",
         "-m",
         "sglang.launch_server",
@@ -528,6 +553,13 @@ def server_command(
         "--experts-shared-outer-loras",
         "--lora-use-virtual-experts",
     ]
+    if data_parallel_size > 1:
+        command.extend(["--dp-size", str(data_parallel_size)])
+    if preloaded_adapter is not None:
+        command.extend(
+            ["--lora-paths", f"{model_name}={preloaded_adapter}"]
+        )
+    return command
 
 
 def wait_for_server(process: subprocess.Popen[str], log_path: Path, port: int) -> None:
@@ -636,6 +668,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--port", type=int, default=8000)
     result.add_argument("--lora-rank", type=int, default=16)
     result.add_argument("--tensor-parallel-size", type=int, default=4)
+    result.add_argument("--data-parallel-size", type=int, default=1)
     result.add_argument("--expected-gpu-count", type=int, default=4)
     result.add_argument("--expected-gpu-model", default="A100")
     result.add_argument("--expected-gpu-memory-mib", type=int, default=80_000)
@@ -648,6 +681,8 @@ def main() -> int:
     args = parser().parse_args()
     if args.tensor_parallel_size <= 0:
         raise ValueError("tensor parallel size must be positive")
+    if args.data_parallel_size <= 0:
+        raise ValueError("data parallel size must be positive")
     if args.expected_gpu_count <= 0:
         raise ValueError("expected GPU count must be positive")
     if args.expected_gpu_memory_mib <= 0:
@@ -656,9 +691,9 @@ def main() -> int:
         raise ValueError("expected GPU model must not be empty")
     if not args.execution_profile.strip() or not args.provisioner.strip():
         raise ValueError("execution profile and provisioner must not be empty")
-    if args.tensor_parallel_size != args.expected_gpu_count:
+    if args.tensor_parallel_size * args.data_parallel_size != args.expected_gpu_count:
         raise ValueError(
-            "this dedicated evaluation lane requires tensor parallel size to equal "
+            "tensor parallel size multiplied by data parallel size must equal "
             "the expected GPU count"
         )
     run_id = validate_run_id(args.run_id)
@@ -720,10 +755,14 @@ def main() -> int:
     )
     log(
         f"verified {args.expected_gpu_count} {args.expected_gpu_model} GPUs; "
-        f"tensor parallel size={args.tensor_parallel_size}"
+        f"tensor parallel size={args.tensor_parallel_size}; "
+        f"data parallel size={args.data_parallel_size}"
     )
     read_exact_marker(
         args.model_path / ".source-revision", BASE_MODEL_REVISION, "base model"
+    )
+    parallelism = model_parallelism_contract(
+        args.model_path, args.tensor_parallel_size
     )
     model_manifest = verify_model_manifest(
         args.model_path, args.expected_model_manifest_sha256
@@ -767,11 +806,13 @@ def main() -> int:
     log_path = destination / "sglang.log"
     process: subprocess.Popen[str] | None = None
     load_receipt = ""
+    preloaded_adapter = serving if args.data_parallel_size > 1 else None
     with log_path.open("w", encoding="utf-8") as log_handle:
         try:
             log(
                 "launching SGLang with tensor parallelism "
-                f"{args.tensor_parallel_size}"
+                f"{args.tensor_parallel_size} and data parallelism "
+                f"{args.data_parallel_size}"
             )
             process = subprocess.Popen(
                 server_command(
@@ -780,14 +821,26 @@ def main() -> int:
                     args.lora_rank,
                     model_name,
                     args.tensor_parallel_size,
+                    args.data_parallel_size,
+                    preloaded_adapter,
                 ),
                 stdout=log_handle,
                 stderr=subprocess.STDOUT,
                 text=True,
             )
             wait_for_server(process, log_path, args.port)
-            log("loading the converted LoRA adapter")
-            load_receipt = load_adapter(serving, args.port, model_name)
+            if preloaded_adapter is not None:
+                log("converted LoRA adapter loaded during SGLang startup")
+                load_receipt = json.dumps(
+                    {
+                        "mode": "startup_preload",
+                        "model": model_name,
+                    },
+                    sort_keys=True,
+                )
+            else:
+                log("loading the converted LoRA adapter")
+                load_receipt = load_adapter(serving, args.port, model_name)
             log(f"running {suite_config['description']} through Aider")
             suite = evaluate_suite_with_aider(
                 task_jsonl,
@@ -819,6 +872,11 @@ def main() -> int:
         "training_run_id": training_run_id,
         "execution_profile": args.execution_profile,
         "tensor_parallel_size": args.tensor_parallel_size,
+        "data_parallel_size": args.data_parallel_size,
+        "parallel_world_size": (
+            args.tensor_parallel_size * args.data_parallel_size
+        ),
+        "model_parallelism": parallelism,
         "expected_gpu_count": args.expected_gpu_count,
         "expected_gpu_model": args.expected_gpu_model,
         "expected_gpu_memory_mib": args.expected_gpu_memory_mib,
