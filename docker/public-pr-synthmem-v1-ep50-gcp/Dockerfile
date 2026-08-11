@@ -29,29 +29,30 @@ RUN git clone https://github.com/Aider-AI/aider.git /aider \
     && /opt/aider-venv/bin/python -m pip install --no-cache-dir -e '/aider[dev]'
 
 WORKDIR /opt/public-pr-eval
-COPY configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl
+COPY configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl
 COPY configs/public_pr_eval/private_probes configs/public_pr_eval/private_probes
 COPY src/glm47_posttraining/public_pr_eval src/glm47_posttraining/public_pr_eval
 COPY scripts/public_pr_repo_eval.py scripts/public_pr_repo_eval.py
 COPY scripts/validate_public_pr_eval.py scripts/validate_public_pr_eval.py
-COPY scripts/gcp_public_pr_synthmem_50ep_eval.py scripts/gcp_public_pr_synthmem_50ep_eval.py
 
 RUN printf '%s  %s\n' \
-      'a8c59421d38ea2dbdf0bca6168398c590d9497cdd0acdbced9d0377c8725746f' \
-      'configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl' | sha256sum -c -
+      '38f567a074a5a61e53ee1dad478833f10d9f7a40738d8d6c0baedfe1fe5294b6' \
+      'configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl' | sha256sum -c -
 
 RUN python3 scripts/validate_public_pr_eval.py \
-      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl \
-      --out /tmp/public-pr-static-validation-demo-fmtlib-v6.json \
+      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl \
+      --out /tmp/public-pr-static-validation-demo-fmtlib-v8.json \
     && python3 scripts/public_pr_repo_eval.py prepare \
-      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl \
-      --output /opt/public-pr-prepared/demo-fmtlib-v6 \
-    && cp /tmp/public-pr-static-validation-demo-fmtlib-v6.json /opt/public-pr-prepared/demo-fmtlib-v6/static-validation.json \
+      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl \
+      --output /opt/public-pr-prepared/demo-fmtlib-v8 \
+    && cp /tmp/public-pr-static-validation-demo-fmtlib-v8.json /opt/public-pr-prepared/demo-fmtlib-v8/static-validation.json \
     && python3 scripts/public_pr_repo_eval.py verify-oracles \
-      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v6.jsonl \
-      --prepared-root /opt/public-pr-prepared/demo-fmtlib-v6 \
-      --output /opt/public-pr-oracles/demo-fmtlib-v6
+      configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl \
+      --prepared-root /opt/public-pr-prepared/demo-fmtlib-v8 \
+      --output /opt/public-pr-oracles/demo-fmtlib-v8
 
 RUN /opt/aider-venv/bin/python -m pip freeze | LC_ALL=C sort > /opt/public-pr-prepared/aider-pip-freeze.txt
+
+COPY scripts/gcp_public_pr_synthmem_50ep_eval.py scripts/gcp_public_pr_synthmem_50ep_eval.py
 
 ENTRYPOINT ["python3", "/opt/public-pr-eval/scripts/gcp_public_pr_synthmem_50ep_eval.py"]

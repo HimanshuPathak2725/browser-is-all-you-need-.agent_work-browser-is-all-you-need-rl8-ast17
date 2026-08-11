@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the SynthMem 50-epoch public-PR diagnostic on GCP A2 Ultra TP4."""
+"""Run the SynthMem 50-epoch public-PR diagnostic on a pinned GCP GPU profile."""
 
 from __future__ import annotations
 
@@ -130,6 +130,52 @@ SUITES = {
         "description": (
             "single-task thinking-on fmtlib best-of-four with compile-gated "
             "named mechanism verification"
+        ),
+    },
+    "fmtlib-prioritized-verified-mechanisms-thinking": {
+        "task_jsonl": Path(
+            "/opt/public-pr-eval/configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v7.jsonl"
+        ),
+        "task_jsonl_sha256": "cec16a8abd6b1d66e40d6d8fc9cff872229173b2614ae4e0f7754e5b61969a89",
+        "prepared_root": Path("/opt/public-pr-prepared/demo-fmtlib-v7"),
+        "oracle_receipt": Path(
+            "/opt/public-pr-oracles/demo-fmtlib-v7/oracle-replay.json"
+        ),
+        "static_validation": Path(
+            "/opt/public-pr-prepared/demo-fmtlib-v7/static-validation.json"
+        ),
+        "edit_format": "diff",
+        "attempts": 2,
+        "candidate_seeds": [1701, 1702, 1703, 1704],
+        "initial_temperature": 0.7,
+        "repair_temperature": 0.2,
+        "thinking_enabled": True,
+        "description": (
+            "single-task thinking-on fmtlib best-of-four with compile-gated "
+            "mechanisms and failure-prioritized intern guidance"
+        ),
+    },
+    "fmtlib-final-cleanup-verified-mechanisms-thinking": {
+        "task_jsonl": Path(
+            "/opt/public-pr-eval/configs/public_pr_eval/public-pr-repo-eval-demo-fmtlib-v8.jsonl"
+        ),
+        "task_jsonl_sha256": "38f567a074a5a61e53ee1dad478833f10d9f7a40738d8d6c0baedfe1fe5294b6",
+        "prepared_root": Path("/opt/public-pr-prepared/demo-fmtlib-v8"),
+        "oracle_receipt": Path(
+            "/opt/public-pr-oracles/demo-fmtlib-v8/oracle-replay.json"
+        ),
+        "static_validation": Path(
+            "/opt/public-pr-prepared/demo-fmtlib-v8/static-validation.json"
+        ),
+        "edit_format": "diff",
+        "attempts": 2,
+        "candidate_seeds": [1701, 1702, 1703, 1704],
+        "initial_temperature": 0.7,
+        "repair_temperature": 0.2,
+        "thinking_enabled": True,
+        "description": (
+            "single-task thinking-on fmtlib best-of-four with compile-gated "
+            "mechanisms and a final mandatory legacy-helper cleanup gate"
         ),
     },
 }
@@ -268,7 +314,11 @@ def verify_network_isolation() -> None:
         )
 
 
-def gpu_inventory() -> list[dict[str, object]]:
+def gpu_inventory(
+    expected_count: int = 4,
+    expected_model: str = "A100",
+    expected_memory_mib: int = 80_000,
+) -> list[dict[str, object]]:
     output = subprocess.check_output(
         [
             "nvidia-smi",
@@ -291,11 +341,19 @@ def gpu_inventory() -> list[dict[str, object]]:
                 "uuid": uuid,
             }
         )
-    if len(inventory) != 4:
-        raise RuntimeError(f"exactly four GPUs are required, found {len(inventory)}")
+    if len(inventory) != expected_count:
+        raise RuntimeError(
+            f"exactly {expected_count} GPUs are required, found {len(inventory)}"
+        )
     for gpu in inventory:
-        if "A100" not in str(gpu["name"]) or int(gpu["memory_mib"]) < 80_000:
-            raise RuntimeError(f"expected four full A100 80GB GPUs, found {gpu}")
+        if expected_model not in str(gpu["name"]) or int(
+            gpu["memory_mib"]
+        ) < expected_memory_mib:
+            raise RuntimeError(
+                "expected "
+                f"{expected_count} {expected_model} GPUs with at least "
+                f"{expected_memory_mib} MiB each, found {gpu}"
+            )
     return inventory
 
 
@@ -425,7 +483,11 @@ def prepare_serving_adapter(
 
 
 def server_command(
-    model_path: Path, port: int, lora_rank: int, model_name: str
+    model_path: Path,
+    port: int,
+    lora_rank: int,
+    model_name: str,
+    tensor_parallel_size: int = 4,
 ) -> list[str]:
     return [
         "python3",
@@ -434,7 +496,7 @@ def server_command(
         "--model-path",
         str(model_path),
         "--tp-size",
-        "4",
+        str(tensor_parallel_size),
         "--tool-call-parser",
         "glm47",
         "--reasoning-parser",
@@ -569,15 +631,36 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument(
         "--suite",
         choices=sorted(SUITES),
-        default="fmtlib-verified-mechanisms-thinking",
+        default="fmtlib-final-cleanup-verified-mechanisms-thinking",
     )
     result.add_argument("--port", type=int, default=8000)
     result.add_argument("--lora-rank", type=int, default=16)
+    result.add_argument("--tensor-parallel-size", type=int, default=4)
+    result.add_argument("--expected-gpu-count", type=int, default=4)
+    result.add_argument("--expected-gpu-model", default="A100")
+    result.add_argument("--expected-gpu-memory-mib", type=int, default=80_000)
+    result.add_argument("--execution-profile", default="gcp-a100-tp4")
+    result.add_argument("--provisioner", default="gcloud-shell")
     return result
 
 
 def main() -> int:
     args = parser().parse_args()
+    if args.tensor_parallel_size <= 0:
+        raise ValueError("tensor parallel size must be positive")
+    if args.expected_gpu_count <= 0:
+        raise ValueError("expected GPU count must be positive")
+    if args.expected_gpu_memory_mib <= 0:
+        raise ValueError("expected GPU memory must be positive")
+    if not args.expected_gpu_model.strip():
+        raise ValueError("expected GPU model must not be empty")
+    if not args.execution_profile.strip() or not args.provisioner.strip():
+        raise ValueError("execution profile and provisioner must not be empty")
+    if args.tensor_parallel_size != args.expected_gpu_count:
+        raise ValueError(
+            "this dedicated evaluation lane requires tensor parallel size to equal "
+            "the expected GPU count"
+        )
     run_id = validate_run_id(args.run_id)
     suite_config = SUITES[args.suite]
     checkpoint_profile = dict(CHECKPOINT_PROFILES[args.checkpoint_profile])
@@ -630,8 +713,15 @@ def main() -> int:
     destination.mkdir(parents=True)
     log(f"starting exact 50-epoch GCP evaluation: {run_id} suite={args.suite}")
     verify_network_isolation()
-    inventory = gpu_inventory()
-    log("verified exactly four full A100 80GB GPUs")
+    inventory = gpu_inventory(
+        args.expected_gpu_count,
+        args.expected_gpu_model,
+        args.expected_gpu_memory_mib,
+    )
+    log(
+        f"verified {args.expected_gpu_count} {args.expected_gpu_model} GPUs; "
+        f"tensor parallel size={args.tensor_parallel_size}"
+    )
     read_exact_marker(
         args.model_path / ".source-revision", BASE_MODEL_REVISION, "base model"
     )
@@ -679,10 +769,17 @@ def main() -> int:
     load_receipt = ""
     with log_path.open("w", encoding="utf-8") as log_handle:
         try:
-            log("launching SGLang with tensor parallelism 4")
+            log(
+                "launching SGLang with tensor parallelism "
+                f"{args.tensor_parallel_size}"
+            )
             process = subprocess.Popen(
                 server_command(
-                    args.model_path, args.port, args.lora_rank, model_name
+                    args.model_path,
+                    args.port,
+                    args.lora_rank,
+                    model_name,
+                    args.tensor_parallel_size,
                 ),
                 stdout=log_handle,
                 stderr=subprocess.STDOUT,
@@ -720,6 +817,12 @@ def main() -> int:
         "classification": "public_pr_regression_diagnostic_only",
         "run_id": run_id,
         "training_run_id": training_run_id,
+        "execution_profile": args.execution_profile,
+        "tensor_parallel_size": args.tensor_parallel_size,
+        "expected_gpu_count": args.expected_gpu_count,
+        "expected_gpu_model": args.expected_gpu_model,
+        "expected_gpu_memory_mib": args.expected_gpu_memory_mib,
+        "provisioner": args.provisioner,
         "inference_request": {
             "thinking_enabled": thinking_enabled,
             "transport": "openai_chat_completions_extra_body",

@@ -17,6 +17,12 @@ from glm47_posttraining.public_pr_eval.validator import (
     BASELINE_REPAIR_PROMPT_PROFILE,
     COMPACT_REPAIR_INSTRUCTION_IDS,
     COMPACT_REPAIR_PROMPT_PROFILE,
+    FINAL_CLEANUP_REPAIR_PARENT_PROMPT_SHA256,
+    FINAL_CLEANUP_REPAIR_PROMPT_PROFILE,
+    FINAL_CLEANUP_REPAIR_SUFFIX,
+    PRIORITIZED_REPAIR_INSTRUCTION_IDS,
+    PRIORITIZED_REPAIR_PARENT_PROMPT_SHA256,
+    PRIORITIZED_REPAIR_PROMPT_PROFILE,
     CLASSIFICATION,
     COMPILER_FEEDBACK_DISCLOSURE,
     COMPILER_FEEDBACK_MODE,
@@ -1398,6 +1404,19 @@ def demo_fmtlib_compact_bestof4_prompt() -> str:
     return path.read_text(encoding="utf-8")
 
 
+def demo_fmtlib_failure_prioritized_prompt() -> str:
+    path = REPO_ROOT / "reports/public-pr-prompt-ablation-r3/final-prompt.md"
+    return path.read_text(encoding="utf-8")
+
+
+def demo_fmtlib_final_cleanup_prompt() -> str:
+    parent = demo_fmtlib_failure_prioritized_prompt()
+    parent_sha256 = hashlib.sha256(parent.encode("utf-8")).hexdigest()
+    if parent_sha256 != FINAL_CLEANUP_REPAIR_PARENT_PROMPT_SHA256:
+        raise ValueError("v8 parent prompt digest does not match the frozen v7 prompt")
+    return parent.rstrip() + "\n\n" + FINAL_CLEANUP_REPAIR_SUFFIX
+
+
 def demo_fmtlib_compact_bestof4_tasks() -> list[dict[str, Any]]:
     row = copy.deepcopy(demo_fmtlib_compiler_repair_tasks()[0])
     prompt_text = demo_fmtlib_compact_bestof4_prompt()
@@ -1524,6 +1543,105 @@ def demo_fmtlib_verified_mechanism_tasks() -> list[dict[str, Any]]:
 
     row = demo_fmtlib_compact_bestof4_thinking_tasks()[0]
     return [upgrade_thinking_row(row, LEGACY_FMT_PR_SOLUTION_CHECKLIST)]
+
+
+def demo_fmtlib_prioritized_verified_mechanism_tasks() -> list[dict[str, Any]]:
+    """Emit the thinking-on v7 lane with failure-prioritized prompt guidance."""
+
+    row = copy.deepcopy(demo_fmtlib_verified_mechanism_tasks()[0])
+    prompt_text = demo_fmtlib_failure_prioritized_prompt()
+    row["model_input"]["messages"][0]["content"] = prompt_text
+    row["integrity"]["model_prompt_sha256"] = hashlib.sha256(
+        prompt_text.encode("utf-8")
+    ).hexdigest()
+    row["prompt_contract"] = {
+        "schema_version": "public-pr-prompt-ablation-v3",
+        "profile": PRIORITIZED_REPAIR_PROMPT_PROFILE,
+        "baseline_prompt_sha256": FIRST_DEMO_BASELINE_PROMPT_SHA256,
+        "parent_prompt_sha256": PRIORITIZED_REPAIR_PARENT_PROMPT_SHA256,
+        "preserved_baseline_mechanisms": list(
+            FIRST_DEMO_BASELINE_PRESERVED_MECHANISMS
+        ),
+        "removed_sections": [
+            "generic_w01_w38_repository_workflow",
+            "generic_f01_f12_self_audit",
+            "ten_flat_c01_c10_audit_locks",
+            "duplicate_behavior_and_scope_language",
+        ],
+        "added_sections": [
+            "intern_file_map",
+            "failure_conditioned_compile_blockers",
+            "exact_reference_aligned_helper_shapes",
+            "priority_ordered_consumer_ledger",
+            "eight_priority_checks",
+        ],
+        "priority_check_ids": list(PRIORITIZED_REPAIR_INSTRUCTION_IDS),
+        "failure_conditions": [
+            "undeclared_duration_template_parameter",
+            "helper_definition_outside_detail_namespace",
+            "helper_use_before_declaration",
+            "duration_passed_to_time_point_helper",
+            "preprocessor_or_brace_boundary_deleted",
+        ],
+    }
+    row["harness_instructions"] = {
+        **row["harness_instructions"],
+        "schema_version": "public-pr-compiler-repair-harness-v3",
+        "suite_mode": "fmtlib-prioritized-verified-mechanisms-bestof4",
+        "priority_check_ids": list(PRIORITIZED_REPAIR_INSTRUCTION_IDS),
+    }
+    row["demo_contract"] = {
+        **row["demo_contract"],
+        "schema_version": "public-pr-prioritized-bestof4-thinking-demo-v1",
+        "claim_template": (
+            "One task was evaluated with thinking enabled, up to four isolated "
+            "candidates, one sanitized compiler-repair turn, and a "
+            "failure-prioritized eight-check prompt."
+        ),
+    }
+    return [row]
+
+
+def demo_fmtlib_final_cleanup_verified_mechanism_tasks() -> list[dict[str, Any]]:
+    """Emit the thinking-on v8 lane with one terminal legacy-helper cleanup gate."""
+
+    row = copy.deepcopy(demo_fmtlib_prioritized_verified_mechanism_tasks()[0])
+    prompt_text = demo_fmtlib_final_cleanup_prompt()
+    row["model_input"]["messages"][0]["content"] = prompt_text
+    row["integrity"]["model_prompt_sha256"] = hashlib.sha256(
+        prompt_text.encode("utf-8")
+    ).hexdigest()
+    row["prompt_contract"] = {
+        **row["prompt_contract"],
+        "schema_version": "public-pr-prompt-ablation-v4",
+        "profile": FINAL_CLEANUP_REPAIR_PROMPT_PROFILE,
+        "parent_prompt_sha256": FINAL_CLEANUP_REPAIR_PARENT_PROMPT_SHA256,
+        "added_sections": [
+            *row["prompt_contract"]["added_sections"],
+            "final_mandatory_legacy_helper_cleanup",
+        ],
+        "mandatory_cleanup": {
+            "identifier_must_be_absent": "fmt_safe_duration_cast",
+            "replacement_helper": "fmt_duration_cast",
+            "required_after_consumer_migration": True,
+            "preserve_adjacent_structure": True,
+        },
+    }
+    row["harness_instructions"] = {
+        **row["harness_instructions"],
+        "schema_version": "public-pr-compiler-repair-harness-v4",
+        "suite_mode": "fmtlib-final-cleanup-verified-mechanisms-bestof4",
+    }
+    row["demo_contract"] = {
+        **row["demo_contract"],
+        "schema_version": "public-pr-final-cleanup-bestof4-thinking-demo-v1",
+        "claim_template": (
+            "One task was evaluated with thinking enabled, up to four isolated "
+            "candidates, one sanitized compiler-repair turn, and a final mandatory "
+            "legacy-helper cleanup gate."
+        ),
+    }
+    return [row]
 
 
 def demo_fmtlib_compiler_repair_tasks() -> list[dict[str, Any]]:
@@ -1796,6 +1914,16 @@ def main() -> int:
         action="store_true",
         help="emit the thinking-on v6 contract with compile-gated mechanisms",
     )
+    parser.add_argument(
+        "--demo-fmtlib-prioritized-verified-mechanisms",
+        action="store_true",
+        help="emit the thinking-on v7 contract with failure-prioritized guidance",
+    )
+    parser.add_argument(
+        "--demo-fmtlib-final-cleanup-verified-mechanisms",
+        action="store_true",
+        help="emit the thinking-on v8 contract with a final cleanup gate",
+    )
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite evaluation JSONL: {args.output}")
@@ -1806,10 +1934,16 @@ def main() -> int:
         args.demo_fmtlib_compact_bestof4,
         args.demo_fmtlib_compact_bestof4_thinking,
         args.demo_fmtlib_verified_mechanisms,
+        args.demo_fmtlib_prioritized_verified_mechanisms,
+        args.demo_fmtlib_final_cleanup_verified_mechanisms,
     )
     if sum(bool(mode) for mode in modes) > 1:
         raise ValueError("select only one demo output mode")
-    if args.demo_fmtlib_verified_mechanisms:
+    if args.demo_fmtlib_final_cleanup_verified_mechanisms:
+        selected = demo_fmtlib_final_cleanup_verified_mechanism_tasks()
+    elif args.demo_fmtlib_prioritized_verified_mechanisms:
+        selected = demo_fmtlib_prioritized_verified_mechanism_tasks()
+    elif args.demo_fmtlib_verified_mechanisms:
         selected = demo_fmtlib_verified_mechanism_tasks()
     elif args.demo_fmtlib_compact_bestof4_thinking:
         selected = demo_fmtlib_compact_bestof4_thinking_tasks()

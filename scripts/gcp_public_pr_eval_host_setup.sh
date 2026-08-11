@@ -2,17 +2,47 @@
 set -euo pipefail
 
 TOOLKIT_VERSION="1.19.1-1"
+EXPECTED_GPU_COUNT="${EXPECTED_GPU_COUNT:-4}"
+EXPECTED_GPU_MODEL="${EXPECTED_GPU_MODEL:-A100}"
+EXPECTED_GPU_MEMORY_MIB="${EXPECTED_GPU_MEMORY_MIB:-80000}"
 
-if [[ "$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)" -ne 4 ]]; then
-  echo "Expected exactly four GPUs" >&2
+if [[ "$#" -ne 0 ]]; then
+  echo "This script accepts no arguments; configure GPU checks with EXPECTED_GPU_* variables" >&2
+  exit 2
+fi
+
+if ! [[ "${EXPECTED_GPU_COUNT}" =~ ^[1-9][0-9]*$ ]]; then
+  echo "EXPECTED_GPU_COUNT must be a positive integer" >&2
+  exit 2
+fi
+if [[ -z "${EXPECTED_GPU_MODEL}" ]]; then
+  echo "EXPECTED_GPU_MODEL must not be empty" >&2
+  exit 2
+fi
+if ! [[ "${EXPECTED_GPU_MEMORY_MIB}" =~ ^[1-9][0-9]*$ ]]; then
+  echo "EXPECTED_GPU_MEMORY_MIB must be a positive integer" >&2
+  exit 2
+fi
+
+observed_gpu_count="$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l)"
+if [[ "${observed_gpu_count}" -ne "${EXPECTED_GPU_COUNT}" ]]; then
+  echo "Expected ${EXPECTED_GPU_COUNT} GPUs, found ${observed_gpu_count}" >&2
   exit 2
 fi
 if nvidia-smi --query-gpu=name,memory.total --format=csv,noheader,nounits | \
-    awk -F, '$1 !~ /A100/ || $2 + 0 < 80000 { bad=1 } END { exit bad }'; then
-  echo "Verified four A100 80GB GPUs"
+    awk -F, -v model="${EXPECTED_GPU_MODEL}" -v memory="${EXPECTED_GPU_MEMORY_MIB}" \
+      'index($1, model) == 0 || $2 + 0 < memory { bad=1 } END { exit bad }'; then
+  echo "Verified ${EXPECTED_GPU_COUNT} ${EXPECTED_GPU_MODEL} GPUs with at least ${EXPECTED_GPU_MEMORY_MIB} MiB each"
 else
-  echo "GPU type or memory does not match four full A100 80GB devices" >&2
+  echo "GPU type or memory does not match ${EXPECTED_GPU_COUNT} ${EXPECTED_GPU_MODEL} devices with at least ${EXPECTED_GPU_MEMORY_MIB} MiB each" >&2
   exit 2
+fi
+
+if command -v docker >/dev/null && command -v nvidia-ctk >/dev/null && \
+    sudo docker info >/dev/null 2>&1 && \
+    sudo docker info --format '{{json .Runtimes}}' | grep -q '"nvidia"'; then
+  echo "Docker and the NVIDIA Container Toolkit are already ready"
+  exit 0
 fi
 
 sudo apt-get update

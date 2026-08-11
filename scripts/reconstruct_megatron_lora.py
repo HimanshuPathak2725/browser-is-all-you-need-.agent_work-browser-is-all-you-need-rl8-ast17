@@ -30,6 +30,12 @@ It treats the single LoRA-rank block as TP-major, first requires byte-exact
 reconstruction of all four legacy shards, and then applies the same EP-aware
 round-trip gate.  This mode is explicit so an arbitrary directory without a
 merge manifest can never be accepted by accident.
+
+``--unmerged-native-template`` uses a separately supplied, complete rank-16
+HF plus native checkpoint only as a byte-exact architecture/layout witness.
+The source must have the identical adapter configuration and tensor schema,
+and the emitted TP4/EP8 shards must invert to every source HF tensor byte. The
+template's weights are never copied into the source output.
 """
 
 from __future__ import annotations
@@ -1060,6 +1066,7 @@ def reconstruct_adapter(
     audit_report_path: Path | None = None,
     expert_parallel_size: int | None = None,
     source_native_template: bool = False,
+    unmerged_native_template: bool = False,
 ) -> dict[str, Any]:
     """Prove the template mapping, then atomically emit a complete adapter."""
     import torch
@@ -1071,6 +1078,10 @@ def reconstruct_adapter(
         audit_report_path = audit_report_path.resolve()
     if output_dir in {source_dir, template_dir}:
         raise ValueError("output adapter directory must differ from all input directories")
+    if source_native_template and unmerged_native_template:
+        raise ValueError(
+            "source-native and unmerged-native template modes are mutually exclusive"
+        )
     if source_native_template:
         if source_dir != template_dir:
             raise ValueError(
@@ -1094,7 +1105,10 @@ def reconstruct_adapter(
     try:
         native_paths = _native_paths(template_dir)
     except FileNotFoundError:
-        if not source_native_template or expert_parallel_size is None:
+        if (
+            not (source_native_template or unmerged_native_template)
+            or expert_parallel_size is None
+        ):
             raise
         source_ep_native_paths = _ep_native_paths(
             template_dir,
@@ -1105,7 +1119,7 @@ def reconstruct_adapter(
     template_config = _load_json(template_dir / ADAPTER_CONFIG)
     source_native_bundle: dict[str, Any] | None = None
     merge_manifest: dict[str, Any] | None = None
-    if source_native_template:
+    if source_native_template or unmerged_native_template:
         source_native_bundle = _validate_source_native_template_bundle(
             template_dir,
             native_paths,
@@ -1156,7 +1170,9 @@ def reconstruct_adapter(
             rank_block_size=rank_block_size,
             experts_per_shard=experts_per_shard,
             rank_layout=(
-                RANK_LAYOUT_TP_MAJOR if source_native_template else RANK_LAYOUT_MERGE_BLOCKED
+                RANK_LAYOUT_TP_MAJOR
+                if source_native_template or unmerged_native_template
+                else RANK_LAYOUT_MERGE_BLOCKED
             ),
         )
         tensor_count, tensor_bytes = _states_exact(template_native, reconstructed)
@@ -1296,6 +1312,21 @@ def reconstruct_adapter(
             "rank_layouts_equivalent": True,
             "tensor_count": len(blocked_reference),
             "element_count": element_count,
+            "all_reference_tensor_bytes_exact": True,
+        }
+    elif unmerged_native_template:
+        source_rank_layout = RANK_LAYOUT_TP_MAJOR
+        rank_layout_evidence = {
+            "status": "passed",
+            "selected": source_rank_layout,
+            "selection_basis": (
+                "separate-unmerged-template-byte-exact-proof-plus-source-hf-roundtrip"
+            ),
+            "rank_layouts_equivalent": True,
+            "tensor_count": len(tp_major_reference),
+            "element_count": sum(
+                _hf_tensor(source_hf, name).numel() for name in tp_major_reference
+            ),
             "all_reference_tensor_bytes_exact": True,
         }
     else:
@@ -1549,6 +1580,14 @@ def main(argv: list[str] | None = None) -> None:
         ),
     )
     parser.add_argument(
+        "--unmerged-native-template",
+        action="store_true",
+        help=(
+            "use a distinct complete rank-16 HF plus native checkpoint as a "
+            "byte-exact layout witness; source HF round-trip remains mandatory"
+        ),
+    )
+    parser.add_argument(
         "--expert-parallel-size",
         type=int,
         help=("emit lossless TP4/EP8 shards named adapter_megatron_tp{tp}_pp0_ep{ep}.pt"),
@@ -1569,6 +1608,7 @@ def main(argv: list[str] | None = None) -> None:
             audit_report_path=args.audit_report,
             expert_parallel_size=args.expert_parallel_size,
             source_native_template=args.source_native_template,
+            unmerged_native_template=args.unmerged_native_template,
         )
     except ReconstructionBlockedError as error:
         print(json.dumps(error.audit, indent=2, sort_keys=True))

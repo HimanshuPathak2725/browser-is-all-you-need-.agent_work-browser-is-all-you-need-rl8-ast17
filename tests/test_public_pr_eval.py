@@ -563,7 +563,7 @@ def test_gcp_lane_is_exactly_bound_and_offline() -> None:
     )
     assert "glm47-synth-mem-v3-v1std-50ep-20260803T023833Z" in runtime
     assert "5ca6a0cbede843e8c042ebb1004a80e85d85686974063cb9bd0540e236aab6ca" in runtime
-    assert "exactly four GPUs are required" in runtime
+    assert "exactly {expected_count} GPUs are required" in runtime
     assert 'interfaces != {"lo"}' in runtime
     assert "verify-oracles" in dockerfile
     assert "public-pr-repo-eval-v2-r5.jsonl" in dockerfile
@@ -577,11 +577,12 @@ def test_gcp_lane_is_exactly_bound_and_offline() -> None:
     assert '"repair_temperature": 0.2' in runtime
     assert "repair_model_settings=repair_settings" in runtime
     assert '"edit_format": "diff"' in runtime
-    assert 'default="fmtlib-verified-mechanisms-thinking"' in runtime
+    assert 'default="fmtlib-final-cleanup-verified-mechanisms-thinking"' in runtime
     assert "write_model_settings(" in runtime
     assert 'temperature=float(suite_config.get("repair_temperature", 0.7))' in runtime
-    assert 'SUITE="${SUITE:-fmtlib-verified-mechanisms-thinking}"' in launcher
+    assert 'SUITE="${SUITE:-fmtlib-final-cleanup-verified-mechanisms-thinking}"' in launcher
     assert '--suite "${SUITE}"' in launcher
     assert "--network none" in launcher
     assert "--gpus all" in launcher
-    assert "a2-ultragpu-4g" in launcher
+    assert 'metadata_value instance/machine-type' in launcher
+    assert '--env "GCP_MACHINE_TYPE=${GCP_MACHINE_TYPE}"' in launcher

@@ -84,20 +84,20 @@ def test_v1_epoch50_profile_and_thinking_request_are_exact(tmp_path: Path) -> No
     assert "seed: 1704" in text
 
 
-def test_v1_epoch50_image_is_v6_single_suite_and_launcher_defaults_match() -> None:
+def test_v1_epoch50_image_is_v8_single_suite_and_launcher_defaults_match() -> None:
     dockerfile = (
         REPO_ROOT / "docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile"
     ).read_text(encoding="utf-8")
     launcher = (REPO_ROOT / "scripts/gcp_public_pr_eval_run.sh").read_text(
         encoding="utf-8"
     )
-    assert "a8c59421d38ea2dbdf0bca6168398c590d9497cdd0acdbced9d0377c8725746f" in dockerfile
+    assert "38f567a074a5a61e53ee1dad478833f10d9f7a40738d8d6c0baedfe1fe5294b6" in dockerfile
     assert dockerfile.count("verify-oracles") == 1
-    assert "public-pr-repo-eval-demo-fmtlib-v6.jsonl" in dockerfile
+    assert "public-pr-repo-eval-demo-fmtlib-v8.jsonl" in dockerfile
     assert "public-pr-repo-eval-v2-r5.jsonl" not in dockerfile
     assert "public-pr-repo-eval-demo-fmtlib-v4.jsonl" not in dockerfile
     assert 'CHECKPOINT_PROFILE="${CHECKPOINT_PROFILE:-synthmem-v1-ep50}"' in launcher
     assert (
-        'SUITE="${SUITE:-fmtlib-verified-mechanisms-thinking}"' in launcher
+        'SUITE="${SUITE:-fmtlib-final-cleanup-verified-mechanisms-thinking}"' in launcher
     )
     assert "docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile" in launcher

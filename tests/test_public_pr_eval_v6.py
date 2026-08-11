@@ -218,8 +218,12 @@ def test_v6_gcp_bindings_are_exact() -> None:
     dockerfile = (
         REPO_ROOT / "docker/public-pr-synthmem-v1-ep50-gcp/Dockerfile"
     ).read_text(encoding="utf-8")
-    assert V6_SHA256 in runtime and V6_SHA256 in dockerfile
+    assert V6_SHA256 in runtime
     assert "public-pr-repo-eval-demo-fmtlib-v6.jsonl" in runtime
-    assert "public-pr-repo-eval-demo-fmtlib-v6.jsonl" in dockerfile
-    assert 'default="fmtlib-verified-mechanisms-thinking"' in runtime
-    assert 'SUITE="${SUITE:-fmtlib-verified-mechanisms-thinking}"' in launcher
+    assert V6_SHA256 not in dockerfile
+    assert "public-pr-repo-eval-demo-fmtlib-v6.jsonl" not in dockerfile
+    assert 'default="fmtlib-final-cleanup-verified-mechanisms-thinking"' in runtime
+    assert (
+        'SUITE="${SUITE:-fmtlib-final-cleanup-verified-mechanisms-thinking}"'
+        in launcher
+    )

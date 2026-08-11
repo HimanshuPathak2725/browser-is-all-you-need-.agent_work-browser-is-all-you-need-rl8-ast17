@@ -88,7 +88,7 @@ def _score_sample(sample: Any) -> dict[str, Any]:
             run_shadow_weighted45_tests
             if reward_mode == "weighted45" and task.harness_kind == "shadow_cpp17"
             else run_shadow_tests
-            if task.harness_kind == "shadow_cpp17"
+            if task.harness_kind in {"shadow_cpp17", "aider_cpp17"}
             else run_aider_tests
         )
 
@@ -96,7 +96,7 @@ def _score_sample(sample: Any) -> dict[str, Any]:
             kwargs: dict[str, Any] = {
                 "image": os.environ.get(SANDBOX_IMAGE_ENV, DEFAULT_AIDER_DOCKER_IMAGE)
             }
-            if task.harness_kind == "shadow_cpp17":
+            if task.harness_kind in {"shadow_cpp17", "aider_cpp17"}:
                 kwargs["expected_test_sha256"] = task.hidden_test_sha256
             return harness_runner(path, files, **kwargs)
 

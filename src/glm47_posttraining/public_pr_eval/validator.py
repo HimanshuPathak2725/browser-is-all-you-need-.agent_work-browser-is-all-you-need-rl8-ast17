@@ -40,6 +40,27 @@ BASELINE_REPAIR_INSTRUCTION_IDS = tuple(f"B{index:02d}" for index in range(1, 9)
 COMPACT_REPAIR_PROMPT_PROFILE = "compact_baseline_compiler_repair_bestof4_v2"
 COMPACT_REPAIR_SECTION = "# Final patch audit"
 COMPACT_REPAIR_INSTRUCTION_IDS = tuple(f"C{index:02d}" for index in range(1, 11))
+PRIORITIZED_REPAIR_PROMPT_PROFILE = "failure_prioritized_intern_guide_bestof4_v3"
+PRIORITIZED_REPAIR_SECTION = "# Priority-ordered final checks"
+PRIORITIZED_REPAIR_INSTRUCTION_IDS = tuple(
+    f"P{index:02d}" for index in range(1, 9)
+)
+PRIORITIZED_REPAIR_PARENT_PROMPT_SHA256 = (
+    "c2e80dccbd50d0c9e1e38ba06a4c021821ac82fb16ba500ac0358a4fe5e9ced5"
+)
+FINAL_CLEANUP_REPAIR_PROMPT_PROFILE = (
+    "failure_prioritized_final_cleanup_bestof4_v4"
+)
+FINAL_CLEANUP_REPAIR_PARENT_PROMPT_SHA256 = (
+    "edb3c99880aae430bad5c9e92ae6e9bbb0f805b9be9b2eca3b1464311fa8a41d"
+)
+FINAL_CLEANUP_REPAIR_SUFFIX = """# Final mandatory cleanup
+
+Confirm every `fmt_safe_duration_cast` caller has been migrated to
+`fmt_duration_cast`, then delete the complete legacy helper block. The
+`fmt_safe_duration_cast` identifier must not remain in `include/fmt/chrono.h`.
+Preserve all adjacent functions, braces, and unrelated preprocessor directives.
+"""
 FIRST_DEMO_BASELINE_PROMPT_SHA256 = (
     "443e4fe72cc4960881d2718821e7f4cf3cb00100080f0b64677b1d02025fdf77"
 )
@@ -67,6 +88,16 @@ COMPACT_REPAIR_REQUIRED_SHAPES = (
     "do_format(gmtime(val), ctx, &subsecs)",
     "format(gmtime(val), ctx)",
     "localtime(val)",
+)
+PRIORITIZED_REPAIR_REQUIRED_SHAPES = (
+    "d - fmt_duration_cast<std::chrono::seconds>(d)",
+    "safe_duration_cast::safe_duration_cast<To>(from, ec)",
+    "template <typename Duration>\nstd::time_t to_time_t(",
+    "template <typename Duration>\ninline std::tm gmtime(",
+    "detail::to_time_t(time_point)",
+    "detail::fmt_duration_cast<Duration>(",
+    "do_format(gmtime(val), ctx, &subsecs)",
+    "format(localtime(val), ctx)",
 )
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -231,17 +262,24 @@ def _validate_prompt(row: dict[str, Any], findings: list[Finding]) -> str:
     if prompt_profile in {
         BASELINE_REPAIR_PROMPT_PROFILE,
         COMPACT_REPAIR_PROMPT_PROFILE,
+        PRIORITIZED_REPAIR_PROMPT_PROFILE,
+        FINAL_CLEANUP_REPAIR_PROMPT_PROFILE,
     }:
-        instruction_ids = (
-            BASELINE_REPAIR_INSTRUCTION_IDS
-            if prompt_profile == BASELINE_REPAIR_PROMPT_PROFILE
-            else COMPACT_REPAIR_INSTRUCTION_IDS
-        )
-        section = (
-            BASELINE_REPAIR_SECTION
-            if prompt_profile == BASELINE_REPAIR_PROMPT_PROFILE
-            else COMPACT_REPAIR_SECTION
-        )
+        if prompt_profile == BASELINE_REPAIR_PROMPT_PROFILE:
+            instruction_ids = BASELINE_REPAIR_INSTRUCTION_IDS
+            section = BASELINE_REPAIR_SECTION
+            marker_prefix = "B"
+            required_shapes = BASELINE_REPAIR_REQUIRED_SHAPES
+        elif prompt_profile == COMPACT_REPAIR_PROMPT_PROFILE:
+            instruction_ids = COMPACT_REPAIR_INSTRUCTION_IDS
+            section = COMPACT_REPAIR_SECTION
+            marker_prefix = "C"
+            required_shapes = COMPACT_REPAIR_REQUIRED_SHAPES
+        else:
+            instruction_ids = PRIORITIZED_REPAIR_INSTRUCTION_IDS
+            section = PRIORITIZED_REPAIR_SECTION
+            marker_prefix = "P"
+            required_shapes = PRIORITIZED_REPAIR_REQUIRED_SHAPES
         missing_baseline_ids = [
             instruction_id
             for instruction_id in instruction_ids
@@ -254,7 +292,6 @@ def _validate_prompt(row: dict[str, Any], findings: list[Finding]) -> str:
             "baseline-preserving prompt is missing its compile-safety section or IDs: "
             f"{missing_baseline_ids}",
         )
-        marker_prefix = "B" if prompt_profile == BASELINE_REPAIR_PROMPT_PROFILE else "C"
         baseline_markers = re.findall(rf"\[{marker_prefix}\d{{2}}\]", prompt)
         _add(
             findings,
@@ -282,16 +319,19 @@ def _validate_prompt(row: dict[str, Any], findings: list[Finding]) -> str:
             lineage_ok = lineage_ok and contract.get("handoff_prompt_sha256") == (
                 "b3997db3f5148890b879db2807c9a3c8de6f5be0552954cef529d8110c86ed25"
             )
+        elif prompt_profile == PRIORITIZED_REPAIR_PROMPT_PROFILE:
+            lineage_ok = lineage_ok and contract.get("parent_prompt_sha256") == (
+                PRIORITIZED_REPAIR_PARENT_PROMPT_SHA256
+            )
+        elif prompt_profile == FINAL_CLEANUP_REPAIR_PROMPT_PROFILE:
+            lineage_ok = lineage_ok and contract.get("parent_prompt_sha256") == (
+                FINAL_CLEANUP_REPAIR_PARENT_PROMPT_SHA256
+            )
         _add(
             findings,
             lineage_ok,
             "PPR-PROMPT-011",
             "compiler-repair prompt must bind the exact first-prompt lineage and preserved mechanisms",
-        )
-        required_shapes = (
-            BASELINE_REPAIR_REQUIRED_SHAPES
-            if prompt_profile == BASELINE_REPAIR_PROMPT_PROFILE
-            else COMPACT_REPAIR_REQUIRED_SHAPES
         )
         _add(
             findings,
@@ -300,6 +340,13 @@ def _validate_prompt(row: dict[str, Any], findings: list[Finding]) -> str:
             "PPR-PROMPT-012",
             "compiler-repair prompt must retain concrete baseline shapes without score-optimization language",
         )
+        if prompt_profile == FINAL_CLEANUP_REPAIR_PROMPT_PROFILE:
+            _add(
+                findings,
+                prompt.endswith(FINAL_CLEANUP_REPAIR_SUFFIX),
+                "PPR-PROMPT-013",
+                "final-cleanup prompt must end with the exact mandatory legacy-helper removal gate",
+            )
     else:
         missing_workflow_ids = [
             instruction_id

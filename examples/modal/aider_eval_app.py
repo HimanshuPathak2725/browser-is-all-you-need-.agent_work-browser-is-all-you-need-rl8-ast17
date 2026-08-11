@@ -14,6 +14,10 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
+from examples.modal._authorization import require_full_modal_authorization
+
+require_full_modal_authorization()
+
 import modal
 
 

@@ -103,11 +103,25 @@ write:
 These revisions are pinned in `scripts/download_assets.py`; environment
 variables can override them when intentionally testing a newer release.
 
-## Modal 8x H100
+## Modal 8x H100 (legacy; execution denied by default)
 
-The canonical Modal launcher is `examples/modal/modal_app.py`. It reproduces
-the recorded machine and image configuration without requiring a separately
-published project image:
+Modal is not an authorized execution target for the active production profile.
+Every Python entrypoint under `examples/modal/` exits before importing the
+Modal SDK unless the exact, explicit cost authorization is present. An
+accidental attempt prints:
+
+```text
+MODAL EXECUTION BLOCKED: You have accidentally started a Modal run, which is not authorized. Continue only after explicit full authorization by setting GLM47_MODAL_FULL_AUTHORIZATION=I_FULLY_AUTHORIZE_MODAL_EXECUTION_AND_COSTS.
+```
+
+Do not set that variable for normal operation. The active ephemeral direction
+is the GCP SkyPilot full-v5 + CHARM profile documented in
+[`docs/GCP_FULL_V5_CHARM_SKYPILOT.md`](docs/GCP_FULL_V5_CHARM_SKYPILOT.md).
+
+The remaining Modal section is historical reproduction documentation. Its
+legacy launcher is `examples/modal/modal_app.py`; the authorization gate still
+applies to every command below. It recorded the following machine and image
+configuration:
 
 | Modal setting | Value |
 | --- | --- |

@@ -49,7 +49,7 @@ class AiderPolyglotTask(BaseModel):
     exercise: str
     language: Literal["cpp"] = "cpp"
     split: Literal["train", "validation"]
-    harness_kind: Literal["shadow_cpp17", "official_cmake"]
+    harness_kind: Literal["shadow_cpp17", "aider_cpp17", "official_cmake"]
     exercise_dir: str
     editable_files: list[str]
     prompt: list[AiderChatMessage]
@@ -60,6 +60,15 @@ class AiderPolyglotTask(BaseModel):
     hidden_test_sha256: str | None = None
     source_prompt_sha256: str | None = None
     verification_gate: str | None = None
+    prompt_contract: Literal["aider-eval-wholefile-v1", "sft-v5-user-v1"] = (
+        "aider-eval-wholefile-v1"
+    )
+    response_contract: Literal["aider-whole-file-v1"] = "aider-whole-file-v1"
+    reward_contract: Literal[
+        "binary-semantic-v1",
+        "ordinal-partial-v1",
+        "dense-semantic-v2",
+    ] = "ordinal-partial-v1"
 
     @field_validator("prompt")
     @classmethod

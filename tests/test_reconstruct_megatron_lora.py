@@ -508,6 +508,51 @@ def test_rank16_source_native_template_roundtrips_every_hf_tensor(tmp_path) -> N
         assert sha256_path(output / name) == sha256_path(output_b / name)
 
 
+def test_distinct_unmerged_rank16_template_roundtrips_selected_source(tmp_path) -> None:
+    template = _synthetic_rank16_source_native_bundle(tmp_path)
+    source = tmp_path / "selected-rank16-source"
+    source_hf = torch.load(
+        template / "adapter_model.bin", map_location="cpu", weights_only=True
+    )
+    source_hf = {name: tensor + 0.25 for name, tensor in source_hf.items()}
+    _write_adapter(source, source_hf, rank=16)
+    output = tmp_path / "selected-rank16-ep8-output"
+
+    manifest = reconstruct_adapter(
+        source,
+        template,
+        output,
+        expected_source_sha256=sha256_path(source / "adapter_model.bin"),
+        expert_parallel_size=8,
+        unmerged_native_template=True,
+    )
+
+    assert manifest["source"]["adapter_model_sha256"] == sha256_path(
+        source / "adapter_model.bin"
+    )
+    assert manifest["source"]["adapter_model_sha256"] != manifest["template"][
+        "adapter_model_sha256"
+    ]
+    assert manifest["template"]["bundle_kind"] == "complete-source-native-checkpoint"
+    layout = manifest["mapping"]["source_rank_layout"]
+    assert layout["selected"] == "tp-major"
+    assert (
+        layout["selection_basis"]
+        == "separate-unmerged-template-byte-exact-proof-plus-source-hf-roundtrip"
+    )
+    roundtrip = manifest["mapping"]["source_hf_roundtrip"]
+    assert roundtrip["status"] == "passed"
+    assert roundtrip["coverage_fraction"] == 1.0
+    assert roundtrip["all_source_hf_tensor_bytes_exact"] is True
+    assert sha256_path(output / "adapter_model.bin") == sha256_path(
+        source / "adapter_model.bin"
+    )
+    assert set(manifest["outputs"]["native_shards"]) == {
+        f"adapter_megatron_tp{ep_rank % 4}_pp0_ep{ep_rank}.pt"
+        for ep_rank in range(8)
+    }
+
+
 def test_source_native_template_is_explicit_and_fails_closed(tmp_path) -> None:
     source = _synthetic_rank16_source_native_bundle(tmp_path)
     with pytest.raises(ValueError, match="source and template adapter directories must differ"):

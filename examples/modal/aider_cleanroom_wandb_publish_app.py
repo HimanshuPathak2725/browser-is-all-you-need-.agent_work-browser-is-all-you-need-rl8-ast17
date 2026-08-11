@@ -9,6 +9,10 @@ import re
 from pathlib import Path
 from typing import Any
 
+from examples.modal._authorization import require_full_modal_authorization
+
+require_full_modal_authorization()
+
 import modal
 
 

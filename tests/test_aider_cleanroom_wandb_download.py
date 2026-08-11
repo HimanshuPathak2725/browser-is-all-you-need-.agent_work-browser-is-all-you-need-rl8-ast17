@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import os
 import sys
 import zipfile
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +17,14 @@ def load_module(name: str, path: Path):
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[name] = module
-    spec.loader.exec_module(module)
+    authorization = {}
+    if path.parent.name == "modal":
+        authorization = {
+            "GLM47_MODAL_FULL_AUTHORIZATION":
+            "I_FULLY_AUTHORIZE_MODAL_EXECUTION_AND_COSTS"
+        }
+    with patch.dict(os.environ, authorization, clear=False):
+        spec.loader.exec_module(module)
     return module
 
 
