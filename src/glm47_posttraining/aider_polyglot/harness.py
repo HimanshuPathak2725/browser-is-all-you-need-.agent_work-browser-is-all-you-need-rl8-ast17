@@ -397,6 +397,7 @@ def run_shadow_weighted45_tests(
     cpp_standard: str = "c++17",
     optimize: bool = False,
     hidden_werror: bool = False,
+    determinism_repeat: bool = False,
 ) -> AiderTestResult:
     """Return observed K/R/H/A outcomes for the weighted 45-check policy.
 
@@ -436,6 +437,9 @@ def run_shadow_weighted45_tests(
             target.write_text(contents, encoding="utf-8")
 
         private_grader = scratch / ".grader" / "test.cpp"
+        # Canonical runtime graders are immutable (0400). Only the isolated
+        # scratch copy is made writable for deterministic partition instrumentation.
+        private_grader.chmod(0o600)
         private_grader.write_text(instrumented_source, encoding="utf-8")
         sources = sorted(path.name for path in scratch.iterdir() if path.suffix in {".cpp", ".cc"})
         quoted_sources = " ".join(shlex_quote(name) for name in sources)
@@ -484,6 +488,17 @@ def run_shadow_weighted45_tests(
         logs: dict[str, str] = {}
         checks = {check_id: False for check_id in WEIGHTED45_HARNESS_CHECK_IDS}
         evidence = {check_id: "stage not reached" for check_id in WEIGHTED45_HARNESS_CHECK_IDS}
+        public_api_required = (scratch / ".grader" / "public_api_manifest.json").is_file()
+        public_api_passed = True
+        public_api_evidence = "not applicable: no AST public API manifest"
+        if public_api_required:
+            public_api_passed, public_api_evidence, public_api_logs = _run_public_api_gate(
+                scratch,
+                files,
+                image=image,
+                timeout_s=build_timeout_s,
+            )
+            logs["public_api_ast"] = public_api_logs
 
         syntax = _run_stage(
             scratch,
@@ -509,8 +524,10 @@ def run_shadow_weighted45_tests(
         logs["hidden_typecheck"] = hidden_logs
         if _is_infrastructure_error(hidden_logs):
             raise SandboxInfrastructureError(hidden_logs)
-        checks["K2"] = hidden_compile.returncode == 0
-        evidence["K2"] = f"hidden API/type-check returncode={hidden_compile.returncode}"
+        checks["K2"] = hidden_compile.returncode == 0 and public_api_passed
+        evidence["K2"] = (
+            f"hidden API/type-check returncode={hidden_compile.returncode}; " + public_api_evidence
+        )
         checks["K4"] = checks["K2"] and checks["K3"]
         evidence["K4"] = "strict warning flags accepted all translation units"
 
@@ -562,6 +579,7 @@ def run_shadow_weighted45_tests(
                     grader_source + "\n" + task_contract_source + "\n" + "\n".join(files.values())
                 )
             )
+            tsan_execution_allowed = os.environ.get("GLM47_CPP_TSAN_EXECUTION_ALLOWED", "1") != "0"
             if checks["K1"] and checks["K5"]:
                 sanitizer = _run_stage(
                     scratch,
@@ -580,7 +598,7 @@ def run_shadow_weighted45_tests(
                 if _is_infrastructure_error(sanitizer_compile_logs):
                     raise SandboxInfrastructureError(sanitizer_compile_logs)
                 sanitizer_ready = sanitizer.returncode == 0
-                if concurrency_applicable:
+                if concurrency_applicable and tsan_execution_allowed:
                     tsan = _run_stage(
                         scratch,
                         f"timeout {build_timeout_s}s c++ {hidden_compiler_flags} -fsanitize=thread -fPIE "
@@ -597,8 +615,14 @@ def run_shadow_weighted45_tests(
                         raise SandboxInfrastructureError(tsan_compile_logs)
                     tsan_ready = tsan.returncode == 0
 
-            # Candidate execution cannot read the hidden source or its objects.
+            # Candidate execution cannot read hidden source or API-verifier metadata.
             private_grader.unlink(missing_ok=True)
+            for private_name in (
+                "public_api_manifest.json",
+                "public_api_receipt.json",
+                "public_api_verifier.py",
+            ):
+                (scratch / ".grader" / private_name).unlink(missing_ok=True)
             for object_name in ("test.o", "test_asan.o", "test_tsan.o"):
                 (scratch / ".grader" / object_name).unlink(missing_ok=True)
             driver.unlink(missing_ok=True)
@@ -696,6 +720,11 @@ def run_shadow_weighted45_tests(
                 if not concurrency_applicable:
                     checks["A4"] = True
                     evidence["A4"] = "not applicable: no threading primitive in candidate"
+                elif not tsan_execution_allowed:
+                    checks["A4"] = False
+                    evidence["A4"] = (
+                        "threading primitive is outside this non-concurrent training profile"
+                    )
                 elif tsan_ready:
                     tsan_run, tsan_layout_retries = _run_tsan_stage(
                         scratch,
@@ -715,8 +744,55 @@ def run_shadow_weighted45_tests(
                 else:
                     checks["A4"] = False
                     evidence["A4"] = "TSan build failed: " + tsan_compile_logs[-500:]
-                checks["A5"] = all(suite_passes)
-                evidence["A5"] = f"all independent hidden partitions={suite_passes}"
+                if determinism_repeat:
+                    repeat_full = _run_stage(
+                        scratch,
+                        f"timeout {test_timeout_s}s env GLM47_AIDER_SUITE=-1 "
+                        ".grader/candidate_test",
+                        image=image,
+                        timeout_s=test_timeout_s + 10,
+                    )
+                    repeat_full_logs = _combined_logs(repeat_full)
+                    logs["determinism_repeat_standard_run"] = repeat_full_logs
+                    if _is_infrastructure_error(repeat_full_logs):
+                        raise SandboxInfrastructureError(repeat_full_logs)
+                    repeat_full_handshake = (
+                        f"{success_marker}:{repeat_full.returncode}" in repeat_full_logs
+                    )
+                    repeat_suite_passes: list[bool] = []
+                    for suite_index in range(WEIGHTED45_SUITE_COUNT):
+                        repeat_suite = _run_stage(
+                            scratch,
+                            f"timeout {test_timeout_s}s env "
+                            f"GLM47_AIDER_SUITE={suite_index} .grader/candidate_test",
+                            image=image,
+                            timeout_s=test_timeout_s + 10,
+                        )
+                        repeat_logs = _combined_logs(repeat_suite)
+                        logs[f"determinism_repeat_hidden_suite_{suite_index + 1}"] = repeat_logs
+                        if _is_infrastructure_error(repeat_logs):
+                            raise SandboxInfrastructureError(repeat_logs)
+                        repeat_handshake = (
+                            f"{success_marker}:{repeat_suite.returncode}" in repeat_logs
+                        )
+                        repeat_suite_passes.append(
+                            repeat_suite.returncode == 0 and repeat_handshake
+                        )
+                    checks["A5"] = (
+                        repeat_full.returncode == full_run.returncode
+                        and repeat_full_handshake == full_handshake
+                        and repeat_suite_passes == suite_passes
+                    )
+                    evidence["A5"] = (
+                        "deterministic repeat matched unpartitioned status and "
+                        f"hidden partition vector={repeat_suite_passes}"
+                        if checks["A5"]
+                        else "deterministic repeat changed unpartitioned status "
+                        "or hidden partition vector"
+                    )
+                else:
+                    checks["A5"] = all(suite_passes)
+                    evidence["A5"] = f"all independent hidden partitions={suite_passes}"
                 after_runtime = _workspace_file_snapshot(scratch)
                 checks["R4"] = before_runtime == after_runtime
                 evidence["R4"] = (
@@ -743,7 +819,44 @@ def run_shadow_weighted45_tests(
                     weighted45_checks=checks,
                     weighted45_evidence=evidence,
                 )
-    return result
+    return result.model_copy(
+        update={"verification_workspace_id": hashlib.sha256(scratch_value.encode()).hexdigest()}
+    )
+
+
+def run_shadow_hybrid45_tests(
+    exercise_dir: str | Path,
+    files: Mapping[str, str],
+    *,
+    image: str = DEFAULT_AIDER_DOCKER_IMAGE,
+    build_timeout_s: int = DEFAULT_BUILD_TIMEOUT_S,
+    test_timeout_s: int = DEFAULT_TEST_TIMEOUT_S,
+    expected_test_sha256: str | None = None,
+    cpp_standard: str = "c++17",
+    optimize: bool = False,
+    hidden_werror: bool = False,
+) -> AiderTestResult:
+    """Run V1 kernels plus a normal-execution repeat when verification is reached.
+
+    V2 redefines A5 as deterministic repeatability.  Keeping this behavior in a
+    separate entry point preserves the historical V1 meaning of A5.
+    """
+
+    kwargs = {
+        "image": image,
+        "build_timeout_s": build_timeout_s,
+        "test_timeout_s": test_timeout_s,
+        "expected_test_sha256": expected_test_sha256,
+        "cpp_standard": cpp_standard,
+        "optimize": optimize,
+        "hidden_werror": hidden_werror,
+    }
+    return run_shadow_weighted45_tests(
+        exercise_dir,
+        files,
+        determinism_repeat=True,
+        **kwargs,
+    )
 
 
 def _instrument_weighted45_grader(source: str) -> tuple[str, int]:
@@ -774,7 +887,9 @@ def _instrument_weighted45_grader(source: str) -> tuple[str, int]:
         total = assertion_count
         transformed = re.sub(r"\bassert\s*\(", "GLM47_WEIGHTED45_ASSERT(", transformed)
     else:
-        transformed, total = _instrument_direct_return_checks(transformed)
+        transformed, total = _instrument_helper_fail_checks(transformed)
+        if total < WEIGHTED45_SUITE_COUNT:
+            transformed, total = _instrument_direct_return_checks(source)
     if total < WEIGHTED45_SUITE_COUNT:
         raise ValueError(
             f"weighted45 hidden grader exposes only {total} independent checks; five required"
@@ -798,6 +913,10 @@ inline bool enforce(int check_index) {{
     const int selected = selected_suite();
     return selected < 0 || suite_for(check_index) == selected;
 }}
+inline int next_check_index() {{
+    static int value = 0;
+    return value++;
+}}
 inline bool failed(bool condition, int check_index) {{
     return condition && enforce(check_index);
 }}
@@ -808,6 +927,58 @@ inline bool failed(bool condition, int check_index) {{
 }} while (false)
 """
     return support + "\n" + transformed, total
+
+
+def _instrument_helper_fail_checks(source: str) -> tuple[str, int]:
+    """Gate project-local ``check``/``expect`` helpers by runtime invocation.
+
+    Clean-room graders commonly centralize failures in small void helpers rather
+    than using assert/Catch macros.  Every helper invocation still evaluates its
+    condition and side effects; only the matching hidden partition is allowed to
+    call the fatal ``fail`` function.
+    """
+
+    main_match = re.search(r"\bint\s+main\s*\([^)]*\)\s*\{", source)
+    if main_match is None:
+        return source, 0
+    definitions: list[tuple[str, int, int]] = []
+    for match in re.finditer(r"\bvoid\s+(?P<name>[A-Za-z_]\w*)\s*\(", source[: main_match.start()]):
+        name = match.group("name")
+        if name == "fail":
+            continue
+        opening = source.find("{", match.end())
+        if opening < 0 or opening >= main_match.start():
+            continue
+        closing = _matching_cpp_delimiter(source, opening, "{", "}")
+        if closing is None or closing >= main_match.start():
+            continue
+        body = source[opening + 1 : closing]
+        if not re.search(r"(?:\bfail\s*\(|\bstd::(?:exit|_Exit)\s*\()", body):
+            continue
+        definitions.append((name, opening, closing))
+    if not definitions:
+        return source, 0
+
+    names = {name for name, _, _ in definitions}
+    total = sum(max(0, len(re.findall(rf"\b{re.escape(name)}\s*\(", source)) - 1) for name in names)
+    if total < WEIGHTED45_SUITE_COUNT:
+        return source, total
+
+    transformed = source
+    for _name, opening, closing in reversed(definitions):
+        body = transformed[opening + 1 : closing]
+        gated_body = re.sub(
+            r"(?P<failure>\bfail|\bstd::(?:exit|_Exit))\s*\(",
+            r"if (glm47_weighted45_enforce) \g<failure>(",
+            body,
+        )
+        injected = (
+            "\nconst bool glm47_weighted45_enforce = "
+            "glm47_weighted45_detail::enforce("
+            "glm47_weighted45_detail::next_check_index());" + gated_body
+        )
+        transformed = transformed[: opening + 1] + injected + transformed[closing:]
+    return transformed, total
 
 
 def _instrument_direct_return_checks(source: str) -> tuple[str, int]:
@@ -958,6 +1129,78 @@ def _validate_candidate_source(name: str, contents: str) -> None:
             )
 
 
+def _run_public_api_gate(
+    scratch: Path,
+    files: Mapping[str, str],
+    *,
+    image: str,
+    timeout_s: int,
+) -> tuple[bool, str, str]:
+    """Run the private Clang-18 API manifest without exposing hidden tests."""
+
+    manifest_path = scratch / ".grader" / "public_api_manifest.json"
+    if not manifest_path.is_file() or manifest_path.is_symlink():
+        raise SandboxInfrastructureError("public API manifest is missing or unsafe")
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SandboxInfrastructureError("public API manifest is unreadable") from exc
+    expected_manifest_sha256 = manifest.get("manifest_sha256")
+    if not isinstance(expected_manifest_sha256, str):
+        raise SandboxInfrastructureError("public API manifest lacks its identity digest")
+
+    verifier_path = scratch / ".grader" / "public_api_verifier.py"
+    shutil.copy2(Path(__file__).with_name("public_api_manifest.py"), verifier_path)
+    receipt_path = scratch / ".grader" / "public_api_receipt.json"
+    candidate_args = " ".join(f"--candidate-file {shlex_quote(name)}" for name in files)
+    result = _run_stage(
+        scratch,
+        f"timeout {timeout_s}s python3 .grader/public_api_verifier.py "
+        "--manifest .grader/public_api_manifest.json --candidate-root . "
+        f"{candidate_args} --output .grader/public_api_receipt.json",
+        image=image,
+        timeout_s=timeout_s + 10,
+    )
+    logs = _combined_logs(result)
+    if _is_infrastructure_error(logs):
+        raise SandboxInfrastructureError(logs)
+    if not receipt_path.is_file() or receipt_path.is_symlink():
+        raise SandboxInfrastructureError(
+            "Clang-18 public API verifier did not emit a receipt: " + logs[-1000:]
+        )
+    try:
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SandboxInfrastructureError("public API receipt is unreadable") from exc
+    digest_payload = dict(receipt)
+    observed_receipt_sha256 = digest_payload.pop("receipt_sha256", None)
+    expected_receipt_sha256 = hashlib.sha256(
+        json.dumps(
+            digest_payload,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    decision = receipt.get("decision")
+    valid_returncode = (decision == "PASS" and result.returncode == 0) or (
+        decision == "FAIL" and result.returncode == 3
+    )
+    if (
+        receipt.get("schema_version") != "glm47-public-api-ast-verification-v1"
+        or receipt.get("manifest_sha256") != expected_manifest_sha256
+        or observed_receipt_sha256 != expected_receipt_sha256
+        or not valid_returncode
+    ):
+        raise SandboxInfrastructureError("invalid Clang-18 public API receipt contract")
+    passed = decision == "PASS"
+    evidence = (
+        f"clang18_ast decision={decision} manifest={expected_manifest_sha256} "
+        f"receipt={observed_receipt_sha256} returncode={result.returncode}"
+    )
+    return passed, evidence, logs
+
+
 def _run_stage(
     scratch: Path, script: str, *, image: str, timeout_s: int
 ) -> subprocess.CompletedProcess[str]:
@@ -1087,7 +1330,11 @@ def assert_local_sandbox_ready() -> None:
         raise SandboxInfrastructureError("bubblewrap is required for secure Aider reward execution")
 
 
-def run_sandbox_preflight(*, image: str = DEFAULT_AIDER_DOCKER_IMAGE) -> None:
+def run_sandbox_preflight(
+    *,
+    image: str = DEFAULT_AIDER_DOCKER_IMAGE,
+    require_tsan: bool = True,
+) -> None:
     """Prove normal, ASan/UBSan/LSan, and TSan execution before training."""
 
     ensure_ast17_tooling()
@@ -1100,6 +1347,12 @@ def run_sandbox_preflight(*, image: str = DEFAULT_AIDER_DOCKER_IMAGE) -> None:
             "worker.join(); return value == 1 ? 0 : 1; }\n",
             encoding="utf-8",
         )
+        compile_tsan = (
+            " && c++ -std=c++17 -Wall -Wextra -Werror -pedantic -pthread "
+            "-fsanitize=thread probe.cpp -o probe_tsan"
+            if require_tsan
+            else ""
+        )
         result = _run_stage(
             scratch,
             "c++ -std=c++17 -Wall -Wextra -Werror -pedantic -pthread probe.cpp -o probe "
@@ -1107,14 +1360,14 @@ def run_sandbox_preflight(*, image: str = DEFAULT_AIDER_DOCKER_IMAGE) -> None:
             "&& c++ -std=c++17 -Wall -Wextra -Werror -pedantic -pthread "
             "-fsanitize=address,undefined -fno-omit-frame-pointer probe.cpp -o probe_asan "
             "&& ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 "
-            "UBSAN_OPTIONS=halt_on_error=1 ./probe_asan "
-            "&& c++ -std=c++17 -Wall -Wextra -Werror -pedantic -pthread "
-            "-fsanitize=thread probe.cpp -o probe_tsan",
+            "UBSAN_OPTIONS=halt_on_error=1 ./probe_asan" + compile_tsan,
             image=image,
             timeout_s=90,
         )
         if result.returncode != 0:
             raise SandboxInfrastructureError(_combined_logs(result) or "sandbox preflight failed")
+        if not require_tsan:
+            return
         tsan_result, _layout_retries = _run_tsan_stage(
             scratch,
             "TSAN_OPTIONS=halt_on_error=1 ./probe_tsan",

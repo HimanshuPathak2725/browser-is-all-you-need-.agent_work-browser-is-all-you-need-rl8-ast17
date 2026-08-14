@@ -1,0 +1,23 @@
+{
+  "category": "wildcard-contiguous-matches",
+  "editable_files": [
+    "wildcard-contiguous-matches.h",
+    "wildcard-contiguous-matches.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "wildcard-contiguous-matches_test.cpp",
+  "hidden_test_sha256": "ff8dad0174b9510bc8362094e2cdac4a6e13d6f62e6b5f80473275a4a0e97952",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "d5b6395f7b034db5de36e7c589bbf6e62e58abd510796e303308eeb7633587b4",
+  "tags": [
+    "sublist",
+    "wildcard",
+    "contiguous"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-wildcard-contiguous-matches",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

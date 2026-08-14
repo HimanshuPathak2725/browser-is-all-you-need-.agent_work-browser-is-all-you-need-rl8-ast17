@@ -1,0 +1,23 @@
+{
+  "category": "contact-source-merge",
+  "editable_files": [
+    "contact-source-merge.h",
+    "contact-source-merge.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "contact-source-merge_test.cpp",
+  "hidden_test_sha256": "9a3efd5caa63a33a1107e7733bc6282d1753219a167f8ac86b99071ebb5f83ee",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "7d73effe6f913c2affc39b6081b3f6087e9409acebedeb820e26eb10b3d267fd",
+  "tags": [
+    "phone",
+    "contact-merge",
+    "priority"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-contact-source-merge",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

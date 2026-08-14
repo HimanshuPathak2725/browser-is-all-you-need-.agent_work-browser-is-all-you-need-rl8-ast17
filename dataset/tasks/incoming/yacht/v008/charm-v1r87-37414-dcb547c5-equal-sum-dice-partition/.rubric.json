@@ -1,0 +1,22 @@
+{
+  "category": "equal-sum-dice-partition",
+  "editable_files": [
+    "equal-sum-dice-partition.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "equal-sum-dice-partition_test.cpp",
+  "hidden_test_sha256": "1cab80c2ef80d2eb92c252165f4ce3dfb6219449cd9481eb7eb7108838dd4c06",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "048927f5df7c3c7c2f5ed61d9394d2e75eba07697cd4d5a9ac7b05dee9c0545a",
+  "tags": [
+    "yacht",
+    "partition",
+    "witness"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-equal-sum-dice-partition",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

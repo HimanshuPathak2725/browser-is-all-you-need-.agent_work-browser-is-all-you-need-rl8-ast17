@@ -1,0 +1,24 @@
+{
+  "category": "t9-prefix-suggestions",
+  "editable_files": [
+    "t9-prefix-suggestions.h",
+    "t9-prefix-suggestions.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "t9-prefix-suggestions_test.cpp",
+  "hidden_test_sha256": "ae6d42b6b5d7036ea2a0a46800e4b59814ed37934bc711d7aab8fbbd05b946d6",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "40ddc03af1048e240da76a20d2fb4b063978d394cafb859135bb929d8d59fa83",
+  "tags": [
+    "phone",
+    "t9",
+    "prefix-search"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-t9-prefix-suggestions",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "category": "standing-order-calendar",
+  "editable_files": [
+    "standing-order-calendar.hpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "standing-order-calendar_test.cpp",
+  "hidden_test_sha256": "87a003814bf10a0110cb9b007ec4303b3a64ac768773c981194d749ac6742f08",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "103c29f4904a50cf0a8e4c0864d9dfa940785df30c1c72d997af31f060c77159",
+  "tags": [
+    "calendar",
+    "business-day",
+    "aggregation"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-standing-order-calendar",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

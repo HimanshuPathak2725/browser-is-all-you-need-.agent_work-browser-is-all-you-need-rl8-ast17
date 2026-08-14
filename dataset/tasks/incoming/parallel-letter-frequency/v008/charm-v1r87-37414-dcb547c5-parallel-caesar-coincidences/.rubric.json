@@ -1,0 +1,22 @@
+{
+  "category": "parallel-caesar-coincidences",
+  "editable_files": [
+    "parallel-caesar-coincidences.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "parallel-caesar-coincidences_test.cpp",
+  "hidden_test_sha256": "0aec3c60213af8afa0f512d3c4d9f032fe6d3aa5e2152ed324916ffb79f03e06",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "4759b8813eed9e32a2bc7fb7166acfb285377a2ba9b8a5af146a8d63639d3cd1",
+  "tags": [
+    "parallel",
+    "caesar",
+    "coincidence"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-parallel-caesar-coincidences",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,22 @@
+{
+  "category": "binary-crc-syndrome",
+  "editable_files": [
+    "binary-crc-syndrome.cpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "binary-crc-syndrome_test.cpp",
+  "hidden_test_sha256": "b87737639ef8e657a5d49d46a07b1f6451abe3c18c0501686e1a7c5040e4001e",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "ecd696b2aa5640f917014abff9b097fd4ff1b3db2dfa7d64338276ba596a8427",
+  "tags": [
+    "crc",
+    "polynomial",
+    "binary"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-binary-crc-syndrome",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

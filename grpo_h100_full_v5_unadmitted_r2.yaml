@@ -1,0 +1,70 @@
+name: glm47-full-v5-unadmitted-r2
+
+resources:
+  cloud: gcp
+  region: us-central1
+  instance_type: a3-highgpu-8g
+  accelerators: H100:8
+  network_tier: best
+  disk_size: 500
+  disk_tier: high
+  use_spot: true
+  autostop:
+    idle_minutes: 10
+    down: true
+
+workdir: .
+
+envs:
+  RUN_ID: ""
+  GLM47_FULL_V5_UNADMITTED_EXPERIMENT_AUTHORIZATION: ""
+
+file_mounts:
+  ~/glm47-full-v5-assets/model/GLM-4.7-Flash:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-public-pr-eval/assets/model/GLM-4.7-Flash
+    mode: COPY
+
+  ~/glm47-full-v5-assets/synthmem-v1-ep50/adapter:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/synthmem-v1-ep50-grpo-adapter
+    mode: COPY
+
+  ~/glm47-full-v5-assets/runtime/aider_cpp_rl_full_v5_api_contracts_r2:
+    source: gs://lifeandhalf-24122025-w8-biayn/glm47-full-v5/assets/runtime/aider_cpp_rl_full_v5_api_contracts_r2
+    mode: COPY
+
+  ~/glm47-results-store:
+    source: gs://lifeandhalf-24122025-w8-biayn
+    mode: MOUNT
+
+setup: |
+  set -euo pipefail
+
+  export EXPECTED_GPU_COUNT=8
+  export EXPECTED_GPU_MODEL=H100
+  export EXPECTED_GPU_MEMORY_MIB=80000
+  bash scripts/gcp_h100_host_setup.sh
+
+  if ! command -v tmux >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install -y tmux
+  fi
+
+run: |
+  set -euo pipefail
+
+  if [[ -z "${RUN_ID}" ]]; then
+    echo "RUN_ID is required" >&2
+    exit 2
+  fi
+  if [[ "${GLM47_FULL_V5_UNADMITTED_EXPERIMENT_AUTHORIZATION}" != "I_AUTHORIZE_UNADMITTED_R2_57_UPDATE_EXPERIMENT_AND_GCP_COSTS" ]]; then
+    echo "explicit unadmitted experiment authorization is required" >&2
+    exit 2
+  fi
+
+  export GLM47_FULL_V5_ASSET_ROOT="${HOME}/glm47-full-v5-assets"
+  export GLM47_FULL_V5_RESULT_ROOT="${HOME}/glm47-full-v5-local-results"
+  export GLM47_FULL_V5_DURABLE_RESULT_ROOT="${HOME}/glm47-results-store/runs/glm47/experiments/unadmitted-full-v5-r2"
+  export GLM47_UNADMITTED_CONFIG_REL="configs/full_v5_charm_grpo/gcp-r2-unadmitted-skypilot.json"
+  export GLM47_HEADLESS_WAIT=1
+
+  bash scripts/gcp_full_v5_unadmitted_tmux.sh "${RUN_ID}"

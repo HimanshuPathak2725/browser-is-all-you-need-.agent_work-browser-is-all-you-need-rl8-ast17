@@ -1,0 +1,22 @@
+{
+  "category": "tick-rate-fit",
+  "editable_files": [
+    "tick-rate-fit.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "tick-rate-fit_test.cpp",
+  "hidden_test_sha256": "f0f5bd746927eb4bbf34d2183721a83bc8b8c1a3a6341663144a6018fb9ac468",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "43dcb416dcfc525ff86b62a999cb125f152b73b70d68e69c33c2be9cc89da4d4",
+  "tags": [
+    "clock-drift",
+    "rational-fit",
+    "samples"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-tick-rate-fit",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

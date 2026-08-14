@@ -1,0 +1,24 @@
+{
+  "category": "paired-cohort-deltas",
+  "editable_files": [
+    "paired-cohort-deltas.h",
+    "paired-cohort-deltas.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "paired-cohort-deltas_test.cpp",
+  "hidden_test_sha256": "3bf4c8b56494b9cbb4606419520532415098d3031de20df2ca2005d1bf914340",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "cc9a92a24ec741e140d5efbf34542a8fd0199bade76e84b3217bd633f5849eec",
+  "tags": [
+    "cohort",
+    "paired-analysis",
+    "median"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-paired-cohort-deltas",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,24 @@
+{
+  "category": "ragged-columnar-transpose",
+  "editable_files": [
+    "ragged-columnar-transpose.h",
+    "ragged-columnar-transpose.cpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "ragged-columnar-transpose_test.cpp",
+  "hidden_test_sha256": "3114e2670a0254459e749e39c6ae974454cab4b1c4f482eaf2e8b61517078423",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "fa432bd86182dbd00211bdc2ca0d579de47ffcaabc2bbeb1ee06baa45ca563fa",
+  "tags": [
+    "transposition",
+    "ragged-grid",
+    "permutation"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-ragged-columnar-transpose",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

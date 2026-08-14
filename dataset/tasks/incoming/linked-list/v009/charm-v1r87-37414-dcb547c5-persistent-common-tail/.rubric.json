@@ -1,0 +1,23 @@
+{
+  "category": "persistent-common-tail",
+  "editable_files": [
+    "persistent-common-tail.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "persistent-common-tail_test.cpp",
+  "hidden_test_sha256": "634a803a91c169cf23e647451ae47728cc4ed50c85b7947c05d15e296244740d",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e030ae60dc6135de0da22b9d79e951099b95f156869bd04c7575edc56c94f498",
+  "tags": [
+    "persistent-list",
+    "common-tail",
+    "arena-audit"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-persistent-common-tail",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

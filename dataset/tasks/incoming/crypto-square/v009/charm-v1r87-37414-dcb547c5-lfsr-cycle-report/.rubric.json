@@ -1,0 +1,23 @@
+{
+  "category": "lfsr-cycle-report",
+  "editable_files": [
+    "lfsr-cycle-report.hpp"
+  ],
+  "family": "Crypto Square",
+  "hidden_test_file": "lfsr-cycle-report_test.cpp",
+  "hidden_test_sha256": "15318a0b0f057baa59a633f48348104bdef89d01189e73e732295f33d59fc47b",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "98efa1a687ac7921af142a5fad72020f9de01bf175d5a09be27668cf6327dcad",
+  "tags": [
+    "lfsr",
+    "cycle-detection",
+    "binary-state"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-lfsr-cycle-report",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

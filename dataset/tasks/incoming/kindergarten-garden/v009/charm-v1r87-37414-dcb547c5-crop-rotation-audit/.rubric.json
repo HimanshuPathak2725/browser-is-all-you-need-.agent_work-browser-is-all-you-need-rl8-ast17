@@ -1,0 +1,24 @@
+{
+  "category": "crop-rotation-audit",
+  "editable_files": [
+    "crop-rotation-audit.h",
+    "crop-rotation-audit.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "crop-rotation-audit_test.cpp",
+  "hidden_test_sha256": "5e11d0a3a5a84cf3713f8f32f8ea80a63f64cc251a92908002f0be030b8b27f0",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e194e25db871b9baf95987a7b41fa43f25f2abd514284a583bb8a8af4fc0ee11",
+  "tags": [
+    "garden",
+    "crop-rotation",
+    "audit"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-crop-rotation-audit",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

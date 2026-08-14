@@ -81,7 +81,8 @@
     "development_prompt_variants": 83,
     "fixed26_exact_hits": 0,
     "reference_answers_packaged": false,
-    "gcp_asset_status": "MISSING"
+    "gcp_asset_status": "MISSING",
+    "asset_subdir": "runtime/aider_cpp_rl_full_v5"
   },
   "training_image": {
     "base": "radixark/miles:latest-cu12@sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e52a932fcefb7031402aeff37",

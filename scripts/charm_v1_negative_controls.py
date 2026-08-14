@@ -53,6 +53,11 @@ def task_descriptor(root: Path, rubric: dict[str, object]) -> AiderPolyglotTask:
 
 
 BOUND_SEMANTIC_MUTATIONS = {
+    "parallel-rare-offsets": (
+        "parallel-rare-offsets.cpp",
+        "if(total[c-'a']==1)out.push_back(offset);",
+        "if(total[c-'a']==2)out.push_back(offset);",
+    ),
     "encapsulated-complex-value": (
         "encapsulated-complex-value.cpp",
         "return real_*real_+imag_*imag_;",

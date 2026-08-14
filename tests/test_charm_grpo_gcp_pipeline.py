@@ -53,7 +53,8 @@ def test_training_image_includes_compiler_guided_candidate_entrypoint() -> None:
 
 def test_training_image_pins_and_validates_libclang_runtime() -> None:
     text = TRAIN_DOCKERFILE.read_text(encoding="utf-8")
-    assert "CPLUS_INCLUDE_PATH=/usr/local/lib/clang/18/include" in text
+    assert "GLM47_LIBCLANG_RESOURCE_DIR=/usr/local/lib/clang/18" in text
+    assert "CPLUS_INCLUDE_PATH=/usr/local/lib/clang/18/include" not in text
     assert "libclang==18.1.1" in text
     assert "assert validate_libclang_runtime()" in text
 

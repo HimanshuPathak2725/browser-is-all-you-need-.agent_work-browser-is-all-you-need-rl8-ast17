@@ -1,0 +1,22 @@
+{
+  "category": "cyclic-hamming-starts",
+  "editable_files": [
+    "cyclic-hamming-starts.cpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "cyclic-hamming-starts_test.cpp",
+  "hidden_test_sha256": "d39dd955955ab70641d306147f52d3e11af3cb0eab116c45bf0e9cff96116338",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "64eef88799fcde853e8ac12e9c77490e4d21e844635d5cd88344bdcf66b75f20",
+  "tags": [
+    "circular-string",
+    "hamming",
+    "matching"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-cyclic-hamming-starts",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

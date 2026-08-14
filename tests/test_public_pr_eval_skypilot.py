@@ -126,6 +126,9 @@ def test_shell_profiles_are_parameterized_and_syntax_valid() -> None:
     assert 'EXPECTED_GPU_COUNT="${EXPECTED_GPU_COUNT:-4}"' in host_setup
     assert 'EXPECTED_GPU_MODEL="${EXPECTED_GPU_MODEL:-A100}"' in host_setup
     assert "This script accepts no arguments" in host_setup
+    assert "NVIDIA_SMI_BIN=" in host_setup
+    assert "sudo -n" in host_setup
+    assert host_setup.count("run_nvidia_smi --query-gpu=") == 2
     assert 'TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-4}"' in launcher
     assert 'DATA_PARALLEL_SIZE="${DATA_PARALLEL_SIZE:-1}"' in launcher
     assert 'BUILD_IMAGE="${BUILD_IMAGE:-1}"' in launcher

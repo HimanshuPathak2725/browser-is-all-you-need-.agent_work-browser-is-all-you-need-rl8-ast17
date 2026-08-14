@@ -8,6 +8,7 @@ import pytest
 from glm47_posttraining.aider_polyglot.ast_evaluator import (
     AST17_CHECK_WEIGHTS,
     AST17Evaluation,
+    _libclang_resource_args,
     compute_ast17_score,
 )
 from glm47_posttraining.aider_polyglot.reward import (
@@ -25,7 +26,31 @@ from glm47_posttraining.aider_polyglot.reward import (
     WRONG_FILE_LABEL_REASON,
     compute_production_aider_reward,
 )
+from glm47_posttraining.aider_polyglot.parser import segment_glm47_response
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
+
+
+def test_libclang_resource_directory_is_explicit_and_validated(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    resource_dir = tmp_path / "clang" / "18"
+    include_dir = resource_dir / "include"
+    include_dir.mkdir(parents=True)
+    (include_dir / "stddef.h").write_text("/* built-in */\n", encoding="utf-8")
+    monkeypatch.setenv("GLM47_LIBCLANG_RESOURCE_DIR", str(resource_dir))
+
+    assert _libclang_resource_args() == [f"-resource-dir={resource_dir}"]
+
+
+def test_libclang_resource_directory_rejects_missing_builtin_headers(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    resource_dir = tmp_path / "clang" / "18"
+    resource_dir.mkdir(parents=True)
+    monkeypatch.setenv("GLM47_LIBCLANG_RESOURCE_DIR", str(resource_dir))
+
+    with pytest.raises(RuntimeError, match="include/stddef.h"):
+        _libclang_resource_args()
 
 
 def _task() -> AiderPolyglotTask:
@@ -101,16 +126,44 @@ def test_production_reward_rejects_forbidden_file_without_runner(tmp_path: Path)
     assert (result.reward, result.reason, called) == (-1.0, FORBIDDEN_VIOLATION_REASON, False)
 
 
+def test_production_reward_applies_only_segmented_final_files(tmp_path: Path) -> None:
+    observed: list[dict[str, str]] = []
+
+    def runner(_path: Path, files: dict[str, str]) -> AiderTestResult:
+        observed.append(files)
+        return AiderTestResult(status="passed", tests_passed=1, tests_total=1)
+
+    raw = (
+        _response("int answer(){return 0;}")
+        + _response("project(unsafe)", "CMakeLists.txt")
+        + "</think>\n"
+        + _response("int answer(){return 42;}")
+    )
+    segments = segment_glm47_response(raw)
+    result = compute_production_aider_reward(
+        _task(), tmp_path, segments.final_answer, runner=runner
+    )
+
+    assert segments.thinking_boundary_applied is True
+    assert observed == [{"example.cpp": "int answer(){return 42;}\n"}]
+    assert result.parsed is not None
+    assert result.parsed.format_valid is True
+
+
 def test_production_reward_parse_failure_is_negative(tmp_path: Path) -> None:
     result = compute_production_aider_reward(_task(), tmp_path, "no file block", runner=None)
     assert (result.reward, result.reason) == (-0.92, CLARIFICATION_OR_NO_FILE_REASON)
 
 
-def test_production_reward_fatal_parse_with_code_fence_is_negative(tmp_path: Path) -> None:
+def test_production_reward_single_unlabelled_fence_is_recoverable(tmp_path: Path) -> None:
+    def runner(_path: Path, _files: dict[str, str]) -> AiderTestResult:
+        return AiderTestResult(status="passed", tests_passed=1, tests_total=1)
+
     result = compute_production_aider_reward(
-        _task(), tmp_path, "```cpp\nint answer(){return 42;}\n```", runner=None
+        _task(), tmp_path, "```cpp\nint answer(){return 42;}\n```", runner=runner
     )
-    assert (result.reward, result.reason) == (-0.85, FATAL_PARSE_REASON)
+    assert (result.reward, result.reason) == (1.0, "recoverable_format_correct")
+    assert result.parsed is not None and result.parsed.format_valid is False
 
 
 def test_production_reward_wrong_file_label_is_recoverable_negative(tmp_path: Path) -> None:

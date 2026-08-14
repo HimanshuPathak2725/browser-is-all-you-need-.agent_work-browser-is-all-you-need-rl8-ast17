@@ -1,0 +1,23 @@
+{
+  "category": "minimum-unique-clue-subset",
+  "editable_files": [
+    "minimum-unique-clue-subset.h",
+    "minimum-unique-clue-subset.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "minimum-unique-clue-subset_test.cpp",
+  "hidden_test_sha256": "1c7cfc84194357466bf0a9bd2b8deb889fa92a11117561f2a79519d06c963f0c",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "257713d5d2d40b78b22de6a96b5dce28038aedd954d1a27710e34188a6181535",
+  "tags": [
+    "zebra",
+    "clue-minimization",
+    "set-cover"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-minimum-unique-clue-subset",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

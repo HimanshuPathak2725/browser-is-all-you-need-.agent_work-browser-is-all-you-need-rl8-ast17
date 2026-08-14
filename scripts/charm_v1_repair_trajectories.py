@@ -101,6 +101,14 @@ const int observed = intentionally_missing_definition();
         return "intentional-undefined-symbol", append_source(reference, editable, suffix)
     if repair_type == "api_repair":
         signatures = {
+            "cyclic-hamming-starts": (
+                "cyclic_hamming_starts",
+                "cyclic_hamming_starts_wrong_api",
+            ),
+            "turn-command-self-avoidance": (
+                "replay_self_avoiding_turns",
+                "replay_self_avoiding_turns_wrong_api",
+            ),
             "rotating-slot-allocation": (
                 "const std::vector<SlotOp>& operations",
                 "std::vector<SlotOp>& operations",
@@ -157,7 +165,9 @@ const int observed = intentionally_missing_definition();
                 f"public API declaration/definition mutation did not apply twice for {task_id}"
             )
         mutation_id = (
-            "change-public-parameter-type"
+            "rename-public-function"
+            if task_id.endswith(("cyclic-hamming-starts", "turn-command-self-avoidance"))
+            else "change-public-parameter-type"
             if task_id.endswith((
                 "coordinate-spiral-rank",
                 "coordinate-spiral-rank-budgeted",

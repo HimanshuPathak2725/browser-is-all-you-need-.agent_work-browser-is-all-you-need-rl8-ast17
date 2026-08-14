@@ -18,7 +18,12 @@ from glm47_posttraining.aider_polyglot.dataset import (
     build_aider_polyglot_datasets,
 )
 from glm47_posttraining.aider_polyglot.harness import run_aider_tests, run_shadow_tests
-from glm47_posttraining.aider_polyglot.parser import AiderResponseError, parse_whole_file_response
+from glm47_posttraining.aider_polyglot.parser import (
+    MAX_RESPONSE_BYTES,
+    AiderResponseError,
+    parse_whole_file_response,
+    segment_glm47_response,
+)
 from glm47_posttraining.aider_polyglot.reward import compute_aider_reward
 from glm47_posttraining.aider_polyglot.schema import AiderPolyglotTask, AiderTestResult
 from glm47_posttraining.aider_polyglot.schema import WEIGHTED45_CHECK_IDS
@@ -32,7 +37,9 @@ from glm47_posttraining.aider_polyglot.validator.oracle.oracle_receipt import (
     canonical_sha256,
     compute_certification_sha256,
 )
-from glm47_posttraining.aider_polyglot.validator.oracle.oracle_runner import OracleCertificationError
+from glm47_posttraining.aider_polyglot.validator.oracle.oracle_runner import (
+    OracleCertificationError,
+)
 from glm47_posttraining.aider_polyglot.validator.oracle.oracle_rules import ORACLE_RULES
 from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
@@ -202,6 +209,76 @@ def test_whole_file_parser_marks_markdown_filename_as_recoverable() -> None:
     parsed = parse_whole_file_response(_response("### example.cpp"), ["example.cpp"])
     assert parsed.files["example.cpp"].startswith("int answer")
     assert parsed.format_valid is False
+
+
+def test_whole_file_parser_recovers_one_unlabelled_fence_for_one_editable_file() -> None:
+    parsed = parse_whole_file_response(
+        "```cpp\nint answer() { return 42; }\n```\n", ["example.cpp"]
+    )
+    assert parsed.files == {"example.cpp": "int answer() { return 42; }\n"}
+    assert parsed.format_valid is False
+
+
+def test_whole_file_parser_rejects_unlabelled_fence_for_multiple_editable_files() -> None:
+    with pytest.raises(AiderResponseError) as exc:
+        parse_whole_file_response(
+            "```cpp\nint answer() { return 42; }\n```\n",
+            ["example.cpp", "example.h"],
+        )
+    assert exc.value.reason == "invalid_format"
+
+
+def test_whole_file_parser_recovers_unlabelled_source_with_exact_declared_header() -> None:
+    parsed = parse_whole_file_response(
+        '```cpp\n#include "example.h"\nint answer() { return 42; }\n```\n',
+        ["example.cpp", "example.h"],
+    )
+    assert parsed.files == {"example.cpp": '#include "example.h"\nint answer() { return 42; }\n'}
+    assert parsed.format_valid is False
+
+
+def test_whole_file_parser_does_not_guess_source_for_unknown_header() -> None:
+    with pytest.raises(AiderResponseError) as exc:
+        parse_whole_file_response(
+            '```cpp\n#include "other.h"\nint answer() { return 42; }\n```\n',
+            ["example.cpp", "example.h"],
+        )
+    assert exc.value.reason == "invalid_format"
+
+
+def test_glm47_response_segment_ignores_reasoning_fences_and_uses_first_boundary() -> None:
+    final = (
+        'example.cpp\n```cpp\nconst char *token = "</think>";\nint answer() { return 42; }\n```\n'
+    )
+    raw = (
+        "draft\nCMakeLists.txt\n```cmake\nproject(unsafe)\n```\n"
+        + _response()
+        + "</think>\n"
+        + final
+    )
+
+    segments = segment_glm47_response(raw)
+    parsed = parse_whole_file_response(segments.final_answer, ["example.cpp"])
+
+    assert segments.thinking_boundary_applied is True
+    assert parsed.files == {
+        "example.cpp": 'const char *token = "</think>";\nint answer() { return 42; }\n'
+    }
+    assert parsed.format_valid is True
+
+
+def test_glm47_response_segment_preserves_legacy_no_marker_contract() -> None:
+    response = _response()
+    segments = segment_glm47_response(response)
+    assert segments.final_answer == response
+    assert segments.thinking_boundary_applied is False
+
+
+def test_glm47_response_segment_validates_raw_bytes_before_boundary() -> None:
+    raw = "x" * (MAX_RESPONSE_BYTES + 1) + "</think>\n" + _response()
+    with pytest.raises(AiderResponseError) as exc:
+        segment_glm47_response(raw)
+    assert exc.value.reason == "response_too_large"
 
 
 @pytest.mark.parametrize("marker", ["<|endoftext|>", "<|user|>", "<|observation|>"])
@@ -608,6 +685,28 @@ def test_dataset_builder_materializes_only_answer_blind_training_files(tmp_path:
     assert all(".reference" not in message.content for message in first.prompt)
 
 
+def test_dataset_builder_emits_v2_only_on_explicit_new_output(tmp_path: Path) -> None:
+    source = _make_shadow_tree(tmp_path)
+    paths = build_aider_polyglot_datasets(
+        source,
+        tmp_path / "prepared-v2",
+        profile="unit-v2",
+        train_limit=1,
+        monitor_limit=1,
+        reward_policy="hybrid-bipolar45-v2",
+    )
+    manifest = json.loads(paths["manifest"].read_text(encoding="utf-8"))
+    row = json.loads(paths["grpo_train"].read_text(encoding="utf-8").splitlines()[0])
+    task = AiderPolyglotTask.read_json(paths["manifest"].parent / row["metadata"]["task_path"])
+
+    assert manifest["schema_version"] == 7
+    assert manifest["reward_contract"]["policy"] == "hybrid-bipolar45-v2"
+    assert manifest["reward_contract"]["activation_status"] == "NOT_ADMITTED"
+    assert task.reward_contract == "hybrid-bipolar45-v2"
+    assert task.prompt_contract == "hybrid45-isolated-wholefile-v2"
+    assert [message.role for message in task.prompt] == ["system", "user"]
+
+
 def test_dataset_builder_rejects_and_reports_any_failed_oracle(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -705,6 +804,33 @@ def test_dataset_builder_rejects_overlapping_explicit_split(tmp_path: Path) -> N
         )
 
 
+def test_miles_preflight_uses_caller_bound_verifier_image(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed: list[str] = []
+    monkeypatch.setenv("GLM47_CPP_SANDBOX_IMAGE", "verifier@sha256:bound")
+    monkeypatch.setattr(integration_module, "run_response_contract_preflight", lambda: None)
+    monkeypatch.setattr(
+        integration_module,
+        "run_sandbox_preflight",
+        lambda *, image: observed.append(image),
+    )
+
+    integration_module.main(["preflight"])
+
+    assert observed == ["verifier@sha256:bound"]
+
+
+def test_miles_preflight_rejects_missing_verifier_image(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("GLM47_CPP_SANDBOX_IMAGE", raising=False)
+    monkeypatch.setattr(integration_module, "run_response_contract_preflight", lambda: None)
+
+    with pytest.raises(RuntimeError, match="must bind the prebuilt verifier image"):
+        integration_module.main(["preflight"])
+
+
 def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -731,6 +857,144 @@ def test_miles_reward_hook_uses_shadow_task_and_returns_metrics(
     assert record["all_tests_pass"] is True
     assert record["candidate_returncode"] == 0
     assert record["modified_files"] == ["example.cpp"]
+
+
+def test_miles_reward_hook_scores_only_post_think_final_answer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = tmp_path / "data"
+    exercise = data / "shadow" / "example"
+    (exercise / ".grader").mkdir(parents=True)
+    task_path = _task().write_json(data / "tasks" / "train" / "example.json")
+    monkeypatch.setenv("GLM47_DATA_DIR", str(data))
+    observed_files: list[dict[str, str]] = []
+
+    def passed(_path: Path, files: dict[str, str], **_kwargs) -> AiderTestResult:
+        observed_files.append(files)
+        return AiderTestResult(
+            status="passed", tests_passed=1, tests_total=1, candidate_returncode=0
+        )
+
+    monkeypatch.setattr(integration_module, "run_shadow_tests", passed)
+    final_answer = "\n" + _response()
+    raw_response = (
+        "draft reasoning\nCMakeLists.txt\n```cmake\nproject(unsafe)\n```\n"
+        + _response()
+        + "</think>"
+        + final_answer
+    )
+    sample = SimpleNamespace(
+        index=2,
+        rollout_id=3,
+        response=raw_response,
+        metadata={"task_path": str(task_path.relative_to(data))},
+    )
+
+    record = asyncio.run(integration_module.reward_func(SimpleNamespace(), sample))
+
+    assert observed_files == [{"example.cpp": "int answer() { return 42; }\n"}]
+    assert record["response"] == raw_response
+    assert record["response_contract"] == "glm47-thinking-final-answer-v1"
+    assert record["thinking_boundary_applied"] is True
+    assert record["scored_response_sha256"] == hashlib.sha256(final_answer.encode()).hexdigest()
+    assert record["format_valid"] is True
+
+
+def test_miles_reward_hook_keeps_protected_file_enforcement_on_final_answer(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = tmp_path / "data"
+    exercise = data / "shadow" / "example"
+    (exercise / ".grader").mkdir(parents=True)
+    task_path = _task().write_json(data / "tasks" / "train" / "example.json")
+    monkeypatch.setenv("GLM47_DATA_DIR", str(data))
+    called = False
+
+    def must_not_run(*_args, **_kwargs) -> AiderTestResult:
+        nonlocal called
+        called = True
+        raise AssertionError("protected final answer reached the compiler")
+
+    monkeypatch.setattr(integration_module, "run_shadow_tests", must_not_run)
+    sample = SimpleNamespace(
+        response="reasoning only</think>\n" + _response("CMakeLists.txt"),
+        metadata={"task_path": str(task_path.relative_to(data))},
+    )
+
+    record = asyncio.run(integration_module.reward_func(SimpleNamespace(), sample))
+
+    assert called is False
+    assert record["score"] == -1.0
+    assert record["reason"] == "forbidden_file"
+    assert record["modified_files"] == []
+    assert record["thinking_boundary_applied"] is True
+
+
+def test_hybrid45_static_rejections_bind_distinct_isolated_receipt_workspaces(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    data = tmp_path / "data"
+    exercise = data / "shadow" / "example"
+    (exercise / ".grader").mkdir(parents=True)
+    (exercise / "example.cpp").write_text(
+        "int answer() { return 0; }\n", encoding="utf-8"
+    )
+    (exercise / "example.h").write_text("int answer();\n", encoding="utf-8")
+    task = _task().model_copy(
+        update={
+            "reward_contract": "hybrid-bipolar45-v2",
+            "prompt_contract": "hybrid45-isolated-wholefile-v2",
+            "tags": ["clean-room-charm-r8"],
+        }
+    )
+    task_path = task.write_json(data / "tasks" / "train" / "example.json")
+    monkeypatch.setenv("GLM47_DATA_DIR", str(data))
+    monkeypatch.setenv("MILES_AIDER_REWARD_MODE", "hybrid_bipolar45")
+    monkeypatch.setenv("GLM47_TOKENIZER_REVISION", "glm47-tokenizer-pinned")
+    monkeypatch.setenv("GLM47_TOKENIZER_MANIFEST_SHA256", "c" * 64)
+    monkeypatch.setenv("GLM47_CHAT_TEMPLATE_SHA256", "d" * 64)
+    monkeypatch.setenv("GLM47_CPP_SANDBOX_IMAGE", "sha256:" + "e" * 64)
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "1")
+    monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "2")
+    monkeypatch.setenv("GLM47_AIDER_REQUIRE_CONTEXT_ISOLATION", "1")
+    monkeypatch.setenv(
+        "MILES_GRPO_ADVANTAGE_POLICY", "miles-standard-grpo-group-std-v1"
+    )
+    monkeypatch.setenv("GLM47_AIDER_MAX_PROMPT_TOKENS", "8")
+    samples = [
+        SimpleNamespace(
+            index=index,
+            rollout_id=3,
+            prompt="<user>solve</user>",
+            response="not a whole-file response",
+            tokens=list(range(10)),
+            response_length=2,
+            status="finished",
+            metadata={
+                "base_task_id": "example",
+                "prompt_variant": "short",
+                "task_path": str(task_path.relative_to(data)),
+            },
+        )
+        for index in range(2)
+    ]
+
+    records = asyncio.run(integration_module.reward_func(SimpleNamespace(), samples))
+
+    contexts = [record["context_identity"] for record in records]
+    assert all(context["verification_executed"] is False for context in contexts)
+    assert all(
+        context["verification_workspace_binding"] == "isolated_receipt"
+        for context in contexts
+    )
+    assert len({context["verification_workspace_id"] for context in contexts}) == 2
+    rollouts = [
+        SimpleNamespace(index=sample.index, response=sample.response, reward=record)
+        for sample, record in zip(samples, records, strict=True)
+    ]
+    integration_module.validate_aider_rollout_batch(
+        SimpleNamespace(rollout_batch_size=1, n_samples_per_prompt=2), [rollouts]
+    )
 
 
 def test_miles_reward_hook_aborts_on_missing_task_binding() -> None:
@@ -792,6 +1056,7 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
     monkeypatch.setenv("GLM47_AIDER_EXPECTED_TRAIN_GROUPS", "6")
     monkeypatch.setenv("GLM47_AIDER_EXPECTED_SAMPLES_PER_GROUP", "8")
     monkeypatch.setenv("GLM47_AIDER_REQUIRE_SIGNAL", "1")
+    monkeypatch.setenv("MILES_GRPO_ADVANTAGE_POLICY", "miles-standard-grpo-group-std-v1")
     monkeypatch.setenv("GLM47_AIDER_SIGNAL_GATE_DIR", str(tmp_path / "gates"))
     data = []
     for group_index in range(6):
@@ -820,6 +1085,10 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
     assert receipt["positive_groups"] == 6
     assert receipt["semantic_variance_groups"] == 2
     assert receipt["reward_variance_groups"] == 4
+    assert receipt["optimizer_policy"] == "miles-standard-grpo-group-std-v1"
+    assert receipt["advantage_telemetry"]["group_count"] == 6
+    assert receipt["advantage_telemetry"]["non_finite_advantage_count"] == 0
+    assert receipt["termination_reasons"] == {"unknown": 48}
 
     constant = [
         [
@@ -828,14 +1097,19 @@ def test_pre_optimizer_signal_gate_writes_pass_receipt(tmp_path: Path, monkeypat
         ]
         for group_index in range(6)
     ]
-    integration_module.validate_aider_rollout_batch(
-        SimpleNamespace(rollout_batch_size=6, n_samples_per_prompt=8), constant
-    )
-    receipts = sorted((tmp_path / "gates").glob("signal_gate_passed_*.json"))
-    assert len(receipts) == 2
-    assert any(
-        json.loads(path.read_text())["signal_requirements_applied"] is False for path in receipts
-    )
+    with pytest.raises(
+        integration_module.AiderRewardInfrastructureError,
+        match="semantic_variance_groups=0<2, reward_variance_groups=0<2",
+    ):
+        integration_module.validate_aider_rollout_batch(
+            SimpleNamespace(rollout_batch_size=6, n_samples_per_prompt=8), constant
+        )
+    failed = list((tmp_path / "gates").glob("signal_gate_failed_*.json"))
+    assert len(failed) == 1
+    failed_receipt = json.loads(failed[0].read_text())
+    assert failed_receipt["sequence"] == 1
+    assert failed_receipt["signal_requirements_applied"] is True
+    assert failed_receipt["thresholds"]["minimum_exact_format_rate"] == 0.5
 
 
 def test_rollout_validator_falls_back_when_expected_count_env_is_blank(monkeypatch) -> None:

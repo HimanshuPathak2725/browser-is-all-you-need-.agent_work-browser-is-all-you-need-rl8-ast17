@@ -213,3 +213,60 @@ def test_uniqueness_scanner_passes_distinct_proposals_in_clean_scope(
     assert receipt["repository_scope_complete"] is True
     assert receipt["parse_failures"] == 0
     assert receipt["corpus_index_sha256"]
+
+
+def test_uniqueness_scanner_excludes_only_exact_query_batch_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "repo"
+    batch = root / "artifacts" / "batch-current"
+    historical = root / "artifacts" / "batch-old"
+    batch.mkdir(parents=True)
+    historical.mkdir(parents=True)
+    plan = {
+        "schema_version": SCANNER.PROPOSAL_SCHEMA,
+        "proposals": [_proposal("candidate-ledger-v1", "amber")],
+    }
+    plan_path = batch / "proposal-plan.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    (batch / "materialization-manifest.json").write_text(
+        json.dumps({"task_id": "candidate-ledger-v1"}), encoding="utf-8"
+    )
+    (historical / "task.json").write_text(
+        json.dumps({"task_id": "unrelated-old-task"}), encoding="utf-8"
+    )
+    monkeypatch.setattr(SCANNER, "git_root", lambda _start: root)
+    monkeypatch.setattr(SCANNER, "git_revision", lambda _root: "c" * 40)
+    monkeypatch.setattr(SCANNER, "linked_worktrees", lambda _root: ([root], []))
+
+    receipt = SCANNER.scan(plan_path, batch / "receipt.json", root, [])
+
+    assert receipt["decision"] == "PASS"
+    assert receipt["task_id_matches"] == 0
+    assert any(
+        row["reason"] == "exact queried-batch artifact-tree exclusion"
+        for row in receipt["exclusions"]
+    )
+
+
+def test_uniqueness_scanner_accepts_empty_json_as_content_free(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    (root / "run_receipt.json").write_text("", encoding="utf-8")
+    plan = {
+        "schema_version": SCANNER.PROPOSAL_SCHEMA,
+        "proposals": [_proposal("candidate-ledger-v1", "amber")],
+    }
+    plan_path = tmp_path / "proposal.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+    monkeypatch.setattr(SCANNER, "git_root", lambda _start: root)
+    monkeypatch.setattr(SCANNER, "git_revision", lambda _root: "d" * 40)
+    monkeypatch.setattr(SCANNER, "linked_worktrees", lambda _root: ([root], []))
+
+    receipt = SCANNER.scan(plan_path, tmp_path / "receipt.json", root, [])
+
+    assert receipt["decision"] == "PASS"
+    assert receipt["repository_scope_complete"] is True
+    assert receipt["parse_failures"] == 0

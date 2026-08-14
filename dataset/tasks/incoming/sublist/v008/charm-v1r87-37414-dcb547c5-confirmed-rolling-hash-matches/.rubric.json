@@ -1,0 +1,22 @@
+{
+  "category": "confirmed-rolling-hash-matches",
+  "editable_files": [
+    "confirmed-rolling-hash-matches.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "confirmed-rolling-hash-matches_test.cpp",
+  "hidden_test_sha256": "43d65dc0ce785ff3793dff8dcdd4811ee53e0907b39d458d0b65a074bd066ff9",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "9586d904d4193de28e2c3eb65314cab5f55fd575821f7da5499a6d2002930f57",
+  "tags": [
+    "sublist",
+    "rolling-hash",
+    "collision-defense"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-confirmed-rolling-hash-matches",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

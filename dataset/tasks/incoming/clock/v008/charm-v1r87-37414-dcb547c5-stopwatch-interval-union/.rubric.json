@@ -1,0 +1,22 @@
+{
+  "category": "stopwatch-interval-union",
+  "editable_files": [
+    "stopwatch-interval-union.hpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "stopwatch-interval-union_test.cpp",
+  "hidden_test_sha256": "52828777fcd38548195ce3181e86d35c5704c0f9429b4c0ba4422853d346613f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "c06325ab40aa7455892650506846b4d27e69dcd2ac02b4d94360f39d9f56cce4",
+  "tags": [
+    "stopwatch",
+    "interval-union",
+    "overflow"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-stopwatch-interval-union",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

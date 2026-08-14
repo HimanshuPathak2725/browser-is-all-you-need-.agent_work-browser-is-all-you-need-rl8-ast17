@@ -1,0 +1,24 @@
+{
+  "category": "exact-histogram-rerolls",
+  "editable_files": [
+    "exact-histogram-rerolls.h",
+    "exact-histogram-rerolls.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "exact-histogram-rerolls_test.cpp",
+  "hidden_test_sha256": "3d19183afaa054c1a8479e7da928e8b949a11f3f76978aa1014f1973ad77d40b",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "902574191220173765fd693d9fbadef84c483272269acb02dfd967bb3da309df",
+  "tags": [
+    "yacht",
+    "reroll",
+    "histogram"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-exact-histogram-rerolls",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

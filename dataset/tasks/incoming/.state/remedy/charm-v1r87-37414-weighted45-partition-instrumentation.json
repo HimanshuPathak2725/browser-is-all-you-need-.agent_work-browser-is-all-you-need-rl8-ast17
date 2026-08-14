@@ -1,0 +1,46 @@
+{
+  "schema_version": "charm-v1-family-remedy-v1",
+  "remedy_id": "charm-v1r87-37414-weighted45-partition-instrumentation",
+  "generation_batch_id": "charm-task-generation-v1r87-20260812T122334Z",
+  "generation_session_id": "dcb547c5-de45-4541-8faa-e889b2790bf5",
+  "disposition": "repair-in-place",
+  "root_cause": "All 51 private graders used a local require_case helper that compiled and executed but was not one of the production Weighted45 instrumenter's supported check idioms.",
+  "observed": "The production proof gate raised: weighted45 hidden grader exposes only 0 independent checks; five required.",
+  "expected": "Every task exposes at least five deterministic checks through a production-instrumentable idiom and all H1-H5 partitions are reachable.",
+  "affected_task_count": 51,
+  "affected_topics": [
+    "Allergies",
+    "Bank Account",
+    "Binary Search Tree",
+    "Circular Buffer",
+    "Clock",
+    "Complex Numbers",
+    "Crypto Square",
+    "Diamond",
+    "Grade School",
+    "Kindergarten Garden",
+    "Linked List",
+    "Parallel Letter Frequency",
+    "Phone Number",
+    "Spiral Matrix",
+    "Sublist",
+    "Yacht",
+    "Zebra Puzzle"
+  ],
+  "public_contract": "Unchanged from frozen proposal plan SHA-256 748b36d9135d0a3a3a28b720c720f6c358eb23453116dff69be95ca2db7445b0.",
+  "representation_and_invariant": "Replace each require_case invocation one-for-one with the production-supported variadic CHECK macro, replacing only the private helper wrapper, preserve every condition byte, and regenerate all 51 roots at v009.",
+  "forbidden_substitutes": [
+    "lowering the five-partition requirement",
+    "adding duplicate or tautological checks",
+    "editing materialized roots or receipts",
+    "changing prompts, public APIs, editable starters, reference implementations, or test conditions"
+  ],
+  "independent_reference": "The v008 reference implementations and exact test conditions remain unchanged; only the private check wrapper and bound private metadata change.",
+  "negative_fixture": "The semantic-mutation runner must still find a compiling candidate rejected by a reachable hidden partition for every task.",
+  "owner_source": "scripts/charm_v1_r87_remediate_partitions.py",
+  "generator_owner_source": "scripts/charm_v1_owner_r87.py",
+  "downstream_evidence_invalidated": [
+    "all first-attempt Step 5 oracle shards",
+    "all first-attempt Step 5 negative-control shards"
+  ]
+}

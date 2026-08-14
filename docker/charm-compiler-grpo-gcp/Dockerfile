@@ -3,7 +3,7 @@ FROM radixark/miles:latest-cu12@sha256:efc8027fc47aaa9687dc4f1046093ed4e2f9789e5
 ENV PYTHONPATH=/opt/charm-grpo/src \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    CPLUS_INCLUDE_PATH=/usr/local/lib/clang/18/include \
+    GLM47_LIBCLANG_RESOURCE_DIR=/usr/local/lib/clang/18 \
     TZ=UTC \
     LC_ALL=C.UTF-8
 

@@ -1,0 +1,23 @@
+{
+  "category": "minimum-substring-block-cover",
+  "editable_files": [
+    "minimum-substring-block-cover.h",
+    "minimum-substring-block-cover.cpp"
+  ],
+  "family": "Sublist",
+  "hidden_test_file": "minimum-substring-block-cover_test.cpp",
+  "hidden_test_sha256": "808f12df64438579ed1edd27922a9ffbf57e928c7f0812bbea95b4e0b6488d73",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "09e68af43c07c2bffba24b0568e232e5f20815aa639794963307cbaf3533bb42",
+  "tags": [
+    "sublist",
+    "block-cover",
+    "dynamic-programming"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-minimum-substring-block-cover",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

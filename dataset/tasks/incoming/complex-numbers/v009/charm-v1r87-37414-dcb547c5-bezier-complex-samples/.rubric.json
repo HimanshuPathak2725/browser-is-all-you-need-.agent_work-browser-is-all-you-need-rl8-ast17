@@ -1,0 +1,23 @@
+{
+  "category": "bezier-complex-samples",
+  "editable_files": [
+    "bezier-complex-samples.cpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "bezier-complex-samples_test.cpp",
+  "hidden_test_sha256": "a6bb10da748140ca24685da4ad5a1893d71440d5cc92edcbaef31cbe95ad9818",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "56db8bb6342cd4488b0e30dc0c97b1b55cdaf328b6e735308bb41de9224d6cb7",
+  "tags": [
+    "complex",
+    "bezier",
+    "rational-parameter"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-bezier-complex-samples",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

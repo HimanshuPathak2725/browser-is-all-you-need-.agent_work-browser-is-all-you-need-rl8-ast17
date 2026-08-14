@@ -24,7 +24,7 @@ from typing import Any, Iterable
 
 SCHEMA_VERSION = "charm-repository-uniqueness-receipt-v1"
 PROPOSAL_SCHEMA = "charm-v1-proposal-plan-v1"
-SCANNER_VERSION = "charm-repository-uniqueness-v1"
+SCANNER_VERSION = "charm-repository-uniqueness-v3-query-lineage-cache"
 FINGERPRINT_SCHEMA = "charm-problem-fingerprint-v1"
 NEAR_THRESHOLD = 0.92
 MAX_TEXT_BYTES = 8 * 1024 * 1024
@@ -67,11 +67,16 @@ def tokens(value: str) -> set[str]:
     return set(WORD_RE.findall(value.casefold()))
 
 
-def similarity(left: str, right: str) -> float:
-    a, b = tokens(left), tokens(right)
+def token_set_similarity(a: set[str], b: set[str]) -> float:
     if len(a) < 12 or len(b) < 12:
         return 0.0
+    if min(len(a), len(b)) / max(len(a), len(b)) < NEAR_THRESHOLD:
+        return 0.0
     return len(a & b) / len(a | b)
+
+
+def similarity(left: str, right: str) -> float:
+    return token_set_similarity(tokens(left), tokens(right))
 
 
 def flatten_text(value: Any) -> str:
@@ -206,7 +211,18 @@ def validate_proposals(plan: dict[str, Any]) -> list[dict[str, Any]]:
         if missing:
             raise ScanError(f"proposal {task_id} lacks substantive fields: {missing}")
         semantic = "\n".join(flatten_text(proposal[field]) for field in PROPOSAL_FIELDS)
-        checked.append({**proposal, "_semantic_text": semantic})
+        structural = normalize(
+            flatten_text(proposal["public_api"])
+            + "\n"
+            + flatten_text(proposal["starter_design"])
+        )
+        checked.append({
+            **proposal,
+            "_semantic_text": semantic,
+            "_normalized_semantic": normalize(semantic),
+            "_semantic_tokens": tokens(semantic),
+            "_structural": structural,
+        })
     return checked
 
 
@@ -232,12 +248,25 @@ def scan(
     parse_failures: list[str] = []
     task_records: list[dict[str, Any]] = []
     excluded_exact = {proposal_path.resolve(), output_path.resolve()}
+    query_artifact_root = proposal_path.resolve().parent
+    exclude_query_artifact_tree = any(
+        included_root in query_artifact_root.parents for included_root in roots
+    )
     files_visited = 0
     for included_root in roots:
         for path in iter_files(included_root, exclusions):
             resolved = path.resolve()
             if resolved in excluded_exact:
                 exclusions.append({"path": str(resolved), "reason": "queried proposal/output exclusion"})
+                continue
+            if (
+                exclude_query_artifact_tree
+                and query_artifact_root in resolved.parents
+            ):
+                exclusions.append({
+                    "path": str(resolved),
+                    "reason": "exact queried-batch artifact-tree exclusion",
+                })
                 continue
             files_visited += 1
             try:
@@ -259,9 +288,14 @@ def scan(
                 "sha256": sha256_bytes(raw),
                 "normalized": normalize(text),
                 "text": text,
+                "_tokens": tokens(text),
                 "task_ids": [],
             }
-            if path.suffix.lower() in {".json", ".jsonl"} and TASK_JSON_NAME_RE.search(path.name):
+            if (
+                text.strip()
+                and path.suffix.lower() in {".json", ".jsonl"}
+                and TASK_JSON_NAME_RE.search(path.name)
+            ):
                 values, errors = parse_json_records(path, text)
                 parse_failures.extend(errors)
                 identifiers = sorted({identifier for value in values for identifier in extract_ids(value)})
@@ -284,15 +318,18 @@ def scan(
     for proposal in proposals:
         task_id = proposal["task_id"]
         semantic = proposal["_semantic_text"]
-        normalized_semantic = normalize(semantic)
-        structural = normalize(flatten_text(proposal["public_api"]) + "\n" + flatten_text(proposal["starter_design"]))
+        normalized_semantic = proposal["_normalized_semantic"]
+        semantic_tokens = proposal["_semantic_tokens"]
+        structural = proposal["_structural"]
+        id_token = re.compile(rf"(?<![A-Za-z0-9_.-]){re.escape(task_id)}(?![A-Za-z0-9_.-])")
         for record in corpus:
-            id_token = re.compile(rf"(?<![A-Za-z0-9_.-]){re.escape(task_id)}(?![A-Za-z0-9_.-])")
-            if task_id in record["task_ids"] or id_token.search(record["text"]):
+            if task_id in record["task_ids"] or (
+                task_id in record["text"] and id_token.search(record["text"])
+            ):
                 task_id_matches.append({"task_id": task_id, "path": record["path"]})
             if normalized_semantic and normalized_semantic == record["normalized"]:
                 exact_matches.append({"task_id": task_id, "path": record["path"]})
-            score = similarity(semantic, record["text"])
+            score = token_set_similarity(semantic_tokens, record["_tokens"])
             if score >= NEAR_THRESHOLD:
                 near_matches.append({"task_id": task_id, "path": record["path"], "score": score})
             if structural and len(tokens(structural)) >= 8 and structural in record["normalized"]:
@@ -300,12 +337,12 @@ def scan(
         for other in proposals:
             if other["task_id"] <= task_id:
                 continue
-            if normalize(semantic) == normalize(other["_semantic_text"]):
+            if normalized_semantic == other["_normalized_semantic"]:
                 semantic_matches.append({"task_ids": [task_id, other["task_id"]]})
-            score = similarity(semantic, other["_semantic_text"])
+            score = token_set_similarity(semantic_tokens, other["_semantic_tokens"])
             if score >= NEAR_THRESHOLD:
                 near_matches.append({"task_ids": [task_id, other["task_id"]], "score": score})
-            if structural == normalize(flatten_text(other["public_api"]) + "\n" + flatten_text(other["starter_design"])):
+            if structural == other["_structural"]:
                 structural_matches.append({"task_ids": [task_id, other["task_id"]]})
 
     corpus_index = [

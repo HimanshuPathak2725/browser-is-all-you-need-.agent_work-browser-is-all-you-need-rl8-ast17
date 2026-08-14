@@ -1,0 +1,23 @@
+{
+  "category": "rubric-cap-scores",
+  "editable_files": [
+    "rubric-cap-scores.h",
+    "rubric-cap-scores.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "rubric-cap-scores_test.cpp",
+  "hidden_test_sha256": "8c0655aa30197a9ec9f0c3ce2157f01ebaa76b55d533846d0bd489c48b2e2758",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "3eda35a0fb4911878f82b302ae4a8d9330f1ecd74bf8ab67e178896014a42e35",
+  "tags": [
+    "grading",
+    "rubric",
+    "caps"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-rubric-cap-scores",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

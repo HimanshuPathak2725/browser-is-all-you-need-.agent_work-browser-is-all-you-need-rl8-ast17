@@ -1,0 +1,22 @@
+{
+  "category": "quota-lane-drain",
+  "editable_files": [
+    "quota-lane-drain.hpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "quota-lane-drain_test.cpp",
+  "hidden_test_sha256": "6b4a80c4f1ad90bfd3a0d83bdf2dea9cbd7125da2b388b918aa5c2bfdb2cc606",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "b1e70e05285febba2ce534105755d02fe27b9b8a62a19f881836f0069d8982e5",
+  "tags": [
+    "circular-scheduling",
+    "fifo",
+    "quota"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-quota-lane-drain",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

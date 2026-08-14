@@ -289,8 +289,8 @@ def replay_tokens(
         add_generation_prompt=False,
         enable_thinking=False,
     )
-    prefix = list(prefix_batch["input_ids"])
-    token_ids = list(complete_batch["input_ids"])
+    prefix = _chat_template_input_ids(prefix_batch)
+    token_ids = _chat_template_input_ids(complete_batch)
     if token_ids[: len(prefix)] != prefix:
         raise ProjectionError("chat template is not prefix-stable at the final assistant boundary")
     eos_id = tokenizer.eos_token_id
@@ -310,6 +310,31 @@ def replay_tokens(
         "loss_mask_sha256": sha256_bytes(canonical_bytes(loss_mask)),
         "eos_at_final_position": token_ids[-1] == eos_id,
     }
+
+
+def _chat_template_input_ids(value: Any) -> list[int]:
+    """Normalize supported Transformers chat-template token return shapes."""
+
+    if isinstance(value, dict):
+        if "input_ids" not in value:
+            raise ProjectionError("chat template token mapping lacks input_ids")
+        value = value["input_ids"]
+    if hasattr(value, "tolist"):
+        value = value.tolist()
+    if isinstance(value, tuple):
+        value = list(value)
+    if (
+        isinstance(value, list)
+        and len(value) == 1
+        and isinstance(value[0], (list, tuple))
+    ):
+        value = list(value[0])
+    if not isinstance(value, list) or any(
+        not isinstance(token_id, int) or isinstance(token_id, bool) or token_id < 0
+        for token_id in value
+    ):
+        raise ProjectionError("chat template returned invalid token IDs")
+    return list(value)
 
 
 def _safe_metadata(selected: dict[str, Any], editable: list[str]) -> dict[str, Any]:

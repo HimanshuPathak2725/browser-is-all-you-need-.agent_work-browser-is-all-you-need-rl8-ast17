@@ -1,0 +1,25 @@
+{
+  "category": "allergen-rule-evaluator",
+  "editable_files": [
+    "allergen-rule-evaluator.h",
+    "allergen-rule-evaluator.cpp",
+    "allergen-rule-evaluator_detail.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "allergen-rule-evaluator_test.cpp",
+  "hidden_test_sha256": "18c8b0078b2c590251bc2c321f4dac01ca7116435d7aba4fbf35028fa423a83f",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "64fdfc918973e1e9733519eac45a37fdbb4e16e3c08ae6566e241056b8d4a8cc",
+  "tags": [
+    "parser",
+    "boolean-rule",
+    "public-grammar"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-allergen-rule-evaluator",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,25 @@
+{
+  "category": "weekly-recurrence-wait",
+  "editable_files": [
+    "weekly-recurrence-wait.h",
+    "weekly-recurrence-wait.cpp",
+    "weekly-recurrence-wait_detail.cpp"
+  ],
+  "family": "Clock",
+  "hidden_test_file": "weekly-recurrence-wait_test.cpp",
+  "hidden_test_sha256": "14f18d17dccf1f8b55ef7bc3ba1cfc8ea7886d492e8e2abfd0fee24cb9f5306a",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e870816876c3af3938b6eeb5ac4424b8be2ec6ef6ad35c50d5f2814e0ff50e82",
+  "tags": [
+    "weekly-clock",
+    "recurrence",
+    "modular-time"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-weekly-recurrence-wait",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,23 @@
+{
+  "category": "avl-certificate-audit",
+  "editable_files": [
+    "avl-certificate-audit.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "avl-certificate-audit_test.cpp",
+  "hidden_test_sha256": "7bd034a1581e6cb70313daf8480a73497148f505594f3cbac857ccff76ea0260",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e66894618daa11d37d65b73f0dff770e041b6d4cc73fd5dbeb5a731eddc9b316",
+  "tags": [
+    "avl",
+    "certificate",
+    "graph-audit"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-avl-certificate-audit",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

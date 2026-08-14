@@ -1,0 +1,23 @@
+{
+  "category": "parallel-rare-offsets",
+  "editable_files": [
+    "parallel-rare-offsets.h",
+    "parallel-rare-offsets.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "parallel-rare-offsets_test.cpp",
+  "hidden_test_sha256": "bb0fe1f185e5a2e11d90792911e4f8ab8321a15db71f1742d6fdfb4764dc4cc9",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "fe8ca0aa0667270a4e466df4f75305ae4d1009f7c7ac102740c846fa9ad598de",
+  "tags": [
+    "parallel",
+    "rare-letter",
+    "offset"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-parallel-rare-offsets",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

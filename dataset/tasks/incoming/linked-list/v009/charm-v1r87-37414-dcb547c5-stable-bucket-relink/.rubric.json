@@ -1,0 +1,24 @@
+{
+  "category": "stable-bucket-relink",
+  "editable_files": [
+    "stable-bucket-relink.h",
+    "stable-bucket-relink.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "stable-bucket-relink_test.cpp",
+  "hidden_test_sha256": "a750518767e1c6e71f261d2c4ee8f9b66c2174b4e63ca918aaf45eb257ec7223",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "ef77f1505f61fdfef44af8decfbffe5d8170f30e7b1983f63a558fd2553aaf60",
+  "tags": [
+    "linked-list",
+    "stable-partition",
+    "relink"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-stable-bucket-relink",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

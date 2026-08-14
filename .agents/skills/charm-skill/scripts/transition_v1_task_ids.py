@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Atomically transition one exact 51-ID CHARM V1 reservation session."""
+"""Atomically transition one exact digest-bound CHARM reservation session."""
 
 from __future__ import annotations
 
@@ -66,8 +66,15 @@ def transition(
         raise ValueError(f"unsupported lifecycle transition: {from_state}->{to_state}")
     plan = load(plan_path)
     claims = plan.get("claims")
+    protocol_id = plan.get("protocol_id")
+    claim_count = len(claims) if isinstance(claims, list) else 0
+    protocol_shape_valid = (
+        claim_count == 51 if protocol_id == "task-generation-v1" else claim_count > 0
+    )
     if (
         plan.get("schema_version") != "charm-task-id-plan-v2"
+        or not isinstance(protocol_id, str)
+        or not protocol_id
         or not isinstance(plan.get("generation_batch_code"), str)
         or len(plan["generation_batch_code"]) != 5
         or not plan["generation_batch_code"].isdigit()
@@ -75,14 +82,16 @@ def transition(
         or not isinstance(plan.get("batch_code_reservation_receipt_sha256"), str)
         or len(plan["batch_code_reservation_receipt_sha256"]) != 64
         or not isinstance(claims, list)
-        or len(claims) != 51
+        or not protocol_shape_valid
     ):
-        raise ValueError("transition requires the exact 51-claim V1 reservation plan")
+        raise ValueError(
+            "transition requires a complete reservation plan; V1 remains exactly 51 claims"
+        )
     evidence = load(evidence_path)
     if evidence.get("decision") != "PASS":
         raise ValueError("lifecycle transition evidence must be a passing receipt")
     task_ids = sorted(str(claim["task_id"]) for claim in claims)
-    if len(set(task_ids)) != 51:
+    if len(set(task_ids)) != claim_count or any(not task_id for task_id in task_ids):
         raise ValueError("reservation plan task IDs are incomplete or duplicated")
 
     lock_path = registry_path.with_name(f"{registry_path.name}.lock")

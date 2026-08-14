@@ -1,0 +1,25 @@
+{
+  "category": "traversal-parent-reconstruction",
+  "editable_files": [
+    "traversal-parent-reconstruction.h",
+    "traversal-parent-reconstruction.cpp",
+    "traversal-parent-reconstruction_detail.cpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "traversal-parent-reconstruction_test.cpp",
+  "hidden_test_sha256": "73d3ca2371a56b3b248dc985a5385c1e962f1c7cce9fea8ed7e22444216e038b",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "84fbc816aeeef9917b83c2b4a6ac6e0116ed12dae58c154b20b69759965da120",
+  "tags": [
+    "bst",
+    "traversal",
+    "reconstruction"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-traversal-parent-reconstruction",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

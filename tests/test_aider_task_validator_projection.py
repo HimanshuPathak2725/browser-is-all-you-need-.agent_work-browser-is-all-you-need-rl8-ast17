@@ -139,6 +139,17 @@ class _FakeTokenizer:
         }
 
 
+class _FlatListTokenizer:
+    eos_token_id = 154820
+
+    def apply_chat_template(self, messages, **kwargs):
+        del kwargs
+        prefix = list(range(70))
+        if messages[-1]["content"] == "":
+            return prefix
+        return [*prefix, 100, 101]
+
+
 def test_replay_tokens_uses_batch_input_ids_and_four_turn_final_loss() -> None:
     messages = [
         {"role": "user", "mask": 0, "content": "task"},
@@ -152,3 +163,11 @@ def test_replay_tokens_uses_batch_input_ids_and_four_turn_final_loss() -> None:
     assert replay["token_ids"][-1] == _FakeTokenizer.eos_token_id
     assert replay["loss_mask"] == [0] * 70 + [1, 1, 1]
     assert replay["token_count"] != 3
+
+
+def test_replay_tokens_accepts_transformers_flat_token_id_lists() -> None:
+    replay = replay_tokens(_FlatListTokenizer(), "task", "answer")
+
+    assert replay["token_count"] == 73
+    assert replay["token_ids"][-1] == _FlatListTokenizer.eos_token_id
+    assert replay["loss_mask"] == [0] * 70 + [1, 1, 1]

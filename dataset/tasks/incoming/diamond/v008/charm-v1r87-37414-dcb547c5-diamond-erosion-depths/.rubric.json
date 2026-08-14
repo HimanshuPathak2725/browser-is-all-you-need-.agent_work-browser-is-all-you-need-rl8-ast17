@@ -1,0 +1,22 @@
+{
+  "category": "diamond-erosion-depths",
+  "editable_files": [
+    "diamond-erosion-depths.hpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "diamond-erosion-depths_test.cpp",
+  "hidden_test_sha256": "117b464bbaf122dd1ffb25e792ec25cfc695912f7bd12ea17ec0205e6b96e19f",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "ad21711e589d9474fd3167ac47e75a21e217f8d87b42b0e7da77e7e213ddc963",
+  "tags": [
+    "diamond-erosion",
+    "grid",
+    "bfs"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-diamond-erosion-depths",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

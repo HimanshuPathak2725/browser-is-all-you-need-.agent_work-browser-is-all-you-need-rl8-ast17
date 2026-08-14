@@ -11,7 +11,9 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from .dataset import build_hybrid45_messages
 from .schema import AiderPolyglotTask
+from .schema import HYBRID45_POLICY_VERSION
 
 
 SOURCE_PACKAGE_KIND = "aider-cpp-rl-full-v5-runtime"
@@ -111,6 +113,20 @@ def _runtime_oracle_hash(package_dir: Path, task: AiderPolyglotTask) -> str:
         )
     ]
     return _tree_sha256(candidates, exercise)
+
+
+def _public_task_instructions(task: AiderPolyglotTask) -> str:
+    """Extract only the current public task from the legacy Aider message stack."""
+
+    current_user = task.prompt[-1].content
+    marker = "\n####\n"
+    if marker not in current_user:
+        raise ValueError(f"{task.task_id}: public task/addendum boundary is missing")
+    instructions, _legacy_addendum = current_user.split(marker, 1)
+    instructions = instructions.strip()
+    if not instructions.startswith("# "):
+        raise ValueError(f"{task.task_id}: public task does not begin with a heading")
+    return instructions
 
 
 def validate_full_v5_package(
@@ -255,11 +271,14 @@ def build_charm_schedule(
     expected_manifest_sha256: str,
     expected_tree_sha256: str,
     selected_task_ids: Sequence[str] | None = None,
+    reward_policy: str | None = None,
 ) -> dict[str, Any]:
     """Copy full-v5 and create a deterministic equal-exposure GRPO schedule."""
 
     if epochs <= 0 or rollout_batch_size <= 0:
         raise ValueError("epochs and rollout batch size must be positive")
+    if reward_policy not in {None, HYBRID45_POLICY_VERSION}:
+        raise ValueError(f"unsupported full-v5 schedule reward policy: {reward_policy}")
     if output_dir.exists() or output_dir.is_symlink():
         raise FileExistsError(f"schedule destination already exists: {output_dir}")
     validation = validate_full_v5_package(
@@ -269,6 +288,7 @@ def build_charm_schedule(
     )
     source_manifest = json.loads((package_dir / "manifest.json").read_text(encoding="utf-8"))
     train_path = package_dir / str(source_manifest["files"]["grpo_train"])
+    development_path = package_dir / str(source_manifest["files"]["development"])
     variants_by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in read_jsonl(train_path):
         metadata = row.get("metadata")
@@ -278,6 +298,17 @@ def build_charm_schedule(
         if not task_id:
             raise ValueError("full-v5 schedule row lacks task ID")
         variants_by_task[task_id].append(row)
+    development_variants_by_task: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in read_jsonl(development_path):
+        metadata = row.get("metadata")
+        if not isinstance(metadata, dict):
+            raise ValueError("full-v5 development row lacks metadata")
+        if reward_policy == HYBRID45_POLICY_VERSION and metadata.get("harness_kind") != "aider_cpp17":
+            continue
+        task_id = str(metadata.get("task_id") or row.get("task_id") or "")
+        if not task_id:
+            raise ValueError("full-v5 development row lacks task ID")
+        development_variants_by_task[task_id].append(row)
     selected = sorted(set(selected_task_ids or variants_by_task))
     if selected_task_ids is not None and len(selected) != len(selected_task_ids):
         raise ValueError("selected canary task IDs contain duplicates")
@@ -286,6 +317,60 @@ def build_charm_schedule(
         raise ValueError(f"selected full-v5 tasks are absent: {missing[:5]}")
     if len(selected) % rollout_batch_size:
         raise ValueError("rollout batch size must divide the selected task count")
+
+    projected_tasks: dict[str, AiderPolyglotTask] = {}
+    projected_prompts: dict[str, list[dict[str, str]]] = {}
+    projected_prompt_sha256: dict[str, str] = {}
+    projection_rows_by_task: dict[str, list[dict[str, Any]]] = {
+        task_id: variants_by_task[task_id] for task_id in selected
+    }
+    if reward_policy == HYBRID45_POLICY_VERSION:
+        projection_rows_by_task.update(development_variants_by_task)
+    if reward_policy == HYBRID45_POLICY_VERSION:
+        package_root = package_dir.resolve()
+        for task_id, variants in sorted(projection_rows_by_task.items()):
+            task_paths = {
+                str(row["metadata"].get("task_path", "")) for row in variants
+            }
+            if len(task_paths) != 1 or not next(iter(task_paths)):
+                raise ValueError(f"{task_id}: prompt variants do not bind one task path")
+            relative_task_path = Path(next(iter(task_paths)))
+            descriptor = (package_root / relative_task_path).resolve()
+            if package_root not in descriptor.parents:
+                raise ValueError(f"{task_id}: task descriptor escapes the runtime package")
+            task = AiderPolyglotTask.read_json(descriptor)
+            if task.task_id != task_id:
+                raise ValueError(f"{task_id}: task descriptor identity mismatch")
+            if task.harness_kind not in {"shadow_cpp17", "aider_cpp17"}:
+                raise ValueError(
+                    f"{task_id}: {HYBRID45_POLICY_VERSION} requires a five-part "
+                    "aider_cpp17 executable oracle"
+                )
+            prompt = build_hybrid45_messages(
+                package_root / task.exercise_dir,
+                task.editable_files,
+                public_instructions=_public_task_instructions(task),
+            )
+            projected = AiderPolyglotTask.model_validate(
+                {
+                    **task.model_dump(),
+                    "prompt": prompt,
+                    "prompt_contract": "hybrid45-isolated-wholefile-v2",
+                    "reward_contract": HYBRID45_POLICY_VERSION,
+                }
+            )
+            prompt_record = [message.model_dump() for message in projected.prompt]
+            prompt_sha256 = hashlib.sha256(
+                json.dumps(
+                    prompt_record,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                    ensure_ascii=False,
+                ).encode("utf-8")
+            ).hexdigest()
+            projected_tasks[task_id] = projected
+            projected_prompts[task_id] = prompt_record
+            projected_prompt_sha256[task_id] = prompt_sha256
 
     schedule: list[dict[str, Any]] = []
     selected_variants: set[str] = set()
@@ -296,14 +381,53 @@ def build_charm_schedule(
                 key=lambda row: str(row["metadata"]["prompt_variant_id"]),
             )
             row = json.loads(json.dumps(variants[(epoch - 1) % len(variants)]))
+            if reward_policy == HYBRID45_POLICY_VERSION:
+                metadata = row["metadata"]
+                source_variant_id = str(metadata["prompt_variant_id"])
+                metadata["source_prompt_variant_id"] = source_variant_id
+                metadata["source_prompt_contract"] = metadata["prompt_contract"]
+                metadata["source_reward_contract"] = metadata["reward_contract"]
+                metadata["prompt_variant_id"] = (
+                    "hybrid45-v2-" + hashlib.sha256(task_id.encode()).hexdigest()[:20]
+                )
+                metadata["prompt_contract"] = "hybrid45-isolated-wholefile-v2"
+                metadata["reward_contract"] = HYBRID45_POLICY_VERSION
+                metadata["projected_prompt_sha256"] = projected_prompt_sha256[task_id]
+                row["prompt"] = projected_prompts[task_id]
             row["metadata"]["schedule_epoch"] = epoch
             row["metadata"]["schedule_target_exposure"] = epoch
             schedule.append(row)
             selected_variants.add(str(row["metadata"]["prompt_variant_id"]))
 
     shutil.copytree(package_dir, output_dir)
+    for task_id, task in projected_tasks.items():
+        task_path = str(projection_rows_by_task[task_id][0]["metadata"]["task_path"])
+        task.write_json(output_dir / task_path)
     scheduled_path = output_dir / str(source_manifest["files"]["grpo_train"])
     _write_jsonl(scheduled_path, schedule)
+    projected_development: list[dict[str, Any]] | None = None
+    projected_development_path = output_dir / str(source_manifest["files"]["development"])
+    if reward_policy == HYBRID45_POLICY_VERSION:
+        projected_development = []
+        for task_id, variants in sorted(development_variants_by_task.items()):
+            row = json.loads(
+                json.dumps(
+                    min(variants, key=lambda item: str(item["metadata"]["prompt_variant_id"]))
+                )
+            )
+            metadata = row["metadata"]
+            metadata["source_prompt_variant_id"] = str(metadata["prompt_variant_id"])
+            metadata["source_prompt_contract"] = metadata["prompt_contract"]
+            metadata["source_reward_contract"] = metadata["reward_contract"]
+            metadata["prompt_variant_id"] = (
+                "hybrid45-v2-eval-" + hashlib.sha256(task_id.encode()).hexdigest()[:20]
+            )
+            metadata["prompt_contract"] = "hybrid45-isolated-wholefile-v2"
+            metadata["reward_contract"] = HYBRID45_POLICY_VERSION
+            metadata["projected_prompt_sha256"] = projected_prompt_sha256[task_id]
+            row["prompt"] = projected_prompts[task_id]
+            projected_development.append(row)
+        _write_jsonl(projected_development_path, projected_development)
     manifest = json.loads(json.dumps(source_manifest))
     manifest["kind"] = SCHEDULE_KIND
     manifest["source_manifest_sha256"] = expected_manifest_sha256
@@ -320,9 +444,37 @@ def build_charm_schedule(
         "selected_task_ids_sha256": hashlib.sha256(
             ("\n".join(selected) + "\n").encode()
         ).hexdigest(),
+        "reward_policy": reward_policy or "source-contract",
     }
+    if reward_policy == HYBRID45_POLICY_VERSION:
+        manifest["projection"] = {
+            "policy_version": HYBRID45_POLICY_VERSION,
+            "prompt_contract": "hybrid45-isolated-wholefile-v2",
+            "prompt_shape": "one isolated system turn plus one current-task user turn",
+            "complete_editable_file_replacements_required": True,
+            "source_rows_preserved_as_lineage_only": True,
+            "activation_status": "EXPERIMENTAL_UNADMITTED",
+            "selected_task_count": len(selected),
+            "development_task_count": len(projected_development or []),
+            "selected_prompt_digest_sha256": hashlib.sha256(
+                ("\n".join(projected_prompt_sha256[task_id] for task_id in selected) + "\n").encode()
+            ).hexdigest(),
+            "development_prompt_digest_sha256": hashlib.sha256(
+                (
+                    "\n".join(
+                        projected_prompt_sha256[task_id]
+                        for task_id in sorted(development_variants_by_task)
+                    )
+                    + "\n"
+                ).encode()
+            ).hexdigest(),
+        }
     manifest["counts"]["train"] = len(selected)
-    manifest["counts"]["validation"] = EXPECTED_COUNTS["development_environments"]
+    manifest["counts"]["validation"] = (
+        len(projected_development)
+        if projected_development is not None
+        else EXPECTED_COUNTS["development_environments"]
+    )
     manifest["counts"]["schedule_epochs"] = epochs
     manifest["counts"]["schedule_rows"] = len(schedule)
     output_manifest = output_dir / "manifest.json"
@@ -340,6 +492,11 @@ def build_charm_schedule(
         "rollout_batch_size": rollout_batch_size,
         "num_rollout": len(schedule) // rollout_batch_size,
         "rows": len(schedule),
+        "development_rows": (
+            len(projected_development)
+            if projected_development is not None
+            else EXPECTED_COUNTS["development_prompt_variants"]
+        ),
     }
 
 
@@ -358,6 +515,10 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--expected-manifest-sha256", required=True)
     build.add_argument("--expected-tree-sha256", required=True)
     build.add_argument("--selected-task-ids", type=Path)
+    build.add_argument(
+        "--reward-policy",
+        choices=(HYBRID45_POLICY_VERSION,),
+    )
     return parser
 
 
@@ -384,6 +545,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             expected_manifest_sha256=args.expected_manifest_sha256,
             expected_tree_sha256=args.expected_tree_sha256,
             selected_task_ids=selected,
+            reward_policy=args.reward_policy,
         )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0

@@ -1,0 +1,23 @@
+{
+  "category": "eastward-shadow-profile",
+  "editable_files": [
+    "eastward-shadow-profile.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "eastward-shadow-profile_test.cpp",
+  "hidden_test_sha256": "f782bdc04e7e0ebabbe178b0ed0f0bed1febaa700772ed2e09fcc0269e095142",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "00f41c7cdc840b638436cb913741abe03bc8152b2eb094403d229bcf31676276",
+  "tags": [
+    "garden",
+    "shadow",
+    "profile"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

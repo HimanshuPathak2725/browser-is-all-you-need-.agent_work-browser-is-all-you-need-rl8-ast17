@@ -1,0 +1,23 @@
+{
+  "category": "decontamination-cover",
+  "editable_files": [
+    "decontamination-cover.cpp"
+  ],
+  "family": "Allergies",
+  "hidden_test_file": "decontamination-cover_test.cpp",
+  "hidden_test_sha256": "314d8c3f5990e04c7fb58e2ed78ae9c7f4d3b638e91e7d636e61ed1bed7ff5f9",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "57cbc03b8ad42972e6db4e50e1eb022d70b9c2135f0ebccf08fc94cb6978789c",
+  "tags": [
+    "set-cover",
+    "bit-domain",
+    "witness"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-decontamination-cover",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

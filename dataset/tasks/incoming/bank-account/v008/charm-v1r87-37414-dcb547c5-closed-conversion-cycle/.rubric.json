@@ -1,0 +1,22 @@
+{
+  "category": "closed-conversion-cycle",
+  "editable_files": [
+    "closed-conversion-cycle.cpp"
+  ],
+  "family": "Bank Account",
+  "hidden_test_file": "closed-conversion-cycle_test.cpp",
+  "hidden_test_sha256": "745d11294e81949020cdd9bbef059fd6104f9df6e8943408e3e3ce4e8e5fff13",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "fb91b2e68907d9e718550e18941ea9099f3442da6674cf5026542323c6040a64",
+  "tags": [
+    "currency",
+    "rational",
+    "cycle"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-closed-conversion-cycle",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

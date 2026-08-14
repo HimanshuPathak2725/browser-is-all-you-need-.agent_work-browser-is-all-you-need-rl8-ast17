@@ -1,0 +1,23 @@
+{
+  "category": "postfix-dice-rule",
+  "editable_files": [
+    "postfix-dice-rule.h",
+    "postfix-dice-rule.cpp"
+  ],
+  "family": "Yacht",
+  "hidden_test_file": "postfix-dice-rule_test.cpp",
+  "hidden_test_sha256": "8fc7ee5c0b28ef67b05673a8d15575cc9e8e572a3e288931aada7fa21b060611",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "0d1cdd9a840dae1e44c9e9848fb4381458499a0df48bb918e0e464f8d3c9e261",
+  "tags": [
+    "yacht",
+    "postfix",
+    "scoring-rule"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-postfix-dice-rule",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

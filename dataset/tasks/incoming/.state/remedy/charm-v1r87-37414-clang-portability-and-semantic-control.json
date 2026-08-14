@@ -1,0 +1,53 @@
+{
+  "schema_version": "charm-v1-family-remedy-v1",
+  "remedy_id": "charm-v1r87-37414-clang-portability-and-semantic-control",
+  "generation_batch_id": "charm-task-generation-v1r87-20260812T122334Z",
+  "generation_session_id": "dcb547c5-de45-4541-8faa-e889b2790bf5",
+  "disposition": "repair-in-place",
+  "root_cause": "The owner formatter joined a closing brace directly to a following identifier in seven reference implementations, which GCC accepted but Clang rejected under -Werror=misleading-indentation. The parallel-rare-offsets negative-control catalog also lacked a task-bound semantic mutation.",
+  "observed": "The complete v009 Step 5 proof run certified 50/51 oracle packages and 44/51 negative controls. Clang portability failed for decontamination-cover, minimum-unique-clue-subset, wildcard-contiguous-matches, equal-sum-dice-partition, diamond-erosion-depths, voxel-shell-sums, and parallel-rare-offsets; parallel-rare-offsets additionally reported semantic_mutation=null.",
+  "expected": "All 51 packages pass strict C++17 GCC and Clang warning-clean compilation, oracle execution, starter rejection, hidden-failure rejection, header isolation, and a task-bound semantic negative control.",
+  "affected_task_count": 21,
+  "affected_topics": [
+    "Allergies",
+    "Diamond",
+    "Parallel Letter Frequency",
+    "Spiral Matrix",
+    "Sublist",
+    "Yacht",
+    "Zebra Puzzle"
+  ],
+  "reference_remediation_task_ids": [
+    "charm-v1r87-37414-dcb547c5-decontamination-cover",
+    "charm-v1r87-37414-dcb547c5-diamond-erosion-depths",
+    "charm-v1r87-37414-dcb547c5-equal-sum-dice-partition",
+    "charm-v1r87-37414-dcb547c5-minimum-unique-clue-subset",
+    "charm-v1r87-37414-dcb547c5-parallel-rare-offsets",
+    "charm-v1r87-37414-dcb547c5-voxel-shell-sums",
+    "charm-v1r87-37414-dcb547c5-wildcard-contiguous-matches"
+  ],
+  "public_contract": "Unchanged from frozen proposal plan SHA-256 748b36d9135d0a3a3a28b720c720f6c358eb23453116dff69be95ca2db7445b0.",
+  "representation_and_invariant": "Regenerate all 21 roots in the seven affected families at v010. In the exact seven failing reference implementations, insert only a line break between a closing brace and the immediately following identifier. Add an exact parallel-rare-offsets semantic mutation that changes the global-frequency acceptance bound from one to two. Preserve prompts, public APIs, editable starters, hidden tests, and all other reference semantics byte-for-byte.",
+  "forbidden_substitutes": [
+    "suppressing -Wmisleading-indentation or lowering -Werror",
+    "editing materialized roots or proof receipts",
+    "changing prompts, public APIs, editable starters, or hidden test conditions",
+    "using a tautological, non-compiling, or unrelated negative mutation",
+    "treating GCC-only success as Clang portability proof"
+  ],
+  "independent_reference": "The v009 public contracts, editable starters, hidden checks, and reference semantics remain authoritative. Only reference source layout for the exact seven tasks, private provenance for the seven affected families, and the bound negative-control catalog change.",
+  "negative_fixture": "parallel-rare-offsets must compile after changing total[c-'a']==1 to total[c-'a']==2 and must then be rejected by a reachable hidden partition; the other 50 bound semantic controls remain unchanged.",
+  "owner_source": "scripts/charm_v1_r87_remediate_portability.py",
+  "generator_spec_source": "scripts/charm_v1_specs_r87.py",
+  "negative_control_source": "scripts/charm_v1_negative_controls.py",
+  "failed_v009_evidence": {
+    "oracle_proof_root": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-002/proofs",
+    "negative_control_proof_root": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-002/proofs",
+    "base_manifest_sha256": "b6f02a7375f2bf67a6c0074c2bfa3e018811baf19079a6f76132f2a604e4eb4f",
+    "base_materialization_receipt_sha256": "159ea0c96ecc7fc4893f5bbda0d7c572b27fa66df79a7c515c3b99ac45ffeef9"
+  },
+  "downstream_evidence_invalidated": [
+    "all v009 Step 5 oracle shard summaries",
+    "all v009 Step 5 negative-control shard summaries"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "category": "successor-jump-queries",
+  "editable_files": [
+    "successor-jump-queries.h",
+    "successor-jump-queries.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "successor-jump-queries_test.cpp",
+  "hidden_test_sha256": "427d07d04162561249f0c102fefb5bce8472b447599909da4cbb46fc2f530fb8",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "7b01429101b932b085149bc394cd78451f07e2f33c8e73fdba34f09d8dd39cf1",
+  "tags": [
+    "linked-list",
+    "binary-lifting",
+    "queries"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-successor-jump-queries",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

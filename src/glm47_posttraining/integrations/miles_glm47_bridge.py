@@ -692,6 +692,10 @@ def _apply_colocate_lora_update_tms_scope(module) -> None:
 
     def sleep(self) -> None:
         assert self.args.offload_train
+        if getattr(self, "_asleep", False):
+            module.logger.info("sleep() called while already offloaded; skipping")
+            return
+
 
         if module.is_lora_enabled(self.args):
             snapshots = _snapshot_lora_parameters(self.model)
@@ -714,6 +718,7 @@ def _apply_colocate_lora_update_tms_scope(module) -> None:
 
         tag = "default" if module.is_lora_enabled(self.args) else None
         module.torch_memory_saver.pause(tag=tag)
+        self._asleep = True
 
         module.print_memory("after offload model")
 
@@ -875,53 +880,43 @@ def _patch_rollout_data_dp_sharding() -> None:
     }:
         return
     _ROLLOUT_DP_SHARD_PATCHED = True
-    _when_imported("miles.utils.data", _apply_rollout_data_dp_sharding)
+    _when_imported(
+        "miles.ray.rollout.train_data_conversion",
+        _apply_rollout_data_dp_sharding,
+    )
 
 
 def _apply_rollout_data_dp_sharding(module) -> None:
-    """Apply Miles' saved DP partition to both lengths and raw rewards.
+    """Apply Miles' saved DP partition to raw rewards after native sharding.
 
-    ``split_train_data_by_dp`` intentionally carries these two vectors globally
-    and stores the balanced row partition beside them. The stock train-side
-    conversion shards ``total_lengths`` but forgets ``raw_reward``. Detailed
-    correct-sample logging then indexes local response arrays with global reward
-    indices and crashes before the optimizer step.
+    The pinned Miles revision owns Ray/object-store fetching and train-side
+    length sharding in ``process_rollout_data`` and
+    ``process_rollout_data_shard``. Wrap only the latter instead of copying
+    the former: copied fetch logic is version-sensitive and previously assumed
+    that ``ray`` and ``Timer`` were re-exported by ``miles.utils.data``.
+
+    ``split_train_data_by_dp`` intentionally carries ``raw_reward`` globally
+    and stores the balanced row partition beside it. Miles consumes the global
+    vector for pass@k, while detailed correct-sample logging needs the DP-local
+    view saved here.
     """
 
     if getattr(module, "_glm47_rollout_dp_shard_patched", False):
         return
 
-    def process_rollout_data(
-        args,
-        rollout_data_ref,
-        dp_rank,
-        dp_size,
-        witness_info=None,
-    ):
-        if getattr(args, "delay_split_train_data_by_dp", False):
-            raw = module.ray.get(rollout_data_ref.inner)
-            if witness_info is not None:
-                raw = {**raw, "seq_witness_ids": witness_info.witness_ids}
-            raw = module.split_train_data_by_dp_raw(args, raw, dp_size=dp_size)
-            rollout_data = raw[dp_rank]
-        else:
-            assert len(rollout_data_ref) == dp_size
-            assert witness_info is None
-            rollout_data = module.ray.get(rollout_data_ref[dp_rank].inner)
+    original_process_rollout_data_shard = module.process_rollout_data_shard
 
-        partition = rollout_data.pop("partition")
-        total_lengths = rollout_data["total_lengths"]
-        module.Timer().seq_lens = total_lengths
-        rollout_data["total_lengths"] = [total_lengths[i] for i in partition]
-        if "raw_reward" in rollout_data:
-            raw_reward = rollout_data["raw_reward"]
+    def process_rollout_data_shard(args, rollout_data):
+        partition = list(rollout_data["partition"])
+        raw_reward = rollout_data.get("raw_reward")
+        rollout_data = original_process_rollout_data_shard(args, rollout_data)
+        if raw_reward is not None:
             rollout_data["_glm47_local_raw_reward"] = [
                 raw_reward[i] for i in partition
             ]
-
         return rollout_data
 
-    module.process_rollout_data = process_rollout_data
+    module.process_rollout_data_shard = process_rollout_data_shard
     module._glm47_rollout_dp_shard_patched = True
 
 
@@ -946,12 +941,18 @@ def _patch_correct_sample_logging() -> None:
 
 
 def _apply_correct_sample_logging(module) -> None:
-    """Select the reward view required by each Miles logging consumer."""
+    """Select the reward view required by each Miles logging consumer.
+
+    Current Miles computes pass@k from rollout-side ``Sample`` objects before
+    train-data sharding and no longer exposes ``log_passrate`` in this module.
+    Older Miles computes it from trainer-side ``raw_reward``. Support both
+    APIs while keeping correct-sample row metrics DP-local.
+    """
 
     if getattr(module, "_glm47_correct_sample_log_patched", False):
         return
     original_log_rollout_data = module.log_rollout_data
-    original_log_passrate = module.log_passrate
+    original_log_passrate = getattr(module, "log_passrate", None)
 
     def log_rollout_data(rollout_id, args, rollout_data) -> None:
         local_rewards = rollout_data.pop("_glm47_local_raw_reward", None)
@@ -965,6 +966,13 @@ def _apply_correct_sample_logging(module) -> None:
 
         global_rewards = rollout_data["raw_reward"]
         rollout_data["raw_reward"] = local_rewards
+        if original_log_passrate is None:
+            try:
+                return original_log_rollout_data(rollout_id, args, rollout_data)
+            finally:
+                rollout_data["raw_reward"] = global_rewards
+                rollout_data["_glm47_local_raw_reward"] = local_rewards
+
         previous_log_passrate = module.log_passrate
 
         def log_passrate(passrate_rollout_id, passrate_args, passrate_data) -> None:

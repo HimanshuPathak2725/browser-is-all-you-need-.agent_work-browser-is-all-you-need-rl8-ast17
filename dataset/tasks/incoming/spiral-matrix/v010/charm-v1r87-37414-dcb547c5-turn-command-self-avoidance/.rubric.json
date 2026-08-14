@@ -1,0 +1,23 @@
+{
+  "category": "turn-command-self-avoidance",
+  "editable_files": [
+    "turn-command-self-avoidance.cpp"
+  ],
+  "family": "Spiral Matrix",
+  "hidden_test_file": "turn-command-self-avoidance_test.cpp",
+  "hidden_test_sha256": "59c3b72dcb6c81c7ebb40f4d666fa943ae160bdc8de80fdb5ee7f0567042682c",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e1415b9a271b8e7ac6ef274e5014f6c626d6b8fbe15aeadfb69bcf59198125d9",
+  "tags": [
+    "spiral",
+    "turns",
+    "self-avoiding-walk"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-turn-command-self-avoidance",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

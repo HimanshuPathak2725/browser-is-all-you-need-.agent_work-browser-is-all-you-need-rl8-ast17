@@ -1,7 +1,7 @@
 """Project independently certified CHARM tasks into an answer-free GRPO corpus.
 
-The projector deliberately consumes the final released CHARM manifest instead of
-walking arbitrary task roots.  It copies only editable starter files and a
+The projector deliberately consumes an admitted or released CHARM manifest
+instead of walking arbitrary task roots.  It copies only editable starter files and a
 read-only hidden grader.  Reference implementations, test filenames, rubrics,
 provenance, and audit internals never appear in model-facing prompt rows.
 """
@@ -193,10 +193,10 @@ def _validate_task(selected: dict[str, Any]) -> tuple[Path, AiderShadowRubric]:
         not root.is_dir()
         or root.is_symlink()
         or root.name != task_id
-        or "released" not in root.parts
+        or not ({"incoming", "released"} & set(root.parts))
         or tree_sha256(root) != selected.get("tree_sha256")
     ):
-        raise CharmGRPOProjectionError(f"released task tree drift: {task_id}")
+        raise CharmGRPOProjectionError(f"admitted task tree drift: {task_id}")
     rubric = AiderShadowRubric.read_json(root / ".rubric.json")
     if rubric.task_id != task_id or rubric.verification_stage != "passed":
         raise CharmGRPOProjectionError(f"rubric identity or verification drift: {task_id}")

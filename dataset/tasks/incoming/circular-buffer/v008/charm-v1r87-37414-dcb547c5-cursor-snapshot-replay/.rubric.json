@@ -1,0 +1,24 @@
+{
+  "category": "cursor-snapshot-replay",
+  "editable_files": [
+    "cursor-snapshot-replay.h",
+    "cursor-snapshot-replay.cpp",
+    "cursor-snapshot-replay_detail.cpp"
+  ],
+  "family": "Circular Buffer",
+  "hidden_test_file": "cursor-snapshot-replay_test.cpp",
+  "hidden_test_sha256": "df0212d80436ac832081c4840e13795777f91b04518ad3cf36f0d2a43ae805e6",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "5418a6f20848ad2d8dc08c212899c645aedb082c2924b906a807d24e002f21ac",
+  "tags": [
+    "ring",
+    "snapshot",
+    "command-replay"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-cursor-snapshot-replay",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

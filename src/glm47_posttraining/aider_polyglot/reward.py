@@ -11,7 +11,18 @@ from typing import Callable
 from glm47_posttraining.cpp_perf.sandbox import SandboxInfrastructureError
 
 from .ast_evaluator import AST17Evaluation, compute_ast17_score
-from .harness import CandidatePolicyError, run_aider_tests, run_shadow_weighted45_tests
+from .harness import (
+    CandidatePolicyError,
+    run_aider_tests,
+    run_shadow_hybrid45_tests,
+    run_shadow_weighted45_tests,
+)
+from .hybrid45 import (
+    derive_hybrid45_observation,
+    evaluate_hybrid45_response_checks,
+    score_hybrid45,
+)
+from .mef45 import MEF45Receipt, project_mef45
 from .parser import AiderResponseError, ParsedAiderResponse, parse_whole_file_response
 from .policy45 import (
     Weighted45Score,
@@ -19,7 +30,14 @@ from .policy45 import (
     failed_harness_checks,
     score_weighted45,
 )
-from .schema import AiderPolyglotTask, AiderTestResult, WEIGHTED45_HARNESS_CHECK_IDS
+from .schema import (
+    AiderPolyglotTask,
+    AiderTestResult,
+    HYBRID45_MEF_POLICY_VERSION,
+    HYBRID45_POLICY_VERSION,
+    Hybrid45Receipt,
+    WEIGHTED45_HARNESS_CHECK_IDS,
+)
 
 
 Runner = Callable[[Path, dict[str, str]], AiderTestResult]
@@ -156,6 +174,20 @@ class Weighted45AiderRewardBreakdown(ProductionAiderRewardBreakdown):
     """Production breakdown carrying every weighted45 outcome and intermediate."""
 
     weighted45: Weighted45Score | None = None
+
+
+@dataclass(frozen=True)
+class Hybrid45AiderRewardBreakdown(ProductionAiderRewardBreakdown):
+    """Production breakdown carrying the exact Hybrid45 V2 receipt."""
+
+    hybrid45: Hybrid45Receipt | None = None
+
+
+@dataclass(frozen=True)
+class MEF45AiderRewardBreakdown(Hybrid45AiderRewardBreakdown):
+    """Breakdown carrying V2 diagnostics and the R7 MEF projection."""
+
+    mef45: MEF45Receipt | None = None
 
 
 def compute_aider_reward(
@@ -430,6 +462,233 @@ def compute_weighted45_aider_reward(
         line_count=line_count,
         weighted45=weighted45,
     )
+
+
+def compute_hybrid45_aider_reward(
+    task: AiderPolyglotTask,
+    exercise_dir: Path,
+    model_output: str,
+    *,
+    runner: Runner | None = None,
+) -> Hybrid45AiderRewardBreakdown:
+    """Evaluate the separately versioned observation-aware V2 reward."""
+
+    if task.reward_contract != HYBRID45_POLICY_VERSION:
+        return Hybrid45AiderRewardBreakdown(
+            reward=INFRASTRUCTURE_MASK_REWARD,
+            reason=INFRASTRUCTURE_FAULT_REASON,
+            infrastructure_error=True,
+            infrastructure_detail=(
+                f"task reward_contract={task.reward_contract!r} does not bind "
+                f"{HYBRID45_POLICY_VERSION}"
+            ),
+        )
+
+    parsed: ParsedAiderResponse | None = None
+    parse_error: AiderResponseError | None = None
+    try:
+        parsed = parse_whole_file_response(model_output, task.editable_files)
+    except AiderResponseError as exc:
+        parse_error = exc
+
+    static_checks, static_evidence = evaluate_hybrid45_response_checks(
+        task,
+        exercise_dir,
+        model_output,
+        parsed=parsed,
+        parse_error=parse_error,
+    )
+    harness: AiderTestResult | None = None
+    policy_violation = any(
+        not static_checks[f"F{index}"] for index in range(1, 6)
+    )
+    complete_payload = static_checks["C2"] and static_checks["P5"] and static_checks["L5"]
+    if parsed is None or policy_violation or not complete_payload:
+        reason = (
+            "not executed: forbidden runtime/verifier-bypass primitive"
+            if policy_violation
+            else "not executed: complete safe editable-file payload unavailable"
+        )
+        harness_checks, harness_evidence = failed_harness_checks(reason)
+    else:
+        try:
+            selected_runner = runner
+            if selected_runner is None:
+                if task.harness_kind != "shadow_cpp17":
+                    raise SandboxInfrastructureError(
+                        "hybrid45 requires the shadow_cpp17 hidden-grader contract"
+                    )
+                selected_runner = run_shadow_hybrid45_tests
+            harness = selected_runner(exercise_dir, parsed.files)
+        except CandidatePolicyError:
+            policy_violation = True
+            harness_checks, harness_evidence = failed_harness_checks(
+                "not executed: forbidden runtime/verifier-bypass primitive"
+            )
+        except SandboxInfrastructureError as exc:
+            return Hybrid45AiderRewardBreakdown(
+                reward=INFRASTRUCTURE_MASK_REWARD,
+                reason=INFRASTRUCTURE_FAULT_REASON,
+                parsed=parsed,
+                infrastructure_detail=str(exc)[-2000:],
+                infrastructure_error=True,
+                ast17_checks={"error": 0.0},
+            )
+        else:
+            if harness.status == "infrastructure_error":
+                return Hybrid45AiderRewardBreakdown(
+                    reward=INFRASTRUCTURE_MASK_REWARD,
+                    reason=INFRASTRUCTURE_FAULT_REASON,
+                    parsed=parsed,
+                    harness=harness,
+                    infrastructure_error=True,
+                    infrastructure_detail=_combined_harness_logs(harness)[-2000:],
+                )
+            if set(harness.weighted45_checks) != WEIGHTED45_HARNESS_CHECK_IDS:
+                return Hybrid45AiderRewardBreakdown(
+                    reward=INFRASTRUCTURE_MASK_REWARD,
+                    reason=INFRASTRUCTURE_FAULT_REASON,
+                    parsed=parsed,
+                    harness=harness,
+                    infrastructure_error=True,
+                    infrastructure_detail=(
+                        "hybrid45 harness did not return the exact 20 K/R/H/A outcomes"
+                    ),
+                )
+            harness_checks = dict(harness.weighted45_checks)
+            harness_evidence = dict(harness.weighted45_evidence)
+
+    all_checks = {**static_checks, **harness_checks}
+    all_evidence = {**static_evidence, **harness_evidence}
+    observed, applicable, compact_evidence = derive_hybrid45_observation(
+        all_checks, all_evidence
+    )
+    reason = _weighted45_reason(
+        parsed=parsed,
+        parse_error=parse_error,
+        response=model_output,
+        harness=harness,
+        policy_violation=policy_violation,
+    )
+    hybrid45 = score_hybrid45(
+        all_checks,
+        compact_evidence,
+        observed,
+        applicable,
+        failure_mechanism=_hybrid45_failure_mechanism(reason),
+    )
+    if hybrid45.optimizer_score is None:
+        return Hybrid45AiderRewardBreakdown(
+            reward=INFRASTRUCTURE_MASK_REWARD,
+            reason=INFRASTRUCTURE_FAULT_REASON,
+            parsed=parsed,
+            harness=harness,
+            infrastructure_error=True,
+            infrastructure_detail="hybrid45 scorer masked the optimizer score",
+        )
+    return Hybrid45AiderRewardBreakdown(
+        reward=hybrid45.optimizer_score,
+        reason=reason,
+        parsed=parsed,
+        harness=harness,
+        s_aider=hybrid45.hidden_partitions_passed / 5.0,
+        s_style=_cpp_quality_score(parsed.files) if parsed else 0.0,
+        line_count=_candidate_line_count(parsed.files) if parsed else 0,
+        hybrid45=hybrid45,
+    )
+
+
+def _mef_curriculum_role(task: AiderPolyglotTask) -> str:
+    prefix = "curriculum-role-"
+    roles = [tag.removeprefix(prefix) for tag in task.tags if tag.startswith(prefix)]
+    allowed = {"ordinary", "repair", "calibration", "monitor"}
+    if len(roles) != 1 or roles[0] not in allowed:
+        raise ValueError(
+            f"MEF45 task must bind exactly one curriculum role tag: {task.task_id}"
+        )
+    return roles[0]
+
+
+def compute_hybrid45_mef_aider_reward(
+    task: AiderPolyglotTask,
+    exercise_dir: Path,
+    model_output: str,
+    *,
+    runner: Runner | None = None,
+) -> MEF45AiderRewardBreakdown:
+    """Run the exact V2 verifier and apply the separately versioned MEF scalar."""
+
+    if task.reward_contract != HYBRID45_MEF_POLICY_VERSION:
+        return MEF45AiderRewardBreakdown(
+            reward=INFRASTRUCTURE_MASK_REWARD,
+            reason=INFRASTRUCTURE_FAULT_REASON,
+            infrastructure_error=True,
+            infrastructure_detail=(
+                f"task reward_contract={task.reward_contract!r} does not bind "
+                f"{HYBRID45_MEF_POLICY_VERSION}"
+            ),
+        )
+    base_task = task.model_copy(update={"reward_contract": HYBRID45_POLICY_VERSION})
+    base = compute_hybrid45_aider_reward(
+        base_task,
+        exercise_dir,
+        model_output,
+        runner=runner,
+    )
+    if base.infrastructure_error or base.hybrid45 is None:
+        return MEF45AiderRewardBreakdown(
+            reward=INFRASTRUCTURE_MASK_REWARD,
+            reason=INFRASTRUCTURE_FAULT_REASON,
+            parsed=base.parsed,
+            harness=base.harness,
+            infrastructure_error=True,
+            infrastructure_detail=base.infrastructure_detail or "MEF45 base receipt unavailable",
+            hybrid45=base.hybrid45,
+        )
+    try:
+        projection = project_mef45(base.hybrid45, _mef_curriculum_role(task))
+    except Exception as exc:
+        return MEF45AiderRewardBreakdown(
+            reward=INFRASTRUCTURE_MASK_REWARD,
+            reason=INFRASTRUCTURE_FAULT_REASON,
+            parsed=base.parsed,
+            harness=base.harness,
+            infrastructure_error=True,
+            infrastructure_detail=f"MEF45 projection failed: {type(exc).__name__}: {exc}",
+            hybrid45=base.hybrid45,
+        )
+    return MEF45AiderRewardBreakdown(
+        reward=projection.optimizer_score,
+        reason=base.reason,
+        parsed=base.parsed,
+        harness=base.harness,
+        s_aider=base.s_aider,
+        s_style=base.s_style,
+        line_count=base.line_count,
+        hybrid45=base.hybrid45,
+        mef45=projection,
+    )
+
+
+def _hybrid45_failure_mechanism(reason: str) -> str | None:
+    return {
+        FORBIDDEN_VIOLATION_REASON: "protected_scope_escape_bypass_or_spoofing",
+        CLARIFICATION_OR_NO_FILE_REASON: "no_file_payload",
+        FATAL_PARSE_REASON: "fatal_parse",
+        DUPLICATE_FILE_REASON: "duplicate_file",
+        WRONG_FILE_LABEL_REASON: "wrong_file_label",
+        COMPILATION_FAILURE_SYNTAX_REASON: "candidate_syntax_failure",
+        COMPILATION_FAILURE_MISSING_SYMBOL_REASON: "public_symbol_missing",
+        COMPILATION_FAILURE_MISSING_INCLUDE_OR_TYPE_REASON: "missing_include_or_type",
+        COMPILATION_FAILURE_API_MISMATCH_REASON: "public_api_signature_mismatch",
+        COMPILATION_FAILURE_LINKER_REASON: "linkage_failure",
+        COMPILATION_FAILURE_WARNING_REASON: "warning_clean_compile_failure",
+        COMPILATION_FAILURE_REASON: "compilation_failure",
+        CANDIDATE_TIMEOUT_REASON: "candidate_inner_timeout",
+        SANITIZER_ERROR_REASON: "sanitizer_failure",
+        RUNTIME_ZERO_PASS_REASON: "hidden_semantic_failure",
+        PARTIAL_TEST_PASS_REASON: "partial_hidden_semantics",
+    }.get(reason.removeprefix("recoverable_format_"))
 
 
 def _weighted45_reason(

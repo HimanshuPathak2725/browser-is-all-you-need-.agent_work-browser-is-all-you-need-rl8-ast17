@@ -19,7 +19,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCANNER = ROOT / "scripts/charm_v1_repository_uniqueness_v4.py"
+SCANNER = ROOT / "scripts/charm_v1_repository_uniqueness_v5.py"
 CORE = ROOT / "scripts/charm_v1_repository_uniqueness_v2.py"
 NEAR_THRESHOLD = 0.92
 
@@ -63,6 +63,16 @@ def main() -> int:
         type=Path,
         help="Exact current-lineage artifact to exclude as query provenance; repeatable.",
     )
+    parser.add_argument(
+        "--lineage-task-root",
+        action="append",
+        default=[],
+        type=Path,
+        help=(
+            "Preserved failed/remediated task root from this exact batch and "
+            "session; provenance is verified before its files are excluded."
+        ),
+    )
     parser.add_argument("--reservation-registry", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--root", type=Path, default=ROOT)
@@ -88,6 +98,39 @@ def main() -> int:
         if not path.is_file():
             raise RuntimeError(f"current-lineage artifact is missing: {path}")
         current_files.add(path.resolve())
+
+    generation_batch_id = materialization.get("generation_batch_id")
+    generation_session_id = materialization.get("generation_session_id")
+    lineage_task_roots: list[dict[str, str]] = []
+    canonical_paths = {Path(row["path"]).resolve() for row in rows}
+    for task_root_value in args.lineage_task_root:
+        task_root = task_root_value.resolve()
+        if not task_root.is_dir() or task_root.is_symlink():
+            raise RuntimeError(f"lineage task root is not a real directory: {task_root}")
+        if task_root in canonical_paths:
+            raise RuntimeError(
+                f"canonical task root must not be repeated as lineage history: {task_root}"
+            )
+        provenance_path = task_root / ".provenance.json"
+        if not provenance_path.is_file():
+            raise RuntimeError(f"lineage task provenance is missing: {task_root}")
+        provenance = json.loads(provenance_path.read_text(encoding="utf-8"))
+        task_id = provenance.get("task_id")
+        if (
+            provenance.get("generation_batch_id") != generation_batch_id
+            or provenance.get("generation_session_id") != generation_session_id
+            or task_id not in proposals
+            or task_root.name != task_id
+        ):
+            raise RuntimeError(f"foreign or inconsistent lineage task root: {task_root}")
+        lineage_task_roots.append({
+            "path": str(task_root),
+            "task_id": str(task_id),
+            "tree_sha256": tree_sha256(task_root),
+        })
+        current_files.update(
+            path.resolve() for path in task_root.rglob("*") if path.is_file()
+        )
 
     internal: list[dict[str, Any]] = []
     task_texts: dict[str, str] = {}
@@ -178,6 +221,11 @@ def main() -> int:
         "canonical_internal_collision_count": len(internal),
         "canonical_internal_collision_details": internal,
         "canonical_roots_excluded_only_as_current_query_lineage": True,
+        "preserved_lineage_task_roots": sorted(
+            lineage_task_roots, key=lambda item: (item["task_id"], item["path"])
+        ),
+        "preserved_lineage_task_root_count": len(lineage_task_roots),
+        "preserved_lineage_provenance_verified": True,
         "exact_generated_prompts_targets_tests_apis_and_sources_queried": True,
     })
     if internal:

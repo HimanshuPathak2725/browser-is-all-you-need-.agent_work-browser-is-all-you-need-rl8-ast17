@@ -1,0 +1,43 @@
+{
+  "schema_version": "charm-v1-family-remedy-v1",
+  "remedy_id": "charm-v1r87-37414-post-generation-structural-uniqueness",
+  "generation_batch_id": "charm-task-generation-v1r87-20260812T122334Z",
+  "generation_session_id": "dcb547c5-de45-4541-8faa-e889b2790bf5",
+  "disposition": "repair-in-place",
+  "root_cause": "The complete V5 post-generation scan found a structural target-source match for parallel-rare-offsets and two ambiguous header matches for postfix-dice-rule. Both were driven by the inherited broad include scaffold rather than by the frozen observable contracts.",
+  "observed": "The v010 post-generation uniqueness receipt recorded task_id_matches=7 from this remedy lineage, structural_matches=1 against v1n7 partitioned-letter-runs, and ambiguous_matches=2 against the v1n7 string-rule-score header and its private reference copy.",
+  "expected": "The exact generated public APIs and implementation sources have zero exact, near, structural, semantic, or ambiguous matches against unrelated repository tasks, while preserved same-session remedy records remain explicitly bound query lineage.",
+  "affected_task_count": 6,
+  "affected_topics": [
+    "Parallel Letter Frequency",
+    "Yacht"
+  ],
+  "header_remediation_task_ids": [
+    "charm-v1r87-37414-dcb547c5-parallel-rare-offsets",
+    "charm-v1r87-37414-dcb547c5-postfix-dice-rule"
+  ],
+  "public_contract": "Unchanged from frozen proposal plan SHA-256 748b36d9135d0a3a3a28b720c720f6c358eb23453116dff69be95ca2db7445b0.",
+  "representation_and_invariant": "Regenerate all six roots in the two affected families at v011. Replace only the two broad public-header include scaffolds with their exact directly required standard-library headers, mirror those exact headers in the private references, and add the exact private implementation includes required after removing transitive dependencies. Preserve function signatures, namespaces, prompts, starter bodies, hidden tests, and runtime semantics.",
+  "forbidden_substitutes": [
+    "excluding unrelated v1n7 tasks from the repository corpus",
+    "raising uniqueness thresholds or suppressing ambiguous matches",
+    "renaming the frozen public API",
+    "changing prompt behavior, hidden checks, or reference semantics",
+    "editing materialized roots or failed scan receipts"
+  ],
+  "independent_reference": "The v010 oracle and negative-control proofs bind the existing behavior. The v011 owner must preserve that behavior while proving minimal self-contained public headers and fresh exact-51 oracle/negative receipts.",
+  "negative_fixture": "Every existing task-bound compiling semantic mutation remains required, including the parallel-rare-offsets frequency-bound mutation and the postfix-dice-rule repair trajectory.",
+  "owner_source": "scripts/charm_v1_r87_remediate_uniqueness.py",
+  "post_uniqueness_owner": "scripts/charm_v1_post_materialization_uniqueness.py",
+  "failed_v010_evidence": {
+    "post_generation_uniqueness_path": "artifacts/charm-task-generation-v1/v1r87-20260812T122334Z/remediation-003/v1-post-materialization-uniqueness-v010.json",
+    "post_generation_uniqueness_sha256": "fc99c0ba21cafb15b5e5630fca3223f8d9c0827ac96be91a03a2dffa9fe3c1e2",
+    "base_manifest_sha256": "3486cc5bfe76c63940182560b46c1d7707f0a3479b1547784023cc0b3d4b8d15",
+    "base_materialization_receipt_sha256": "8e8d9920e275f29b22ab213fa73181259b977fa16218d09ac1694cd42eef3e6b"
+  },
+  "downstream_evidence_invalidated": [
+    "all v010 Step 5 oracle proofs",
+    "all v010 Step 5 negative-control proofs",
+    "the failed v010 post-generation uniqueness receipt"
+  ]
+}

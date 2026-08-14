@@ -1,0 +1,22 @@
+{
+  "category": "optimistic-appeal-replay",
+  "editable_files": [
+    "optimistic-appeal-replay.cpp"
+  ],
+  "family": "Grade School",
+  "hidden_test_file": "optimistic-appeal-replay_test.cpp",
+  "hidden_test_sha256": "cf9d1287aa98162f061054da747bd2b8733c1ac671e75d2a9f1f3e939a78b0ec",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "36993030f24267fd54f3cccd42f98b66f03a9d7b9b891cbe4caaa4a44d754957",
+  "tags": [
+    "grade-appeal",
+    "versioning",
+    "transaction"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-optimistic-appeal-replay",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

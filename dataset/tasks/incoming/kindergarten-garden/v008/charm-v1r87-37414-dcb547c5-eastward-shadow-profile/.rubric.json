@@ -1,0 +1,22 @@
+{
+  "category": "eastward-shadow-profile",
+  "editable_files": [
+    "eastward-shadow-profile.cpp"
+  ],
+  "family": "Kindergarten Garden",
+  "hidden_test_file": "eastward-shadow-profile_test.cpp",
+  "hidden_test_sha256": "e92bf52e8bea1aa44417c39baad337b922fd71f5b88ccfa0d32820c526a4f5a6",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "00f41c7cdc840b638436cb913741abe03bc8152b2eb094403d229bcf31676276",
+  "tags": [
+    "garden",
+    "shadow",
+    "profile"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-eastward-shadow-profile",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

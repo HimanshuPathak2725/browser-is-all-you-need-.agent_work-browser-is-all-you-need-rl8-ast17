@@ -1,0 +1,22 @@
+{
+  "category": "successor-thread-audit",
+  "editable_files": [
+    "successor-thread-audit.hpp"
+  ],
+  "family": "Binary Search Tree",
+  "hidden_test_file": "successor-thread-audit_test.cpp",
+  "hidden_test_sha256": "508351c8b287767206ad726d537e584f24e521840b496243a79bb56eaa9eae31",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "52fb962428638cc1d17f414169922d636e20e4dd7d99d3ae5a268758a26ab26a",
+  "tags": [
+    "threaded-tree",
+    "successor",
+    "audit"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-successor-thread-audit",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

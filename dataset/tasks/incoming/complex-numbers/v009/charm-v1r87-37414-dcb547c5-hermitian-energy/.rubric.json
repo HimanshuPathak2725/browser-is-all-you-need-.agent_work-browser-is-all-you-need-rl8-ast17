@@ -1,0 +1,23 @@
+{
+  "category": "hermitian-energy",
+  "editable_files": [
+    "hermitian-energy.hpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "hermitian-energy_test.cpp",
+  "hidden_test_sha256": "12e98984d0431e7873f6690bb85165dd2dcf9fff4da51f696a7a37297e9ee15d",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "20285f606128865278d2d29fd0413a2f906c563af303867f857f7096f72eef1d",
+  "tags": [
+    "complex",
+    "hermitian",
+    "quadratic-form"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-hermitian-energy",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

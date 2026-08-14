@@ -1,0 +1,24 @@
+{
+  "category": "selected-dft-bins",
+  "editable_files": [
+    "selected-dft-bins.h",
+    "selected-dft-bins.cpp",
+    "selected-dft-bins_detail.cpp"
+  ],
+  "family": "Complex Numbers",
+  "hidden_test_file": "selected-dft-bins_test.cpp",
+  "hidden_test_sha256": "1602441352302260ac4583f20b7fdf3402efc7a4f8e5c3065833c127d9431543",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "209eae0582cb088fa300c3a08c6153c4b1082241f98ad2a4927f76815142481b",
+  "tags": [
+    "complex",
+    "dft",
+    "spectral"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-selected-dft-bins",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

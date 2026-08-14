@@ -1,0 +1,23 @@
+{
+  "category": "billing-pulse-summary",
+  "editable_files": [
+    "billing-pulse-summary.cpp"
+  ],
+  "family": "Phone Number",
+  "hidden_test_file": "billing-pulse-summary_test.cpp",
+  "hidden_test_sha256": "4de4673201b6eae2d87f57d3d7cee9fc7dff4e2704f06d20225f60ac83041e0f",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "0f8a39b321693a0f4fb646af01bf4fa904439fda72348fa47b76b0c1292ffb06",
+  "tags": [
+    "phone",
+    "billing",
+    "rounding"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-billing-pulse-summary",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

@@ -1,0 +1,22 @@
+{
+  "category": "persistent-common-tail",
+  "editable_files": [
+    "persistent-common-tail.cpp"
+  ],
+  "family": "Linked List",
+  "hidden_test_file": "persistent-common-tail_test.cpp",
+  "hidden_test_sha256": "7c49e8d029e21c5ace16473b235e775b9483362a70b5e194baba7988e7b422db",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "e030ae60dc6135de0da22b9d79e951099b95f156869bd04c7575edc56c94f498",
+  "tags": [
+    "persistent-list",
+    "common-tail",
+    "arena-audit"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-persistent-common-tail",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

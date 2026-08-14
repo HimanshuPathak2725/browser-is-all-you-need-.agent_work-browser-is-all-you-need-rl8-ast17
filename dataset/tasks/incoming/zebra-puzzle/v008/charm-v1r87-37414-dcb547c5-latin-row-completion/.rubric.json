@@ -1,0 +1,22 @@
+{
+  "category": "latin-row-completion",
+  "editable_files": [
+    "latin-row-completion.cpp"
+  ],
+  "family": "Zebra Puzzle",
+  "hidden_test_file": "latin-row-completion_test.cpp",
+  "hidden_test_sha256": "7053eceb25cdcd44bc873dc3f34b7c36c819693907374967e4c94b9671a42ff7",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "8f51c74c21c539a44b087db23b90875eee808253d7177c9f8d2f4717fa2b19dd",
+  "tags": [
+    "zebra",
+    "latin-square",
+    "unique-completion"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-latin-row-completion",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

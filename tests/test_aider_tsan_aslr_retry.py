@@ -85,6 +85,27 @@ def test_sandbox_preflight_retries_layout_collision_with_bound_image(
     assert images == ["verifier@sha256:bound"] * 4
 
 
+def test_nonconcurrent_profile_preflight_skips_only_tsan(monkeypatch) -> None:
+    scripts: list[str] = []
+
+    def fake_stage(_scratch, script: str, **_kwargs):
+        scripts.append(script)
+        return _completed(0)
+
+    monkeypatch.setattr(harness_module, "ensure_ast17_tooling", lambda: None)
+    monkeypatch.setattr(harness_module, "assert_local_sandbox_ready", lambda: None)
+    monkeypatch.setattr(harness_module, "_run_stage", fake_stage)
+
+    harness_module.run_sandbox_preflight(
+        image="verifier@sha256:bound",
+        require_tsan=False,
+    )
+
+    assert len(scripts) == 1
+    assert "-fsanitize=address,undefined" in scripts[0]
+    assert "-fsanitize=thread" not in scripts[0]
+
+
 def test_tsan_does_not_retry_a_real_race(tmp_path: Path, monkeypatch) -> None:
     calls = 0
 

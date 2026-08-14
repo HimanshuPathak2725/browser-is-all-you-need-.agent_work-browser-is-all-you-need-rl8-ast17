@@ -79,3 +79,85 @@ def test_rejection_decision_binds_exact_plan_and_failing_receipts(tmp_path: Path
     )
     with pytest.raises(ValueError, match="not a failing receipt"):
         module.decide(plan_path, [passing_path])
+
+
+def test_rejection_decision_supports_complete_non_v1_protocol(tmp_path: Path) -> None:
+    module = _load_module()
+    identity = {
+        "generation_batch_id": "batch-ft60",
+        "generation_session_id": "session-ft60",
+        "generation_batch_code": "10331",
+        "generation_batch_created_at_utc": "2026-08-05T06:12:11Z",
+        "batch_code_reservation_receipt_sha256": "c" * 64,
+    }
+    plan = {
+        "schema_version": module.PLAN_SCHEMA,
+        "protocol_id": "task-generation-four-topic-60-v1",
+        **identity,
+        "claims": [{"task_id": f"ft60-task-{index:02d}"} for index in range(60)],
+    }
+    plan_path = tmp_path / "plan.json"
+    _write(plan_path, plan)
+    failure_path = tmp_path / "failure.json"
+    _write(
+        failure_path,
+        {
+            "decision": "FAIL",
+            "generation_batch_id": identity["generation_batch_id"],
+            "generation_session_id": identity["generation_session_id"],
+            "hard_failure_ids": ["V4G-027"],
+        },
+    )
+
+    result = module.decide(plan_path, [failure_path])
+
+    assert result["decision"] == "PASS"
+    assert result["protocol_id"] == "task-generation-four-topic-60-v1"
+    assert result["task_count"] == 60
+    assert len(result["task_ids"]) == 60
+
+
+def test_rejection_accepts_validator_canonical_subject_and_bound_plan(
+    tmp_path: Path,
+) -> None:
+    module = _load_module()
+    identity = {
+        "generation_batch_id": "batch-ft60",
+        "generation_session_id": "session-ft60",
+        "generation_batch_code": "10331",
+        "generation_batch_created_at_utc": "2026-08-05T06:12:11Z",
+        "batch_code_reservation_receipt_sha256": "d" * 64,
+    }
+    plan = {
+        "schema_version": module.PLAN_SCHEMA,
+        "protocol_id": "task-generation-four-topic-60-v1",
+        **identity,
+        "claims": [{"task_id": f"ft60-task-{index:02d}"} for index in range(60)],
+    }
+    plan_path = tmp_path / "plan.json"
+    _write(plan_path, plan)
+    subject = {
+        "task_id_reservation_plan": {
+            "path": str(plan_path),
+            "sha256": hashlib.sha256(plan_path.read_bytes()).hexdigest(),
+        }
+    }
+    subject_path = tmp_path / "bundle.json"
+    _write(subject_path, subject)
+    failure_path = tmp_path / "validator-failure.json"
+    _write(
+        failure_path,
+        {
+            "decision": "FAIL",
+            "hard_failure_ids": ["V4G-027"],
+            "subject_path": str(subject_path),
+            "subject_sha256": hashlib.sha256(
+                json.dumps(subject, sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest(),
+        },
+    )
+
+    result = module.decide(plan_path, [failure_path])
+
+    assert result["decision"] == "PASS"
+    assert result["failure_evidence"][0]["subject"]["hash_mode"] == "validator_canonical_json"

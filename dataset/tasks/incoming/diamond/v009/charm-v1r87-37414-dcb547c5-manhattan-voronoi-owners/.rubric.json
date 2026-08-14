@@ -1,0 +1,24 @@
+{
+  "category": "manhattan-voronoi-owners",
+  "editable_files": [
+    "manhattan-voronoi-owners.h",
+    "manhattan-voronoi-owners.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "manhattan-voronoi-owners_test.cpp",
+  "hidden_test_sha256": "88a835b5be285605aed6389c6e84c9f2c96c90f49ec668888b4c5a62184fd1cb",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "0b36632276d0c0e8d7a420aca4feb27875be1c06186c68f72569c6b369d32369",
+  "tags": [
+    "diamond-metric",
+    "voronoi",
+    "lattice"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-manhattan-voronoi-owners",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

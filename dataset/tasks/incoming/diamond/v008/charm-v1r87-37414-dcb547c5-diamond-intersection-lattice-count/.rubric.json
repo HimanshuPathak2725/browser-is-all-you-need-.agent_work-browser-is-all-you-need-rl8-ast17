@@ -1,0 +1,22 @@
+{
+  "category": "diamond-intersection-lattice-count",
+  "editable_files": [
+    "diamond-intersection-lattice-count.cpp"
+  ],
+  "family": "Diamond",
+  "hidden_test_file": "diamond-intersection-lattice-count_test.cpp",
+  "hidden_test_sha256": "784cb72fe431cfa3702be75708177dbd9424b34ac54c3f4e81d682384c0b14f5",
+  "language": "cpp",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "61d1250998fc8632270754b8171b7fda374b4957eee76c04f3069cae615c8f45",
+  "tags": [
+    "diamond",
+    "intersection",
+    "lattice-count"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-diamond-intersection-lattice-count",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

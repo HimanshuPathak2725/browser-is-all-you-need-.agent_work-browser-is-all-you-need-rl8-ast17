@@ -65,14 +65,46 @@ def failure_binding(path: Path, plan: dict[str, Any]) -> dict[str, Any]:
         subject_path = Path(subject_path_value)
         if not subject_path.is_absolute():
             subject_path = (Path.cwd() / subject_path).resolve()
-        if not subject_path.is_file() or sha256(subject_path) != receipt.get("subject_sha256"):
+        if not subject_path.is_file():
             raise ValueError(f"rejection evidence subject binding drifted: {path}")
         subject = load(subject_path)
-        reservation_plan = subject.get("task_id_reservation_plan")
+        raw_subject_sha = sha256(subject_path)
+        canonical_subject_sha = hashlib.sha256(canonical(subject)).hexdigest()
+        validator_subject_sha = hashlib.sha256(
+            json.dumps(subject, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        receipt_subject_sha = receipt.get("subject_sha256")
+        if receipt_subject_sha not in {raw_subject_sha, canonical_subject_sha, validator_subject_sha}:
+            raise ValueError(f"rejection evidence subject binding drifted: {path}")
+        reservation_plan: Any = subject.get("task_id_reservation_plan")
+        if (
+            isinstance(reservation_plan, dict)
+            and isinstance(reservation_plan.get("path"), str)
+            and isinstance(reservation_plan.get("sha256"), str)
+        ):
+            reservation_plan_path = Path(reservation_plan["path"])
+            if not reservation_plan_path.is_absolute():
+                reservation_plan_path = (subject_path.parent / reservation_plan_path).resolve()
+            if (
+                not reservation_plan_path.is_file()
+                or sha256(reservation_plan_path) != reservation_plan["sha256"]
+            ):
+                raise ValueError(f"rejection evidence reservation-plan binding drifted: {path}")
+            reservation_plan = load(reservation_plan_path)
         subject_identity = isinstance(reservation_plan, dict) and identity_matches(
             reservation_plan, plan
         )
-        subject_binding = {"path": str(subject_path), "sha256": sha256(subject_path)}
+        subject_binding = {
+            "path": str(subject_path),
+            "sha256": str(receipt_subject_sha),
+            "hash_mode": (
+                "validator_canonical_json"
+                if receipt_subject_sha == validator_subject_sha
+                else "canonical_json"
+                if receipt_subject_sha == canonical_subject_sha
+                else "raw_file"
+            ),
+        }
     if not (direct_identity or subject_identity):
         raise ValueError(f"rejection evidence does not bind the exact batch: {path}")
     return {
@@ -90,28 +122,37 @@ def decide(plan_path: Path, evidence_paths: list[Path]) -> dict[str, Any]:
     claims = plan.get("claims")
     code = plan.get("generation_batch_code")
     receipt_sha = plan.get("batch_code_reservation_receipt_sha256")
+    protocol_id = plan.get("protocol_id")
+    claim_count = len(claims) if isinstance(claims, list) else 0
+    protocol_shape_valid = (
+        claim_count == 51 if protocol_id == "task-generation-v1" else claim_count > 0
+    )
     if not (
         plan.get("schema_version") == PLAN_SCHEMA
-        and plan.get("protocol_id") == "task-generation-v1"
+        and isinstance(protocol_id, str)
+        and bool(protocol_id)
         and isinstance(code, str)
         and len(code) == 5
         and code.isdigit()
         and isinstance(receipt_sha, str)
         and len(receipt_sha) == 64
         and isinstance(claims, list)
-        and len(claims) == 51
-        and len({row.get("task_id") for row in claims if isinstance(row, dict)}) == 51
+        and protocol_shape_valid
+        and len({row.get("task_id") for row in claims if isinstance(row, dict)})
+        == claim_count
         and evidence_paths
     ):
-        raise ValueError("rejection requires one exact 51-claim V1 reservation plan")
+        raise ValueError(
+            "rejection requires one complete reservation plan; V1 remains exactly 51 claims"
+        )
     bindings = [failure_binding(path, plan) for path in evidence_paths]
     return {
         "schema_version": SCHEMA,
         "decision": "PASS",
         "action": "transition_to_rejected_tombstone",
-        "protocol_id": "task-generation-v1",
+        "protocol_id": protocol_id,
         **{field: plan[field] for field in IDENTITY_FIELDS},
-        "task_count": 51,
+        "task_count": claim_count,
         "task_ids": sorted(str(row["task_id"]) for row in claims),
         "reservation_plan": {"path": str(plan_path.resolve()), "sha256": sha256(plan_path)},
         "failure_evidence": bindings,
@@ -137,7 +178,7 @@ def main() -> int:
         handle.write(canonical(result))
         handle.flush()
         os.fsync(handle.fileno())
-    print(json.dumps({"decision": "PASS", "action": result["action"], "task_count": 51}, sort_keys=True))
+    print(json.dumps({"decision": "PASS", "action": result["action"], "task_count": result["task_count"]}, sort_keys=True))
     return 0
 
 

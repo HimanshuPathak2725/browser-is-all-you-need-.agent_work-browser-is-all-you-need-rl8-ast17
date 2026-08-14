@@ -1,0 +1,24 @@
+{
+  "category": "parallel-anagram-groups",
+  "editable_files": [
+    "parallel-anagram-groups.h",
+    "parallel-anagram-groups.cpp"
+  ],
+  "family": "Parallel Letter Frequency",
+  "hidden_test_file": "parallel-anagram-groups_test.cpp",
+  "hidden_test_sha256": "b9e35077f1f03f75b90bcdd3a1b624f85149b6d18e203d56f47a99a69c1ffa50",
+  "language": "cpp",
+  "lineage": "repair-in-place-v009-weighted45-partition-instrumentation",
+  "reference_answer_model_facing": false,
+  "reference_answer_packaged": true,
+  "schema_version": 2,
+  "source_prompt_sha256": "1b12c201808e48ee68da3b926b72227a61b01ecdbed13b99443e5c0f69992d49",
+  "tags": [
+    "parallel",
+    "anagram",
+    "deterministic-reduction"
+  ],
+  "task_id": "charm-v1r87-37414-dcb547c5-parallel-anagram-groups",
+  "verification_gate": "charm-v1-weighted45-oracle-v1",
+  "verification_stage": "passed"
+}

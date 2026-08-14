@@ -42,7 +42,7 @@ def _task() -> AiderPolyglotTask:
 def _complete_response() -> str:
     return (
         "example.h\n```cpp\n#pragma once\nint answer();\n```\n"
-        "example.cpp\n```cpp\n#include \"example.h\"\nint answer() { return 42; }\n```\n"
+        'example.cpp\n```cpp\n#include "example.h"\nint answer() { return 42; }\n```\n'
     )
 
 
@@ -143,7 +143,9 @@ def test_weighted45_hidden_harness_returns_all_twenty_observed_checks(
         " if(answer()!=answer()) return 5;\n"
         " return 0;\n}\n"
     )
-    (exercise / ".grader" / "test.cpp").write_text(hidden, encoding="utf-8")
+    grader_path = exercise / ".grader" / "test.cpp"
+    grader_path.write_text(hidden, encoding="utf-8")
+    grader_path.chmod(0o400)
     marker = "GLM47_AIDER_WEIGHTED45_fixed"
     monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "fixed")
 
@@ -169,6 +171,60 @@ def test_weighted45_hidden_harness_returns_all_twenty_observed_checks(
     assert set(result.weighted45_checks) == WEIGHTED45_HARNESS_CHECK_IDS
     assert all(result.weighted45_checks.values())
     assert set(result.weighted45_evidence) == WEIGHTED45_HARNESS_CHECK_IDS
+    assert grader_path.stat().st_mode & 0o777 == 0o400
+
+
+def test_weighted45_k2_requires_bound_public_api_ast_pass(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    exercise = tmp_path / "api-bound"
+    (exercise / ".grader").mkdir(parents=True)
+    source = "namespace charm::api_bound { int answer(){return 42;} }\n"
+    (exercise / "answer.cpp").write_text(source, encoding="utf-8")
+    hidden = (
+        '#include "answer.cpp"\n'
+        "int main(){\n"
+        " if(charm::api_bound::answer()!=42) return 1;\n"
+        " if(charm::api_bound::answer()<0) return 2;\n"
+        " if(charm::api_bound::answer()>100) return 3;\n"
+        " if(charm::api_bound::answer()%2!=0) return 4;\n"
+        " if(charm::api_bound::answer()!=charm::api_bound::answer()) return 5;\n"
+        " return 0;\n}\n"
+    )
+    (exercise / ".grader" / "test.cpp").write_text(hidden, encoding="utf-8")
+    (exercise / ".grader" / "public_api_manifest.json").write_text("{}\n", encoding="utf-8")
+    gate_calls: list[list[str]] = []
+
+    def fake_api_gate(
+        _scratch: Path,
+        files: dict[str, str],
+        *,
+        image: str,
+        timeout_s: int,
+    ) -> tuple[bool, str, str]:
+        del image, timeout_s
+        gate_calls.append(list(files))
+        return False, "clang18_ast decision=FAIL", "private receipt"
+
+    def fake_stage(
+        _scratch: Path, script: str, *, image: str, timeout_s: int
+    ) -> subprocess.CompletedProcess[str]:
+        del script, image, timeout_s
+        return subprocess.CompletedProcess(["fake"], 0, stdout="", stderr="")
+
+    monkeypatch.setattr(harness_module, "_run_public_api_gate", fake_api_gate)
+    monkeypatch.setattr(harness_module, "_run_stage", fake_stage)
+    result = run_shadow_weighted45_tests(
+        exercise,
+        {"answer.cpp": source},
+        expected_test_sha256=hashlib.sha256(hidden.encode()).hexdigest(),
+    )
+
+    assert gate_calls == [["answer.cpp"]]
+    assert result.status == "compile_failed"
+    assert result.weighted45_checks["K3"] is True
+    assert result.weighted45_checks["K2"] is False
+    assert "clang18_ast decision=FAIL" in result.weighted45_evidence["K2"]
 
 
 def test_weighted45_hidden_harness_does_not_link_an_included_cpp_twice(
@@ -196,11 +252,7 @@ def test_weighted45_hidden_harness_does_not_link_an_included_cpp_twice(
     ) -> subprocess.CompletedProcess[str]:
         del image, timeout_s
         scripts.append(script)
-        output = (
-            "GLM47_AIDER_WEIGHTED45_fixed:0\n"
-            if "GLM47_AIDER_SUITE=" in script
-            else ""
-        )
+        output = "GLM47_AIDER_WEIGHTED45_fixed:0\n" if "GLM47_AIDER_SUITE=" in script else ""
         return subprocess.CompletedProcess(["fake"], 0, stdout=output, stderr="")
 
     monkeypatch.setattr(harness_module.secrets, "token_hex", lambda _size: "fixed")
@@ -235,9 +287,7 @@ def test_weighted45_reward_keeps_all_45_outcomes_and_intermediates(tmp_path: Pat
             weighted45_evidence={check_id: "unit pass" for check_id in checks},
         )
 
-    result = compute_weighted45_aider_reward(
-        _task(), tmp_path, _complete_response(), runner=runner
-    )
+    result = compute_weighted45_aider_reward(_task(), tmp_path, _complete_response(), runner=runner)
 
     assert result.weighted45 is not None
     assert set(result.weighted45.checks) == WEIGHTED45_CHECK_IDS
@@ -254,9 +304,7 @@ def test_weighted45_parse_failure_records_downstream_false_without_skipping_tier
 
     assert result.weighted45 is not None
     assert set(result.weighted45.checks) == WEIGHTED45_CHECK_IDS
-    assert not any(
-        result.weighted45.checks[check_id] for check_id in WEIGHTED45_HARNESS_CHECK_IDS
-    )
+    assert not any(result.weighted45.checks[check_id] for check_id in WEIGHTED45_HARNESS_CHECK_IDS)
     assert len(result.weighted45.tier_pass_counts) == 9
     assert -1.0 <= result.reward <= 1.0
 

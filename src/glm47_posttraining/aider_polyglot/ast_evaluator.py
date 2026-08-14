@@ -26,6 +26,7 @@ AST17_CHECK_WEIGHTS: dict[str, float] = {
     "sanitizer": 0.10,
 }
 _CHECK_DENOMINATOR = sum(abs(value) for value in AST17_CHECK_WEIGHTS.values())
+_LIBCLANG_RESOURCE_DIR_ENV = "GLM47_LIBCLANG_RESOURCE_DIR"
 
 _RAW_NEW_RE = re.compile(r"\bnew\s+(?!\()")
 _RAW_DELETE_RE = re.compile(r"\bdelete(?:\s*\[\s*\])?\s+")
@@ -82,7 +83,7 @@ def validate_libclang_runtime(
             )
             unit = index.parse(
                 str(source),
-                args=["-std=c++17", "-xc++"],
+                args=["-std=c++17", "-xc++", *_libclang_resource_args()],
                 options=cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
             )
             fatal = [
@@ -156,6 +157,28 @@ def _configure_libclang(cindex) -> None:
             cindex.Config.set_library_path(str(path))
 
 
+def _libclang_resource_args() -> list[str]:
+    """Return a validated Clang resource directory without poisoning CUDA JIT."""
+
+    configured = os.environ.get(_LIBCLANG_RESOURCE_DIR_ENV, "").strip()
+    if not configured:
+        return []
+    resource_dir = Path(configured)
+    if not resource_dir.is_absolute():
+        raise RuntimeError(f"{_LIBCLANG_RESOURCE_DIR_ENV} must be an absolute path")
+    if not resource_dir.is_dir():
+        raise RuntimeError(
+            f"{_LIBCLANG_RESOURCE_DIR_ENV} is not a directory: {resource_dir}"
+        )
+    builtin_header = resource_dir / "include" / "stddef.h"
+    if not builtin_header.is_file():
+        raise RuntimeError(
+            f"{_LIBCLANG_RESOURCE_DIR_ENV} does not contain include/stddef.h: "
+            f"{resource_dir}"
+        )
+    return [f"-resource-dir={resource_dir}"]
+
+
 def _clang18_binary_available() -> bool:
     try:
         completed = subprocess.run(
@@ -194,7 +217,13 @@ def _parse_node_count(
         index = cindex.Index.create()
         unit = index.parse(
             str(root / parse_target),
-            args=["-std=c++17", "-I", str(root), "-xc++"],
+            args=[
+                "-std=c++17",
+                "-I",
+                str(root),
+                "-xc++",
+                *_libclang_resource_args(),
+            ],
             options=cindex.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD,
         )
         diagnostics = tuple(str(diagnostic) for diagnostic in unit.diagnostics)

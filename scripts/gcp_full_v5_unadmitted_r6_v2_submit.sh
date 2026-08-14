@@ -1,0 +1,246 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+REPO_ROOT="$(cd -- "${SCRIPT_DIR}/.." &>/dev/null && pwd)"
+PROJECT="lifeandhalf-24122025"
+ZONE="us-central1-a"
+INSTANCE="glm47-full-v5-charm-h100-8"
+REMOTE_ROOT_BASE="browser-is-all-you-need-staging"
+BYPASS_ENV="GLM47_R6_V2_SMOKE_BYPASS_AUTHORIZATION"
+BYPASS_PHRASE="I_AUTHORIZE_R6_V2_SMOKE_GATE_BYPASS_AFTER_FAILED_EXACT_FORMAT_SMOKE"
+RUN_ID="${1:-unadmitted-r6-v2-full-$(date -u +%Y%m%dT%H%M%SZ)}"
+SMOKE_RUN_ID="${2:-}"
+REMOTE_ROOT="${REMOTE_ROOT_BASE}/${RUN_ID}-stage-$(date -u +%Y%m%dT%H%M%SZ)-$$"
+SOURCE_COMMIT="$(git -C "${REPO_ROOT}" rev-parse HEAD)"
+SMOKE_RECEIPT_DIR="$(mktemp -d)"
+SMOKE_RECEIPT="${SMOKE_RECEIPT_DIR}/smoke-gate-receipt.json"
+SMOKE_GCS="gs://lifeandhalf-24122025-w8-biayn/runs/glm47/experiments/unadmitted-r6-hybrid45-v2-smoke/${SMOKE_RUN_ID}/smoke-gate-receipt.json"
+
+case "${RUN_ID}" in
+  unadmitted-r6-v2-four-topic40-*)
+    CONFIG_REL="configs/full_v5_charm_grpo/gcp-r6-hybrid45-v2-four-topic40.json"
+    AUTH_ENV="GLM47_FULL_V5_HYBRID45_V2_FOUR_TOPIC40_EXPERIMENT_AUTHORIZATION"
+    AUTH_PHRASE="I_AUTHORIZE_UNADMITTED_R6_HYBRID45_V2_FOUR_TOPIC40_6_UPDATE_EXPERIMENT_AND_GCP_COSTS"
+    ;;
+  unadmitted-r6-v2-full-*)
+    CONFIG_REL="configs/full_v5_charm_grpo/gcp-r6-hybrid45-v2-full.json"
+    AUTH_ENV="GLM47_FULL_V5_HYBRID45_V2_EXPERIMENT_AUTHORIZATION"
+    AUTH_PHRASE="I_AUTHORIZE_UNADMITTED_R6_HYBRID45_V2_57_UPDATE_EXPERIMENT_AND_GCP_COSTS"
+    ;;
+  *)
+    echo "run ID must use an R6 V2 full or four-topic40 prefix" >&2
+    exit 2
+    ;;
+esac
+HASH_INPUTS=(
+  scripts/gcp_full_v5_charm_grpo.py
+  scripts/gcp_full_v5_unadmitted_r6_v2_headless.sh
+  scripts/train_grpo.sh
+  scripts/check_runtime.py
+  scripts/prepare_grpo_adapter.py
+  scripts/convert_checkpoint.sh
+  scripts/publish_results.py
+  configs/full_v5_charm_grpo/gcp-r1.json
+  "${CONFIG_REL}"
+  docker/full-v5-charm-grpo-gcp/Dockerfile
+  docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile
+  examples/grpo.sh
+  src/glm47_posttraining/__init__.py
+  src/glm47_posttraining/constants.py
+  src/glm47_posttraining/aider_polyglot
+  src/glm47_posttraining/cpp_perf
+  src/glm47_posttraining/integrations
+)
+
+if ! [[ "${RUN_ID}" =~ ^[A-Za-z0-9][A-Za-z0-9._-]{0,159}$ ]]; then
+  echo "run ID contains unsafe characters" >&2
+  exit 2
+fi
+if [[ "${!AUTH_ENV:-}" != "${AUTH_PHRASE}" ]]; then
+  echo "${AUTH_ENV} must explicitly authorize the unadmitted R6 V2 57-update GCP experiment" >&2
+  exit 2
+fi
+if [[ "${!BYPASS_ENV:-}" == "${BYPASS_PHRASE}" ]]; then
+  BYPASS_MODE=1
+  if ! [[ "${GLM47_R6_V2_FAILED_SMOKE_RUN_ID:-}" =~ ^unadmitted-r6-v2-smoke-[A-Za-z0-9][A-Za-z0-9._-]{0,134}$ ]]; then
+    echo "bypass requires GLM47_R6_V2_FAILED_SMOKE_RUN_ID" >&2
+    exit 2
+  fi
+  if ! [[ "${GLM47_R6_V2_FAILED_SIGNAL_RECEIPT_SHA256:-}" =~ ^[0-9a-f]{64}$ ]]; then
+    echo "bypass requires GLM47_R6_V2_FAILED_SIGNAL_RECEIPT_SHA256" >&2
+    exit 2
+  fi
+else
+  BYPASS_MODE=0
+  if ! [[ "${SMOKE_RUN_ID}" =~ ^unadmitted-r6-v2-smoke-[A-Za-z0-9][A-Za-z0-9._-]{0,134}$ ]]; then
+    echo "smoke run ID must begin with unadmitted-r6-v2-smoke-" >&2
+    exit 2
+  fi
+fi
+if ! [[ "${SOURCE_COMMIT}" =~ ^[0-9a-f]{40}$ ]]; then
+  echo "local source commit is not a lowercase 40-character Git SHA" >&2
+  exit 2
+fi
+for path in "${HASH_INPUTS[@]}"; do
+  if [[ ! -e "${REPO_ROOT}/${path}" ]]; then
+    echo "missing required staged build input: ${path}" >&2
+    exit 2
+  fi
+done
+
+STARTED_VM=0
+stop_vm_after_failed_startup() {
+  exit_code=$?
+  trap - EXIT
+  if [[ "${exit_code}" -ne 0 && "${STARTED_VM}" -eq 1 ]]; then
+    echo "startup failed after this command started the VM; stopping it to limit cost" >&2
+    gcloud compute instances stop "${INSTANCE}" \
+      --project="${PROJECT}" \
+      --zone="${ZONE}" \
+      --discard-local-ssd=false \
+      --quiet || true
+  fi
+  exit "${exit_code}"
+}
+trap stop_vm_after_failed_startup EXIT
+
+# Fetch and hash the certifier-produced smoke PASS before starting the costly VM,
+# unless the operator has explicitly authorized the receipt-bound bypass.
+SMOKE_RECEIPT_SHA256=""
+if [[ "${BYPASS_MODE}" -eq 0 ]]; then
+  gcloud storage cp "${SMOKE_GCS}" "${SMOKE_RECEIPT}"
+  SMOKE_RECEIPT_SHA256="$(sha256sum "${SMOKE_RECEIPT}" | awk '{print $1}')"
+fi
+
+provisioning_model="$(gcloud compute instances describe "${INSTANCE}" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}" \
+  --format='value(scheduling.provisioningModel)')"
+if [[ "${provisioning_model}" != "SPOT" ]]; then
+  echo "R6 V2 full training requires SPOT scheduling; found ${provisioning_model}" >&2
+  exit 2
+fi
+
+status="$(gcloud compute instances describe "${INSTANCE}" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}" \
+  --format='value(status)')"
+case "${status}" in
+  RUNNING) ;;
+  TERMINATED)
+    gcloud compute instances start "${INSTANCE}" \
+      --project="${PROJECT}" \
+      --zone="${ZONE}"
+    STARTED_VM=1
+    ;;
+  *)
+    echo "VM is in unsupported state: ${status}" >&2
+    exit 2
+    ;;
+esac
+
+for _attempt in {1..60}; do
+  status="$(gcloud compute instances describe "${INSTANCE}" \
+    --project="${PROJECT}" \
+    --zone="${ZONE}" \
+    --format='value(status)')"
+  [[ "${status}" == "RUNNING" ]] && break
+  sleep 5
+done
+if [[ "${status}" != "RUNNING" ]]; then
+  echo "VM did not reach RUNNING state" >&2
+  exit 2
+fi
+
+gcloud compute ssh "${INSTANCE}" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}" \
+  --command="mkdir -p \
+    ~/${REMOTE_ROOT}/scripts \
+    ~/${REMOTE_ROOT}/receipts \
+    ~/${REMOTE_ROOT}/configs/full_v5_charm_grpo \
+    ~/${REMOTE_ROOT}/docker/full-v5-charm-grpo-gcp \
+    ~/${REMOTE_ROOT}/examples \
+    ~/${REMOTE_ROOT}/src/glm47_posttraining"
+
+gcloud compute scp \
+  "${REPO_ROOT}/scripts/gcp_full_v5_charm_grpo.py" \
+  "${REPO_ROOT}/scripts/gcp_full_v5_unadmitted_r6_v2_headless.sh" \
+  "${REPO_ROOT}/scripts/train_grpo.sh" \
+  "${REPO_ROOT}/scripts/check_runtime.py" \
+  "${REPO_ROOT}/scripts/prepare_grpo_adapter.py" \
+  "${REPO_ROOT}/scripts/convert_checkpoint.sh" \
+  "${REPO_ROOT}/scripts/publish_results.py" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/scripts/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+if [[ "${BYPASS_MODE}" -eq 0 ]]; then
+  gcloud compute scp \
+    "${SMOKE_RECEIPT}" \
+    "${INSTANCE}:~/${REMOTE_ROOT}/receipts/smoke-gate-receipt.json" \
+    --project="${PROJECT}" \
+    --zone="${ZONE}"
+fi
+gcloud compute scp \
+  "${REPO_ROOT}/configs/full_v5_charm_grpo/gcp-r1.json" \
+  "${REPO_ROOT}/${CONFIG_REL}" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/configs/full_v5_charm_grpo/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+gcloud compute scp \
+  "${REPO_ROOT}/docker/full-v5-charm-grpo-gcp/Dockerfile" \
+  "${REPO_ROOT}/docker/full-v5-charm-grpo-gcp/Verifier.Dockerfile" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/docker/full-v5-charm-grpo-gcp/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+gcloud compute scp \
+  "${REPO_ROOT}/examples/grpo.sh" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/examples/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+gcloud compute scp \
+  "${REPO_ROOT}/src/glm47_posttraining/__init__.py" \
+  "${REPO_ROOT}/src/glm47_posttraining/constants.py" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/src/glm47_posttraining/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+gcloud compute scp --recurse \
+  "${REPO_ROOT}/src/glm47_posttraining/aider_polyglot" \
+  "${REPO_ROOT}/src/glm47_posttraining/cpp_perf" \
+  "${REPO_ROOT}/src/glm47_posttraining/integrations" \
+  "${INSTANCE}:~/${REMOTE_ROOT}/src/glm47_posttraining/" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}"
+
+local_hashes="$(
+  cd "${REPO_ROOT}"
+  LC_ALL=C find "${HASH_INPUTS[@]}" -type f -print0 \
+    | LC_ALL=C sort -z \
+    | xargs -0 sha256sum \
+    | sha256sum
+)"
+local_hashes="${local_hashes%%[[:space:]]*}"
+remote_hashes="$(gcloud compute ssh "${INSTANCE}" \
+  --project="${PROJECT}" \
+  --zone="${ZONE}" \
+  --command="cd ~/${REMOTE_ROOT} && LC_ALL=C find ${HASH_INPUTS[*]} -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum | sha256sum")"
+remote_hashes="${remote_hashes%%[[:space:]]*}"
+if [[ "${local_hashes}" != "${remote_hashes}" ]]; then
+  echo "remote staged build-context hash does not match local bytes: local=${local_hashes} remote=${remote_hashes}" >&2
+  exit 2
+fi
+
+if [[ "${BYPASS_MODE}" -eq 1 ]]; then
+  gcloud compute ssh "${INSTANCE}" \
+    --project="${PROJECT}" \
+    --zone="${ZONE}" \
+    --command="cd ~/${REMOTE_ROOT} && GLM47_SOURCE_COMMIT=${SOURCE_COMMIT} ${AUTH_ENV}=${AUTH_PHRASE} ${BYPASS_ENV}=${BYPASS_PHRASE} GLM47_R6_V2_FAILED_SMOKE_RUN_ID=${GLM47_R6_V2_FAILED_SMOKE_RUN_ID} GLM47_R6_V2_FAILED_SIGNAL_RECEIPT_SHA256=${GLM47_R6_V2_FAILED_SIGNAL_RECEIPT_SHA256} bash scripts/gcp_full_v5_unadmitted_r6_v2_headless.sh ${RUN_ID}"
+else
+  gcloud compute ssh "${INSTANCE}" \
+    --project="${PROJECT}" \
+    --zone="${ZONE}" \
+    --command="cd ~/${REMOTE_ROOT} && GLM47_SOURCE_COMMIT=${SOURCE_COMMIT} ${AUTH_ENV}=${AUTH_PHRASE} bash scripts/gcp_full_v5_unadmitted_r6_v2_headless.sh ${RUN_ID} receipts/smoke-gate-receipt.json ${SMOKE_RECEIPT_SHA256}"
+fi
+
+trap - EXIT
