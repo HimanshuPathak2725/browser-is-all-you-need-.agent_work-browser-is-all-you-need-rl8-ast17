@@ -11,6 +11,8 @@ import argparse
 import asyncio
 import hashlib
 import json
+import os
+import re
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, Sequence
@@ -35,11 +37,28 @@ from glm47_posttraining.integrations.miles_aider_polyglot import (
 CURRICULUM_NAME = "crypto-square-v1"
 DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"
 POLYGLOT_COMMIT = "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"
-VERIFICATION_GATE = "crypto-square-strange-12-kernel-gcc13-v1"
+VERIFICATION_GATE = "crypto-square-strange-12-independent-kernel-gcc13-v2"
 EDITABLE_FILES = ["crypto_square.h", "crypto_square.cpp"]
 HIDDEN_TEST = "crypto_square_hidden_test.cpp"
-KERNEL_COUNT = 12
 POLICY_IDS = ["CS-E01", "CS-E02", "CS-E03", "CS-E04"]
+KERNEL_IDS = (
+    "CS-E01-A",
+    "CS-E01-B",
+    "CS-E01-C",
+    "CS-E02-A",
+    "CS-E02-B",
+    "CS-E02-C",
+    "CS-E03-A",
+    "CS-E03-B",
+    "CS-E03-C",
+    "CS-E04-A",
+    "CS-E04-B",
+    "CS-E04-C",
+)
+KERNEL_COUNT = len(KERNEL_IDS)
+KERNEL_RECEIPT_RE = re.compile(
+    r"GLM47_CRYPTO_KERNELS_V2:([01]{12})\nGLM47_AIDER_PASS_[0-9a-f]{32}"
+)
 
 
 INSTRUCTIONS = r"""# Crypto Square
@@ -259,6 +278,8 @@ std::string cipher::normalized_cipher_text() const { return cipher_text(); }
 
 HIDDEN_TEST_SOURCE = r"""#include "crypto_square.h"
 
+#include <array>
+#include <iostream>
 #include <string>
 #include <type_traits>
 #include <utility>
@@ -273,20 +294,85 @@ static_assert(std::is_same_v<decltype(std::declval<const Cipher&>().plain_text_s
 static_assert(std::is_same_v<decltype(std::declval<const Cipher&>().cipher_text()), std::string>);
 static_assert(std::is_same_v<decltype(std::declval<const Cipher&>().normalized_cipher_text()), std::string>);
 
+template <typename Function>
+bool guarded(Function&& function) {
+    try {
+        return static_cast<bool>(function());
+    } catch (...) {
+        return false;
+    }
+}
+
 int main() {
-    if (Cipher("").normalize_plain_text() != "") return 1;
-    if (Cipher("... --- ...").normalize_plain_text() != "") return 2;
-    if (Cipher(" A1, b2! ").normalize_plain_text() != "a1b2") return 3;
-    if (Cipher("").size() != 0) return 4;
-    if (Cipher("ab").size() != 2 || Cipher("123456789").size() != 3 || Cipher("1234567890").size() != 4) return 5;
-    if (Cipher("This is fun!").plain_text_segments() != std::vector<std::string>{"thi", "sis", "fun"}) return 6;
-    if (Cipher("Chill out.").plain_text_segments() != std::vector<std::string>{"chi", "llo", "ut"}) return 7;
-    if (Cipher("This is fun!").cipher_text() != "tsfhiuisn") return 8;
-    if (Cipher("This is fun!").normalized_cipher_text() != "tsf hiu isn") return 9;
-    if (Cipher("Chill out.").cipher_text() != "cluhltio") return 10;
-    if (Cipher("Chill out.").normalized_cipher_text() != "clu hlt io ") return 11;
-    if (Cipher("If man was meant to stay on the ground, god would have given us roots.").normalized_cipher_text() !=
-        "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn  sseoau ") return 12;
+    std::array<bool, 12> kernels{};
+
+    kernels[0] = guarded([] {
+        return Cipher("abc").normalize_plain_text() == "abc";
+    });
+    kernels[1] = true;
+    kernels[2] = guarded([] {
+        const Cipher value("A b!");
+        return value.normalize_plain_text() == "ab" && value.size() == 2 &&
+               value.plain_text_segments() == std::vector<std::string>{"ab"} &&
+               value.cipher_text() == "ab" && value.normalized_cipher_text() == "a b";
+    });
+    kernels[3] = guarded([] {
+        const Cipher value("A man, a plan, a canal: Panama!");
+        return value.normalize_plain_text() == "amanaplanacanalpanama" &&
+               Cipher("").size() == 0 && Cipher("ab").size() == 2 &&
+               Cipher("123456789").size() == 3 && Cipher("1234567890").size() == 4;
+    });
+    kernels[4] = guarded([] {
+        return Cipher("This is fun!").plain_text_segments() ==
+                   std::vector<std::string>{"thi", "sis", "fun"} &&
+               Cipher("Chill out.").plain_text_segments() ==
+                   std::vector<std::string>{"chi", "llo", "ut"};
+    });
+    kernels[5] = guarded([] {
+        const Cipher value("Chill out.");
+        return value.cipher_text() == "cluhltio" &&
+               value.normalized_cipher_text() == "clu hlt io " &&
+               Cipher("").cipher_text().empty();
+    });
+    kernels[6] = true;
+    kernels[7] = true;
+    kernels[8] = guarded([] {
+        return Cipher("").normalized_cipher_text() == "" &&
+               Cipher("... --- ...").normalized_cipher_text() == "" &&
+               Cipher("A").normalized_cipher_text() == "a" &&
+               Cipher("  b ").normalized_cipher_text() == "b" &&
+               Cipher("@1,%!").normalized_cipher_text() == "1" &&
+               Cipher("This is fun!").normalized_cipher_text() == "tsf hiu isn" &&
+               Cipher("Chill out.").normalized_cipher_text() == "clu hlt io ";
+    });
+    kernels[9] = guarded([] {
+        return Cipher("").normalize_plain_text() == "" &&
+               Cipher("... --- ...").normalize_plain_text() == "" &&
+               Cipher(" A1, b2! ").normalize_plain_text() == "a1b2";
+    });
+    kernels[10] = guarded([] {
+        const Cipher perfect("This is fun!");
+        const Cipher incomplete("Chill out.");
+        return perfect.size() == 3 &&
+               perfect.plain_text_segments() == std::vector<std::string>{"thi", "sis", "fun"} &&
+               incomplete.size() == 3 &&
+               incomplete.plain_text_segments() == std::vector<std::string>{"chi", "llo", "ut"};
+    });
+    kernels[11] = guarded([] {
+        const Cipher perfect("This is fun!");
+        const Cipher incomplete("Chill out.");
+        const Cipher long_case("If man was meant to stay on the ground, god would have given us roots.");
+        return perfect.cipher_text() == "tsfhiuisn" &&
+               perfect.normalized_cipher_text() == "tsf hiu isn" &&
+               incomplete.cipher_text() == "cluhltio" &&
+               incomplete.normalized_cipher_text() == "clu hlt io " &&
+               long_case.normalized_cipher_text() ==
+                   "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn  sseoau ";
+    });
+
+    std::cout << "GLM47_CRYPTO_KERNELS_V2:";
+    for (const bool passed : kernels) std::cout << (passed ? '1' : '0');
+    std::cout << '\n';
     return 0;
 }
 """
@@ -393,26 +479,91 @@ def build_data(args: argparse.Namespace) -> dict[str, Path]:
         )
 
 
+def _invalid_kernel_reward(record: dict[str, Any], reason: str) -> dict[str, Any]:
+    record["verifier_pack"] = "crypto-square-strange-v2"
+    record["verifier_policy_ids"] = POLICY_IDS
+    record["verification_gate"] = VERIFICATION_GATE
+    record["kernel_results"] = [
+        {"kernel_id": kernel_id, "kernel": None, "status": "invalid"}
+        for kernel_id in KERNEL_IDS
+    ]
+    record["policy_results"] = [
+        {"policy_id": policy_id, "kernel_sum": None, "status": "invalid"}
+        for policy_id in POLICY_IDS
+    ]
+    record["kernel_sum"] = None
+    record["kernel_total"] = KERNEL_COUNT
+    record["kernel_status"] = "invalid"
+    record["kernel_receipt_error"] = reason
+    record["infrastructure_error"] = True
+    record["reward"] = 0.0
+    record["score"] = 0.0
+    return record
+
+
+def _extract_kernel_bits(record: dict[str, Any]) -> str | None:
+    logs = record.get("logs")
+    if not isinstance(logs, dict):
+        return None
+    test_log = logs.get("test")
+    if not isinstance(test_log, str):
+        return None
+    matches = KERNEL_RECEIPT_RE.findall(test_log)
+    return matches[-1] if matches else None
+
+
 def _apply_kernel_reward(record: dict[str, Any]) -> dict[str, Any]:
-    record["verifier_pack"] = "crypto-square-strange-v1"
+    record["verifier_pack"] = "crypto-square-strange-v2"
     record["verifier_policy_ids"] = POLICY_IDS
     record["verification_gate"] = VERIFICATION_GATE
     if record.get("infrastructure_error"):
-        record["kernel_sum"] = None
-        record["kernel_total"] = KERNEL_COUNT
-        record["kernel_status"] = "invalid"
-        record["reward"] = 0.0
-        record["score"] = 0.0
-        return record
-    passed = KERNEL_COUNT if record.get("all_tests_pass") else int(record.get("tests_passed") or 0)
-    passed = max(0, min(KERNEL_COUNT, passed))
+        return _invalid_kernel_reward(
+            record, "underlying sandbox infrastructure error"
+        )
+
+    bits = _extract_kernel_bits(record)
+    if bits is None:
+        if record.get("all_tests_pass"):
+            return _invalid_kernel_reward(
+                record,
+                "hidden verifier passed without an authenticated kernel receipt",
+            )
+        bits = "0" * KERNEL_COUNT
+
+    kernel_values = [1 if value == "1" else -1 for value in bits]
+    passed = sum(value == 1 for value in kernel_values)
     failed = KERNEL_COUNT - passed
-    kernel_sum = passed - failed
+    kernel_sum = sum(kernel_values)
+    record["kernel_results"] = [
+        {
+            "kernel_id": kernel_id,
+            "kernel": value,
+            "status": "pass" if value == 1 else "fail",
+        }
+        for kernel_id, value in zip(KERNEL_IDS, kernel_values, strict=True)
+    ]
+    record["kernel_bits"] = bits
+    record["policy_results"] = [
+        {
+            "policy_id": policy_id,
+            "kernel_sum": sum(kernel_values[index : index + 3]),
+            "status": (
+                "pass"
+                if all(value == 1 for value in kernel_values[index : index + 3])
+                else "fail"
+            ),
+        }
+        for policy_id, index in zip(POLICY_IDS, range(0, KERNEL_COUNT, 3), strict=True)
+    ]
     record["kernel_passed"] = passed
     record["kernel_failed"] = failed
     record["kernel_sum"] = kernel_sum
     record["kernel_total"] = KERNEL_COUNT
     record["kernel_status"] = "pass" if passed == KERNEL_COUNT else "fail"
+    record["tests_passed"] = passed
+    record["tests_total"] = KERNEL_COUNT
+    record["all_tests_pass"] = passed == KERNEL_COUNT
+    record["reason"] = "passed" if passed == KERNEL_COUNT else "kernel_tests_failed"
     record["reward"] = kernel_sum / KERNEL_COUNT
     record["score"] = record["reward"]
     return record
@@ -421,6 +572,7 @@ def _apply_kernel_reward(record: dict[str, Any]) -> dict[str, Any]:
 async def reward_func(
     args: Any, sample: Any, **kwargs: Any
 ) -> dict[str, Any] | list[dict[str, Any]]:
+    os.environ.setdefault("MILES_CPP_INCLUDE_LOGS", "1")
     result = await aider_reward_func(args, sample, **kwargs)
     if isinstance(result, list):
         records = [_apply_kernel_reward(record) for record in result]
@@ -447,6 +599,20 @@ def preflight() -> None:
         manifest = json.loads(paths["manifest"].read_text(encoding="utf-8"))
         if manifest.get("kind") != DATASET_KIND or manifest["counts"]["train"] != len(EPISODES):
             raise RuntimeError("Crypto Square dataset preflight produced an invalid manifest")
+    synthetic = _apply_kernel_reward(
+        {
+            "all_tests_pass": True,
+            "infrastructure_error": False,
+            "logs": {
+                "test": (
+                    "GLM47_CRYPTO_KERNELS_V2:101010101010\n"
+                    "GLM47_AIDER_PASS_0123456789abcdef0123456789abcdef\n"
+                )
+            },
+        }
+    )
+    if synthetic["kernel_sum"] != 0 or synthetic["kernel_passed"] != 6:
+        raise RuntimeError("independent Crypto Square kernel receipt preflight failed")
     print("CRYPTO_SQUARE_STRANGE_REWARD_READY")
 
 
