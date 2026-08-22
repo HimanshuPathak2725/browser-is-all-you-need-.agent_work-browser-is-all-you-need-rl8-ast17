@@ -1,0 +1,1085 @@
+{
+  "candidate_count": 25,
+  "checks": [
+    {
+      "control": "canonical_reference",
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      }
+    },
+    {
+      "control": "dataset_dual_acceptance",
+      "official": {
+        "acceptance_mode": "official",
+        "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+        "category_overlap_warning": "Policy outcomes overlap; do not sum failures as independent errors.",
+        "category_results": [
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_01_build_integrity.py",
+            "kernel_sum": 3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C01",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_01_build_integrity/verification_receipt.json",
+            "receipt_sha256": "ffffa21a2ad5ac0503ae532c290de512328cdf0e4c623b69b7ceb89508e1cf75",
+            "return_code": 0,
+            "runner_error": null,
+            "status": "pass"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_02_exact_api.py",
+            "kernel_sum": -3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C02",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_02_exact_api/verification_receipt.json",
+            "receipt_sha256": "3ef6aed3621f714ee6a3b49bdacee6a94adbbe45d168fdc43fee74ce7d6a1135",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_03_integration_odr.py",
+            "kernel_sum": -1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C03",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_03_integration_odr/verification_receipt.json",
+            "receipt_sha256": "2eb09e93edc80738261a0bb35bd2d7df92c9ced8a6d3e056cd1f176ecbf86bf5",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_04_formatting_observer.py",
+            "kernel_sum": 1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C04",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_04_formatting_observer/verification_receipt.json",
+            "receipt_sha256": "551f935ef8b84a282ede0ed822c1b612ff5012faec901298c3ec94bf39a73f11",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_05_time_properties.py",
+            "kernel_sum": -1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C05",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_05_time_properties/verification_receipt.json",
+            "receipt_sha256": "4fda3b4e834712fcb415f7ff46e3ef7636067114a8cb9a5d639443c446154245",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_06_official_terminal.py",
+            "kernel_sum": 3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C06",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass_acceptance/verifier_06_official_terminal/verification_receipt.json",
+            "receipt_sha256": "5561a53f830520fc6d3b10e1027e209d1671508c214581b9e06e41d35ce9a64c",
+            "return_code": 0,
+            "runner_error": null,
+            "status": "pass"
+          }
+        ],
+        "cross_policy_source_consistent": true,
+        "duration_seconds": 16.008044,
+        "exercise_dir": "/tmp/clock-final-validation-20260822-v4/fixtures/dataset_official_pass",
+        "generated_at": "2026-08-22T12:13:29.068543+00:00",
+        "official_success": true,
+        "official_terminal_policy_id": "CLF-C06",
+        "package": "clock_verifiers_final",
+        "reward_boundary": {
+          "official": "Only authenticated official terminal success determines reward readiness; C01-C05 are diagnostics.",
+          "strict": "All shaping policies and the authenticated official terminal policy must pass."
+        },
+        "reward_ready": true,
+        "schema_version": 2,
+        "shaping_success": false,
+        "status": "pass",
+        "strict_contract_success": false,
+        "task_id": "clock"
+      },
+      "passed": true,
+      "strict": {
+        "acceptance_mode": "strict",
+        "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+        "category_overlap_warning": "Policy outcomes overlap; do not sum failures as independent errors.",
+        "category_results": [
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_01_build_integrity.py",
+            "kernel_sum": 3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C01",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_01_build_integrity/verification_receipt.json",
+            "receipt_sha256": "966b836bb5615a42f82a6480b113dcc4da660bfb531f9a23c36ac9c5f3adedeb",
+            "return_code": 0,
+            "runner_error": null,
+            "status": "pass"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_02_exact_api.py",
+            "kernel_sum": -3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C02",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_02_exact_api/verification_receipt.json",
+            "receipt_sha256": "7eb8f7dafe188c7675023973e5f6055566fd54043d9b51e6793f4ab9779b7b18",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_03_integration_odr.py",
+            "kernel_sum": -1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C03",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_03_integration_odr/verification_receipt.json",
+            "receipt_sha256": "b7592a907a8f3b44b80fcde9e6f9961670cf51e08339787c7e56a670b85b69a2",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_04_formatting_observer.py",
+            "kernel_sum": 1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C04",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_04_formatting_observer/verification_receipt.json",
+            "receipt_sha256": "7a3a77ac744a70426baddd56ba415b66cc032b26ff3ba525f1fa3646ef98c8d0",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_05_time_properties.py",
+            "kernel_sum": -1,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C05",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_05_time_properties/verification_receipt.json",
+            "receipt_sha256": "34b731802b05a43fe1e56c450edce8c6e8ba7d1397f0afa711a914d6c24fe5cc",
+            "return_code": 1,
+            "runner_error": null,
+            "status": "fail"
+          },
+          {
+            "candidate_source_sha256": "82108e36ff3a4af407ec5a930c234e99e7e040edc35cfcff5958bc66bf8318b7",
+            "filename": "verifier_06_official_terminal.py",
+            "kernel_sum": 3,
+            "maximum_kernel_sum": 3,
+            "policy_id": "CLF-C06",
+            "receipt": "/tmp/clock-final-validation-20260822-v4/runs/dataset_official_pass/verifier_06_official_terminal/verification_receipt.json",
+            "receipt_sha256": "0bca0ed3c96eb13a94501d34adb688a50b22fa00ff450c70c33695f50b47ee5f",
+            "return_code": 0,
+            "runner_error": null,
+            "status": "pass"
+          }
+        ],
+        "cross_policy_source_consistent": true,
+        "duration_seconds": 17.022518,
+        "exercise_dir": "/tmp/clock-final-validation-20260822-v4/fixtures/dataset_official_pass",
+        "generated_at": "2026-08-22T12:11:09.199419+00:00",
+        "official_success": true,
+        "official_terminal_policy_id": "CLF-C06",
+        "package": "clock_verifiers_final",
+        "reward_boundary": {
+          "official": "Only authenticated official terminal success determines reward readiness; C01-C05 are diagnostics.",
+          "strict": "All shaping policies and the authenticated official terminal policy must pass."
+        },
+        "reward_ready": false,
+        "schema_version": 2,
+        "shaping_success": false,
+        "status": "fail",
+        "strict_contract_success": false,
+        "task_id": "clock"
+      }
+    },
+    {
+      "control": "f01_cxx20_spaceship",
+      "fault_class": "language_mode",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    {
+      "control": "f02_missing_iomanip",
+      "fault_class": "dependency",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    {
+      "control": "f03_missing_inequality",
+      "fault_class": "exact_api",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "f04_missing_constructor_declaration",
+      "fault_class": "header_source",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    {
+      "control": "f05_noninline_header_operator",
+      "fault_class": "odr_linkage",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C03"
+    },
+    {
+      "control": "f06_snprintf_warning",
+      "fault_class": "warning_cleanliness",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    {
+      "control": "f07_unpadded_format",
+      "fault_class": "formatting",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C04"
+    },
+    {
+      "control": "f08_negative_whole_day",
+      "fault_class": "normalization",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "f09_plus_off_by_one",
+      "fault_class": "arithmetic",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "f10_minus_noop",
+      "fault_class": "arithmetic_api",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "f11_equality_ignores_minutes",
+      "fault_class": "equality",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "f12_official_rare_case",
+      "fault_class": "official_only",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C06"
+    },
+    {
+      "control": "f13_missing_default_argument",
+      "fault_class": "exact_api_default",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "f14_member_instead_of_free_inequality",
+      "fault_class": "exact_api_operator_form",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "x15_missing_include_guard",
+      "fault_class": "header_idempotence",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C03"
+    },
+    {
+      "control": "x16_public_constructor",
+      "fault_class": "constructor_access",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "x17_factory_ignores_minutes",
+      "fault_class": "factory_semantics",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "x18_minus_reversed",
+      "fault_class": "signed_arithmetic",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "x19_inequality_always_false",
+      "fault_class": "operator_consistency",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "x20_space_padding",
+      "fault_class": "formatting",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C04"
+    },
+    {
+      "control": "x21_plus_skips_normalization",
+      "fault_class": "arithmetic_normalization",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "x22_equality_uses_or",
+      "fault_class": "equality_relation",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    {
+      "control": "x23_nonconst_conversion",
+      "fault_class": "observer_constness",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    {
+      "control": "evaluator_tampered_asset",
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "invalid",
+        "CLF-C02": "invalid",
+        "CLF-C03": "invalid",
+        "CLF-C04": "invalid",
+        "CLF-C05": "invalid",
+        "CLF-C06": "invalid"
+      }
+    },
+    {
+      "control": "evaluator_missing_compiler",
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "invalid",
+        "CLF-C02": "invalid",
+        "CLF-C03": "invalid",
+        "CLF-C04": "invalid",
+        "CLF-C05": "invalid",
+        "CLF-C06": "invalid"
+      }
+    }
+  ],
+  "comparison_fault_count": 14,
+  "evaluator_receipt_sha256": {
+    "missing_compiler": "4ab22f294b20728c2be26154f5bb9958d2901c8f9df887311489ef24ecc99e80",
+    "tampered_asset": "cbe448afb7c3cf8ab65a364edd3886d0196b387c36beb3b0e22abeb2fd9b55be"
+  },
+  "expanded_fault_count": 9,
+  "fault_count": 23,
+  "generated_at": "2026-08-22T12:13:30.206139+00:00",
+  "killed_fault_count": 23,
+  "mutant_matrix": {
+    "f01_cxx20_spaceship": {
+      "fault_class": "language_mode",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    "f02_missing_iomanip": {
+      "fault_class": "dependency",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    "f03_missing_inequality": {
+      "fault_class": "exact_api",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    "f04_missing_constructor_declaration": {
+      "fault_class": "header_source",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    "f05_noninline_header_operator": {
+      "fault_class": "odr_linkage",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C03"
+    },
+    "f06_snprintf_warning": {
+      "fault_class": "warning_cleanliness",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "fail",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C01"
+    },
+    "f07_unpadded_format": {
+      "fault_class": "formatting",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C04"
+    },
+    "f08_negative_whole_day": {
+      "fault_class": "normalization",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "f09_plus_off_by_one": {
+      "fault_class": "arithmetic",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "f10_minus_noop": {
+      "fault_class": "arithmetic_api",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "f11_equality_ignores_minutes": {
+      "fault_class": "equality",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "f12_official_rare_case": {
+      "fault_class": "official_only",
+      "official_expectation_matches": true,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C06"
+    },
+    "f13_missing_default_argument": {
+      "fault_class": "exact_api_default",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    "f14_member_instead_of_free_inequality": {
+      "fault_class": "exact_api_operator_form",
+      "official_expectation_matches": true,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    "x15_missing_include_guard": {
+      "fault_class": "header_idempotence",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C03"
+    },
+    "x16_public_constructor": {
+      "fault_class": "constructor_access",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "pass",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    "x17_factory_ignores_minutes": {
+      "fault_class": "factory_semantics",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "x18_minus_reversed": {
+      "fault_class": "signed_arithmetic",
+      "official_expectation_matches": null,
+      "official_success": true,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "pass",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "pass"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "x19_inequality_always_false": {
+      "fault_class": "operator_consistency",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    },
+    "x20_space_padding": {
+      "fault_class": "formatting",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C04"
+    },
+    "x21_plus_skips_normalization": {
+      "fault_class": "arithmetic_normalization",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "pass",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "x22_equality_uses_or": {
+      "fault_class": "equality_relation",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "pass",
+        "CLF-C05": "fail",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C05"
+    },
+    "x23_nonconst_conversion": {
+      "fault_class": "observer_constness",
+      "official_expectation_matches": null,
+      "official_success": false,
+      "passed": true,
+      "statuses": {
+        "CLF-C01": "pass",
+        "CLF-C02": "fail",
+        "CLF-C03": "fail",
+        "CLF-C04": "fail",
+        "CLF-C05": "pass",
+        "CLF-C06": "fail"
+      },
+      "strict_rejected": true,
+      "target_failed": true,
+      "target_policy": "CLF-C02"
+    }
+  },
+  "package": "clock_verifiers_final",
+  "run_receipt_sha256": {
+    "canonical_reference": "1c5b9bb200b705db52dd96075be03e8c0b000d2992a8adf8f527fb4aad70fc47",
+    "dataset_official_pass": "cac4ff87cf2d5b4dfddbc254406c8ee1272a20b67ebb12b686013e4272c17aa7",
+    "f01_cxx20_spaceship": "1f3aadcd24b8db2688b9062710876382d6db4a12170fef7fc720ffb14a870e6c",
+    "f02_missing_iomanip": "7532e29c899444aabd41fa78147e341a6e60bf99092363a20b3a5a9b50c6d437",
+    "f03_missing_inequality": "9f1ea0e64bf82bf09a571ea696a63ae9cf53ad8d82cdac63b54db28c4408d697",
+    "f04_missing_constructor_declaration": "6ea2af87556d1769e46fd454712c94858d51f94a97615aa0fa9bd0e44c6215d7",
+    "f05_noninline_header_operator": "ac6ae939d5ac1b5f06439466b1341792be71b0ada23c2a06cf70aa24f66707b0",
+    "f06_snprintf_warning": "37f7723b9fc8a67aa197039f5715796ddf623ac3acc62775764e145a5a4fac74",
+    "f07_unpadded_format": "fd0e546faba11f55936f36d29ba229200cda2c1b5c88b41e0e7cac3dcf77c553",
+    "f08_negative_whole_day": "fd3aaea4d2dc216036549cc085581ec306eeb34049fa9500d43a965d0479c462",
+    "f09_plus_off_by_one": "31605521afe77cbbda0fab09f3e360ff6b6e7705b2ad7743454ef1206fcc975f",
+    "f10_minus_noop": "df268f3256bf9e900c1769adda929b67329b42e8e1b9c2c72859ea916b137a74",
+    "f11_equality_ignores_minutes": "33cee8d559cda3454cebed008499fa01f029de495e36e7a07220dbb3bb92ace0",
+    "f12_official_rare_case": "03cd62f2ab8a42c3596e7d27765d0c117861db65ded4391336cf93507c505aac",
+    "f13_missing_default_argument": "b7938f6eabe67dbe5d543dfbeaf559ecefff1f5c4cf3f242a18ad897ecdf7ffa",
+    "f14_member_instead_of_free_inequality": "a524661609f7f4ad1e77bb44a4ba730d0e6cbd906ff0f4c8784e145698030a7d",
+    "x15_missing_include_guard": "f52b0bff33c36246ac8ebe86a2dcc403fa9b77bfc97655d6dc087f6ff7a93db3",
+    "x16_public_constructor": "4b1bbd76eb3c0753779c5a43fa5cd7d259b88bc7386f79a4d1c327464ed2aaf8",
+    "x17_factory_ignores_minutes": "dd31c3b2378ba63316581ddf92f15e6a69076860b3b4ee073854b167988a77f8",
+    "x18_minus_reversed": "1a65508b6b7d292cc66319cdcf64115746165dbb571c257cb2072d59705eb1a4",
+    "x19_inequality_always_false": "c5bc442deeaaa8e4f6f9828b30430fca296e4be283f49a81bcfc76b2f661629b",
+    "x20_space_padding": "8e63a0d1fe64add36d61b1a3cc994ecd87fa0f3247bffe620904ff6ce74d9508",
+    "x21_plus_skips_normalization": "8788e882f96e874bf804f759088e8407bb0c7b28848cb610946fa61c5d7da3c6",
+    "x22_equality_uses_or": "8e8ef50634fe9c2b884e8a52756b5381d98c6d4216df009313d4a12be5928a1c",
+    "x23_nonconst_conversion": "2484d3b9c605bd52bcdff3b28c22b1befb4e286f970adcc3f7621489a8157998"
+  },
+  "schema_version": 1,
+  "status": "pass",
+  "surviving_mutants": [],
+  "task_id": "clock"
+}

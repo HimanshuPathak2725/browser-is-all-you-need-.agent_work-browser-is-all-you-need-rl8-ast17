@@ -1,0 +1,182 @@
+{
+  "baseline": {
+    "accepted_by_original": true,
+    "accepted_by_v2": true,
+    "candidate_sha256": {
+      "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+      "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+    },
+    "kind": "pinned_meta_reference"
+  },
+  "dataset_control": {
+    "candidate_sha256": {
+      "clock.cpp": "74d0f8630b52bb46207a9adbbd5ef176f6958fd0a3e39a78e4a76a2001199f7f",
+      "clock.h": "2e70ba6b96fb7ed5b21553957eb329a764ecbab239cdad22d8f8b81a4bfda92d"
+    },
+    "included_in_fault_denominator": false,
+    "official_passed": true,
+    "response_hash": "60836d9a00fce0c477bc9447721ddf383ecfc54170f748ea86a6b36f7828288f",
+    "sample_id": "a01-clock-turn2",
+    "score_output_hash": "464504f384d581f5102f8fbd88a11d6c2e92753f0f16694998d326ccf85efe10",
+    "source": "/data/Himanshu/browser-is-all-you-need-tirtha-env-stable-midband-RL-v2/results/luna-fixed26-20260805/datasets/terminal_eval_only_samples.jsonl"
+  },
+  "sample_count": 14,
+  "samples": [
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+        "clock.h": "f5277f13cf95451ba96f71a6c49bddb290288316bc05bee25130e7cd9110f793"
+      },
+      "description": "Adds unsupported C++20 spaceship syntax to the C++17 header.",
+      "fault_class": "language_mode",
+      "official_expected_pass": false,
+      "sample_id": "f01_cxx20_spaceship",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "1f7a0a7575e8a5e485a8112dfd2a4b59f1f7c43ca9f771a1c96c545120859fb4",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Removes the header declaring setw and setfill.",
+      "fault_class": "dependency",
+      "official_expected_pass": false,
+      "sample_id": "f02_missing_iomanip",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+        "clock.h": "cd5310ac815e4c907861365adcde3ee6bd60a23051fc7225306606e96e257ca6"
+      },
+      "description": "Deletes required operator!= entirely.",
+      "fault_class": "exact_api",
+      "official_expected_pass": false,
+      "sample_id": "f03_missing_inequality",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+        "clock.h": "c9bb86a3a3bbf835ea18fffd00a6b6ad5d87bee62d043df69a7f2d1b21d20cfc"
+      },
+      "description": "Keeps constructor definitions but removes their class declaration.",
+      "fault_class": "header_source",
+      "official_expected_pass": false,
+      "sample_id": "f04_missing_constructor_declaration",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+        "clock.h": "612b77edd088c9baba677dd553f80e988470fe8b71e6044afb07b638b5bb4598"
+      },
+      "description": "Makes the header-defined free operator!= non-inline.",
+      "fault_class": "odr_linkage",
+      "official_expected_pass": false,
+      "sample_id": "f05_noninline_header_operator",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "e00ad267c44dd70ffc641c3636e5ee372935e7a07d9bfbf0e716cf3d9d10a305",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Uses a five-byte snprintf buffer rejected by GCC -Werror.",
+      "fault_class": "warning_cleanliness",
+      "official_expected_pass": false,
+      "sample_id": "f06_snprintf_warning",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "76f550733ca23dfa00383c9947855d3a12cf0748bb517d4be023f1a34eeb61f8",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Renders H:M rather than zero-padded HH:MM.",
+      "fault_class": "formatting",
+      "official_expected_pass": false,
+      "sample_id": "f07_unpadded_format",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f8fe8741d97048c55f5477ed207c36c5b82f6a9682ef19312e679a9fa161d91b",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Leaves exact whole-day values at 24:00.",
+      "fault_class": "normalization",
+      "official_expected_pass": false,
+      "sample_id": "f08_negative_whole_day",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "23eac457b9f7d85970e33309c83bed574647af991b71db0f0cfd84253ff539e0",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Adds one extra minute in plus().",
+      "fault_class": "arithmetic",
+      "official_expected_pass": false,
+      "sample_id": "f09_plus_off_by_one",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "2873c7679aa8b9d959ccb239837dc3a624bde5894e640b5ebcda66267857e5a1",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "minus() ignores its argument; official tests do not call minus directly.",
+      "fault_class": "arithmetic_api",
+      "official_expected_pass": true,
+      "sample_id": "f10_minus_noop",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "97cc30df7d6fbd3de1e3c92c1bac3b224cd243ba6b8260fa8db78c36e7a98c11",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Compares only hours and ignores minutes.",
+      "fault_class": "equality",
+      "official_expected_pass": false,
+      "sample_id": "f11_equality_ignores_minutes",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "02f1a997392384df034d9f0ffe6b6771171b64b8ecfc4a52bc6be61d2c2d5086",
+        "clock.h": "74bb7ea77a1a11a856065976fbc421da450112df5e38e232b83c63e072c60c62"
+      },
+      "description": "Corrupts only official input (201, 3001).",
+      "fault_class": "official_only",
+      "official_expected_pass": false,
+      "sample_id": "f12_official_rare_case",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "f269249dfeae1939942a7f3335d9f058e8e1c0de7e74205d7cb44eb1d5822269",
+        "clock.h": "a6552a99bf0f1a28b5dd1b4a658104bd870b78cb37afaec2696fa98352b80289"
+      },
+      "description": "Removes the required default minute argument while preserving function type.",
+      "fault_class": "exact_api_default",
+      "official_expected_pass": true,
+      "sample_id": "f13_missing_default_argument",
+      "strict_contract_expected_pass": false
+    },
+    {
+      "candidate_sha256": {
+        "clock.cpp": "16426b47478cf8a69d3965cfa5dc5843e04673bf6b51c43f5ad2087ec85d2ee8",
+        "clock.h": "bc63b69542bba3322cf394a28293b95bbc65462794e42484dd6fe17c7cda3334"
+      },
+      "description": "Replaces required free operator!= with equivalent member behavior.",
+      "fault_class": "exact_api_operator_form",
+      "official_expected_pass": true,
+      "sample_id": "f14_member_instead_of_free_inequality",
+      "strict_contract_expected_pass": false
+    }
+  ],
+  "schema_version": 1,
+  "task_id": "clock"
+}
