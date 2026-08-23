@@ -1,0 +1,285 @@
+{
+  "config_sha256": "ff4d2208eeca47191ef13f914c08994a81e959c323e3817971a9780f991f050d",
+  "generated_at": "2026-08-23T21:22:26.108933+00:00",
+  "polyglot_commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+  "schema_version": 1,
+  "status": "failed",
+  "tasks": [
+    {
+      "aggregate_receipt_sha256": "d1771ae586cb9c2060ff209fcef7bf019a000bd18d181bcccc404e0beb1c098c",
+      "executed_policies": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G07"
+      ],
+      "full_pass": false,
+      "infrastructure_error": null,
+      "policy_results": [
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G01",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G02",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G03",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G04",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G05",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G07",
+          "status": "fail"
+        }
+      ],
+      "selected_policy": "G01",
+      "status": "fail",
+      "task": "binary-search-tree"
+    },
+    {
+      "aggregate_receipt_sha256": "4f18bdb6940f5f459db1308eff8be400bcd7254498b244c58e93d76856b297cc",
+      "executed_policies": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G07"
+      ],
+      "full_pass": false,
+      "infrastructure_error": null,
+      "policy_results": [
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G01",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G02",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G03",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G04",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G05",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G07",
+          "status": "fail"
+        }
+      ],
+      "selected_policy": "G01",
+      "status": "fail",
+      "task": "kindergarten-garden"
+    },
+    {
+      "aggregate_receipt_sha256": "d09a4fcfa065a348fc14692791253212f509690a286459f755de50edcc198b0e",
+      "executed_policies": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G07"
+      ],
+      "full_pass": false,
+      "infrastructure_error": null,
+      "policy_results": [
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G01",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G02",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G03",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G04",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G05",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G07",
+          "status": "fail"
+        }
+      ],
+      "selected_policy": "G01",
+      "status": "fail",
+      "task": "linked-list"
+    },
+    {
+      "aggregate_receipt_sha256": "b4a369bca93f71eba7fc57b5e7134e134aa82ef3d194f38152e0d97ccb74f423",
+      "executed_policies": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G07"
+      ],
+      "full_pass": false,
+      "infrastructure_error": null,
+      "policy_results": [
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G01",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G02",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G03",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G04",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G05",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G07",
+          "status": "fail"
+        }
+      ],
+      "selected_policy": "G01",
+      "status": "fail",
+      "task": "meetup"
+    },
+    {
+      "aggregate_receipt_sha256": "b0f0befd119d9e9618b91f55514e87cbf36a62cdcf39cc4f962d0b806291730c",
+      "executed_policies": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G07"
+      ],
+      "full_pass": false,
+      "infrastructure_error": null,
+      "policy_results": [
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G01",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G02",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": 1,
+          "kernel_total": 1,
+          "policy_id": "G03",
+          "status": "pass"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G04",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G05",
+          "status": "fail"
+        },
+        {
+          "kernel_sum": -1,
+          "kernel_total": 1,
+          "policy_id": "G07",
+          "status": "fail"
+        }
+      ],
+      "selected_policy": "G01",
+      "status": "fail",
+      "task": "zebra-puzzle"
+    }
+  ],
+  "trajectory_policy": {
+    "live_reward_status": "excluded",
+    "policy_id": "G06",
+    "reason": "single-turn GRPO samples have no authenticated two-turn trajectory"
+  },
+  "verifier_image": "glm47-strange-multi-env:gcc13.3-v2"
+}

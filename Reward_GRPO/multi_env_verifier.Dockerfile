@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LANG=C
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends cmake make util-linux python3 \
+    && apt-get install -y --no-install-recommends clang cmake libboost-date-time-dev make util-linux python3 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace

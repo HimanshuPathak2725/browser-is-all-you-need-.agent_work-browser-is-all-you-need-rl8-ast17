@@ -39,7 +39,7 @@ from glm47_posttraining.integrations.miles_aider_polyglot import (
 )
 
 
-CURRICULUM_NAME = "multi-env-strange-v1"
+CURRICULUM_NAME = "multi-env-strange-global-v2"
 DATASET_KIND = "aider-polyglot-cpp-shadow-grpo"
 POLYGLOT_COMMIT = "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f"
 REWARD_ROOT = Path(__file__).resolve().parent
@@ -92,9 +92,17 @@ def load_config() -> dict[str, Any]:
     for topic in topics:
         live = [str(value) for value in topic.get("live_policies", [])]
         terminal = [str(value) for value in topic.get("terminal_policies", [])]
-        if not live or len(live) != len(set(live)) or not set(terminal).issubset(live):
+        dataset = [str(value) for value in topic.get("dataset_policies", live)]
+        if (
+            not live
+            or len(live) != len(set(live))
+            or not dataset
+            or len(dataset) != len(set(dataset))
+            or not set(dataset).issubset(live)
+            or not set(terminal).issubset(live)
+        ):
             raise ValueError(f"invalid policy selection for {topic.get('slug')}")
-        policy_count += len(live)
+        policy_count += len(dataset)
     if len(topics) != int(config["expected_topic_count"]):
         raise ValueError("multi-environment topic count does not match its contract")
     if policy_count != int(config["expected_train_count"]):
@@ -108,8 +116,15 @@ def _topic_by_slug(slug: str) -> dict[str, Any]:
 
 
 def _ordered_policies(topic: dict[str, Any]) -> list[str]:
+    dataset = [
+        str(value)
+        for value in topic.get("dataset_policies", topic["live_policies"])
+    ]
     terminal = [str(value) for value in topic["terminal_policies"]]
-    return [*terminal, *(str(value) for value in topic["live_policies"] if value not in terminal)]
+    return [
+        *(value for value in terminal if value in dataset),
+        *(value for value in dataset if value not in terminal),
+    ]
 
 
 def _verifier_script(topic: dict[str, Any], policy: str) -> Path:
@@ -205,9 +220,14 @@ def _write_task_source(output: Path) -> Path:
                 objective_group=f"{slug}/{policy}",
                 failure_signature=f"validated-strange-{slug}-{policy}",
                 tags=[
-                    "multi-env-strange-v1",
+                    CURRICULUM_NAME,
                     f"strange-topic:{slug}",
                     f"strange-policy:{policy}",
+                    *(
+                        ["strange-runner:global-cpp"]
+                        if topic.get("runner_kind") == "global"
+                        else []
+                    ),
                     *("strange-terminal-policy" for _ in [0] if policy in terminal),
                 ],
             )
@@ -706,7 +726,7 @@ def _parser() -> argparse.ArgumentParser:
     build.add_argument("--train-limit", type=int)
     build.add_argument("--eval-limit", type=int)
     build.add_argument("--eval-splits", default="validation,test")
-    build.add_argument("--profile", default="multi-env-strange-grpo20")
+    build.add_argument("--profile", default="multi-env-strange-global-grpo30")
     build.add_argument("--run-id")
     build.add_argument("--sort-by-size", action="store_true")
     build.add_argument("--filter-train-oracle-full-marks", action="store_true")

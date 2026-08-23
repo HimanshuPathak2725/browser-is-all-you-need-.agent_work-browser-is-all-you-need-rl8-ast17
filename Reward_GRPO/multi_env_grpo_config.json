@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "curriculum": "multi-env-strange-v1",
+  "curriculum": "multi-env-strange-global-v2",
   "dataset_kind": "aider-polyglot-cpp-shadow-grpo",
-  "expected_train_count": 62,
-  "expected_topic_count": 12,
-  "verifier_image": "glm47-strange-multi-env:gcc13.3-v1",
+  "expected_train_count": 67,
+  "expected_topic_count": 17,
+  "verifier_image": "glm47-strange-multi-env:gcc13.3-v2",
   "topics": [
     {
       "slug": "allergies",
@@ -90,6 +90,61 @@
       "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
       "terminal_policies": ["E05", "E06"],
       "runner_kind": "sublist"
+    },
+    {
+      "slug": "binary-search-tree",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["binary_search_tree.cpp", "binary_search_tree.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/binary-search-tree.json",
+      "global_manifest_sha256": "1a9a65b79b3153715fdfed5eba3e8707c48361a779ea4c30b7ab16efaf91e8ff"
+    },
+    {
+      "slug": "kindergarten-garden",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["kindergarten_garden.cpp", "kindergarten_garden.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/kindergarten-garden.json",
+      "global_manifest_sha256": "9cb7d17cb01c824d0315b0118c4e4f245fbced39282cd2b532db3a3e5f850584"
+    },
+    {
+      "slug": "linked-list",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["linked_list.cpp", "linked_list.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/linked-list.json",
+      "global_manifest_sha256": "88e5ec210f9cbb0cf582711f8fd42cd1a25fc82d832c4203cdd635c7b90b2a92"
+    },
+    {
+      "slug": "meetup",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["meetup.cpp", "meetup.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/meetup.json",
+      "global_manifest_sha256": "6894475ed671c884867e5ea5ac021161e17dedb5413aab31ec1c758f63e90f91"
+    },
+    {
+      "slug": "zebra-puzzle",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["zebra_puzzle.cpp", "zebra_puzzle.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/zebra-puzzle.json",
+      "global_manifest_sha256": "f385421aefda5b81c529e5bb31361f286694d23407b16b2762b893273f5fa0c0"
     }
   ]
 }

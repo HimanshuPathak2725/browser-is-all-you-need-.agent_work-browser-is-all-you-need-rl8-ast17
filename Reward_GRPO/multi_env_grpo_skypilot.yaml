@@ -1,7 +1,7 @@
-# Twenty-update, 62-policy-environment GRPO warm-started from the best saved
+# Thirty-update, 67-environment GRPO warm-started from the best saved
 # Phone Number GRPO checkpoint (iter 14). Infrastructure and trainer controls
 # are preserved from the successful Phone Number run.
-name: multi-env-strange-grpo20
+name: multi-env-strange-global-grpo30
 
 workdir: .
 
@@ -21,7 +21,7 @@ resources:
     wait_for: jobs
   labels:
     managed-by: skypilot
-    workload: multi-env-strange-grpo20
+    workload: multi-env-strange-global-grpo30
 
 envs:
   MILES_RUN_ID: null
@@ -38,13 +38,13 @@ envs:
   MILES_EXPECTED_NATIVE_SHARDS: "4"
   MILES_CPP_TASKS_DIR: /root/sky_workdir/Reward_GRPO
   MILES_DATA_BUILD_MODULE: Reward_GRPO.multi_env_grpo
-  MILES_DATA_CURRICULUM: multi-env-strange-v1
+  MILES_DATA_CURRICULUM: multi-env-strange-global-v2
   MILES_CUSTOM_RM_PATH: Reward_GRPO.multi_env_grpo.reward_func
   MILES_REWARD_PREFLIGHT_MODULE: Reward_GRPO.multi_env_grpo
   MILES_EXPECTED_DATASET_KIND: aider-polyglot-cpp-shadow-grpo
-  MILES_EXPECTED_TRAIN_COUNT: "62"
+  MILES_EXPECTED_TRAIN_COUNT: "67"
   MILES_EVAL_NAME: multi_env_strange_monitor
-  MILES_NUM_ROLLOUT: "20"
+  MILES_NUM_ROLLOUT: "30"
   MILES_ROLLOUT_BATCH_SIZE: "8"
   MILES_N_SAMPLES_PER_PROMPT: "32"
   MILES_GLOBAL_BATCH_SIZE: "256"
@@ -71,7 +71,7 @@ envs:
   GLM47_CPP_SANDBOX_BACKEND: docker
   GLM47_CPP_SANDBOX_IMAGE: glm47-aider-polyglot-cpp:latest
   GLM47_CPP_SANDBOX_UNSHARE_NET: "1"
-  GLM47_MULTI_ENV_VERIFIER_IMAGE: glm47-strange-multi-env:gcc13.3-v1
+  GLM47_MULTI_ENV_VERIFIER_IMAGE: glm47-strange-multi-env:gcc13.3-v2
   GLM47_MULTI_ENV_REWARD_ROOT: /tmp/glm47-multi-env-reward-root
   GLM47_MULTI_ENV_VERIFIER_TIMEOUT_S: "900"
   MILES_RAY_SCOPED_CLEANUP: "1"
@@ -84,9 +84,9 @@ envs:
   MILES_RAY_SUBMIT_RETRIES: "5"
   WANDB_MODE: online
   MILES_WANDB_PROJECT: glm47-multi-env-strange-grpo
-  MILES_WANDB_JOB_TYPE: grpo20
-  WANDB_JOB_TYPE: grpo20
-  WANDB_TAGS: multi-env,phone-number-iter14,62-policy-envs,gcp,skypilot,8xh100,thinking,strange-verifiers
+  MILES_WANDB_JOB_TYPE: grpo30
+  WANDB_JOB_TYPE: grpo30
+  WANDB_TAGS: multi-env,phone-number-iter14,67-envs,17-topics,global-cpp,gcp,skypilot,8xh100,thinking,strange-verifiers
 
 secrets:
   WANDB_API_KEY: null
@@ -178,7 +178,7 @@ setup: |
   PYTHONPATH=src python3 -m Reward_GRPO.multi_env_grpo build-verifier-image
   PYTHONPATH=src python3 -m Reward_GRPO.multi_env_grpo static-preflight
   test -w /workspace/runs
-  echo MULTI_ENV_STRANGE_GRPO20_SETUP_READY
+  echo MULTI_ENV_STRANGE_GLOBAL_GRPO30_SETUP_READY
 
 run: |
   set -euo pipefail
@@ -231,8 +231,8 @@ run: |
     build-data \
     --tasks-dir Reward_GRPO \
     --out "${MILES_CPP_DATA_DIR}" \
-    --curriculum multi-env-strange-v1 \
-    --profile multi-env-strange-grpo20 \
+    --curriculum multi-env-strange-global-v2 \
+    --profile multi-env-strange-global-grpo30 \
     --run-id "${MILES_RUN_ID}" \
     --force
 
@@ -243,7 +243,7 @@ run: |
 
   final_adapter=""
   if [ "${train_status}" -eq 0 ]; then
-    final_adapter="${run_root}/checkpoints/grpo_lora_r16/iter_0000019/adapter"
+    final_adapter="${run_root}/checkpoints/grpo_lora_r16/iter_0000029/adapter"
     test -f "${final_adapter}/adapter_model.bin"
     test "$(find "${final_adapter}" -maxdepth 1 -type f -name 'adapter_megatron_*.pt' | wc -l)" -eq "${MILES_EXPECTED_NATIVE_SHARDS}"
     test -f "${run_root}/grpo_lora_r16/grpo_training_gate.json"
@@ -294,7 +294,7 @@ run: |
   rsync -a --no-links "${run_root}/" "${artifact_root}/"
   test -f "${artifact_root}/grpo_lora_r16/run.log"
   if [ -n "${final_adapter}" ]; then
-    test -f "${artifact_root}/checkpoints/grpo_lora_r16/iter_0000019/adapter/finiteness_receipt.json"
+    test -f "${artifact_root}/checkpoints/grpo_lora_r16/iter_0000029/adapter/finiteness_receipt.json"
   fi
   {
     echo "train_status=${train_status}"
@@ -304,9 +304,9 @@ run: |
     echo "reward_func=${MILES_CUSTOM_RM_PATH}"
     echo "source_run=phone-number-kernel12-grpo20-spot-20260822-102653"
     echo "source_iteration=14"
-    echo "verifier_gate=multi-env-strange-62-policy-environments-gcc13.3-v1"
+    echo "verifier_gate=multi-env-strange-global-67-environments-gcc13.3-v2"
     echo "thinking=true"
   } > "${artifact_root}/run_status.txt"
-  echo "MULTI_ENV_STRANGE_GRPO20_ARTIFACTS_PRESERVED ${artifact_root}"
+  echo "MULTI_ENV_STRANGE_GLOBAL_GRPO30_ARTIFACTS_PRESERVED ${artifact_root}"
   trap - EXIT
   exit "${train_status}"

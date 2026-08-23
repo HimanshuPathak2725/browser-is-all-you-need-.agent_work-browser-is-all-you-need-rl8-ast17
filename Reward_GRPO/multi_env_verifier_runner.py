@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 
-POLICY_RE = re.compile(r"^E(?P<number>[0-9]{2})$")
+POLICY_RE = re.compile(r"^[EG](?P<number>[0-9]{2})$")
 
 
 def _sha256(path: Path) -> str:
@@ -148,7 +148,30 @@ def _run_policy(
     script = _verifier_script(reward_root, topic, policy_id)
     policy_output = output_root / policy_id.lower()
     command = [sys.executable, str(script)]
-    if topic.get("runner_kind") == "sublist":
+    if topic.get("runner_kind") == "global":
+        manifest = reward_root / str(topic["global_manifest"])
+        expected = str(topic["global_manifest_sha256"])
+        if not manifest.is_file() or manifest.is_symlink() or _sha256(manifest) != expected:
+            return {
+                "policy_id": policy_id,
+                "status": "invalid",
+                "kernel_sum": None,
+                "kernel_total": 0,
+                "kernels": [],
+                "return_code": 2,
+                "receipt_error": "trusted global manifest is missing or has the wrong digest",
+            }
+        command.extend(
+            [
+                "--candidate-dir",
+                str(candidate_dir),
+                "--manifest",
+                str(manifest),
+                "--expected-manifest-sha256",
+                expected,
+            ]
+        )
+    elif topic.get("runner_kind") == "sublist":
         command.extend(
             [
                 "--candidate-dir",
