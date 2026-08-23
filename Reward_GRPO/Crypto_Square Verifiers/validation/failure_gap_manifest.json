@@ -1,0 +1,1660 @@
+{
+  "schema_version": 1,
+  "task_id": "crypto-square",
+  "source_run_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z",
+  "baseline": {
+    "source_commit": "133713036d844268086899342f300c987649ee72",
+    "module": "Reward_GRPO/crypto_square_grpo.py",
+    "hidden_verifier_sha256": "85666ccb159ecc8b2012b0d1bb0862a22a882a921a702973e2f91b11e775f524",
+    "kernel_count": 12
+  },
+  "official": {
+    "test_sha256": "3770199d92bda7e4551742ac2d5a30a1970318f18f92f29088f9704a6e67a676",
+    "policy_id": "CS-E03"
+  },
+  "source_population": {
+    "training_outputs": 2048,
+    "authenticated_receipts": 1240,
+    "format_or_truncated": 476,
+    "compile_failures": 264,
+    "sigfpe": 60,
+    "sigsegv": 6,
+    "timeouts": 2
+  },
+  "selection": {
+    "cases": 49,
+    "all_baseline_full_outputs": 20,
+    "unique_authenticated_kernel_vectors": 29,
+    "crash_representatives": 2
+  },
+  "classification_counts": {
+    "agreement_pass": 20,
+    "missed_failure": 0,
+    "restriction": 5,
+    "agreement_fail": 24,
+    "invalid": 0
+  },
+  "diagnostic_disagreements": {
+    "e05_rejects_official_pass": 5,
+    "e06_rejects_official_pass": 2
+  },
+  "cases": [
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_000",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_000",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_000",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "4257825ee2c7a0b42ab64e18ad7029a502e5258c24a99ac8a9e94bec86f315f6"
+      },
+      "stored_baseline_bits": "000000000000",
+      "replayed_baseline_bits": null,
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": -11,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_002",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_002",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_002",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "0084a4aa4038d8b144433923fc9e67a0f5207a272a962ad3a10ab64353d5b6c4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "110100110100",
+      "replayed_baseline_bits": "110100110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_003",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_003",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_003",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "3acde0a00ad0784aace80b82e8c13824575a9c2f8d3ce98d01f2230b966fc34e"
+      },
+      "stored_baseline_bits": "110010110110",
+      "replayed_baseline_bits": "110010110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_006",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_006",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_006",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "344847a9206a086b629a81251262e7722375321418bfe80bbff34889b29e77f5"
+      },
+      "stored_baseline_bits": "111110110110",
+      "replayed_baseline_bits": "111110110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_009",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_009",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_009",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "f4e0cb0f6b77d01c0a5ffee93c60230b6874e957857476bddc11d53dc56bce6e"
+      },
+      "stored_baseline_bits": "110110110110",
+      "replayed_baseline_bits": "110110110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_013",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_013",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_013",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "75117f96e0fa9cff76730535c42fb8d0425788c3c96feca012aaf4c76f8d0a65"
+      },
+      "stored_baseline_bits": "110000110000",
+      "replayed_baseline_bits": "110000110000",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_022",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_022",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_022",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "06c23175e377648c99e64a499bd0a1d872cd5fb44212485bc783ca619d36feb2",
+        "crypto_square.cpp": "a7d26b202c681d5b636d03c2f68b84612c5f6fc4257b9dfeefdfc3cbcf7cd569"
+      },
+      "stored_baseline_bits": "110111111110",
+      "replayed_baseline_bits": "110111111110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_028",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_028",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_028",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "942992699172c4073dfb64249725b502aab81d2956bed2999e152908d3e42011"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_035",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_035",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_035",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "82974db673ed2630bd83f118e06ebfc8ae45e606b56787285673b81284209f89"
+      },
+      "stored_baseline_bits": "110111110110",
+      "replayed_baseline_bits": "110111110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_040",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_040",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_040",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "5c688993a984e4d2ca1275b57be5f46b9a4cfbded226b6cab5890aa86e8b949b"
+      },
+      "stored_baseline_bits": "000000000000",
+      "replayed_baseline_bits": null,
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": -8,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_053",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_053",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_053",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "600c5d2d4da3a262f2d6bdd3eb0454d2d5f09d5a6a91bf45134dac2c658e3abc"
+      },
+      "stored_baseline_bits": "110101111100",
+      "replayed_baseline_bits": "110101111100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_063",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_063",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_063",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "8b5ce1f1fb16a989d186933a40f34591758ce5e56b3ac8c934747027338763cf",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "110000110100",
+      "replayed_baseline_bits": "110000110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_115",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_115",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_115",
+      "episode": "transpose-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "7a9370140114522914b2a7a4ae72748b1051e8b3a08c1aa1bc8f2ff87d91c4bc",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111100110100",
+      "replayed_baseline_bits": "111100110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_225",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_225",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_225",
+      "episode": "full-solve",
+      "candidate_sha256": {
+        "crypto_square.h": "482774167e8809b5d6b0812b70d7c46662374c5765924619e50dddc7bc1af2c3",
+        "crypto_square.cpp": "7e11fe7c979fa05991a9969969455166df7baef27db0208528f67f19fd4cadcd"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_233",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_233",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_233",
+      "episode": "full-solve",
+      "candidate_sha256": {
+        "crypto_square.h": "37ea4f140dff2914cc3ae69cd812ba191c080c69af5595a00ed62d4d3f1d3757",
+        "crypto_square.cpp": "bb719c80c483cdd1a678c4aaf4ab3eff0d72a5f75d6095928b2968032d89017c"
+      },
+      "stored_baseline_bits": "110101111101",
+      "replayed_baseline_bits": "110101111101",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "restriction"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_261",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_261",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_261",
+      "episode": "square-size-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "234d8e08385b7141187dd872d0a8a97896375aa6776856ee22c136cf3938bc2e"
+      },
+      "stored_baseline_bits": "111101111101",
+      "replayed_baseline_bits": "111101111101",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "restriction"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_306",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_306",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_306",
+      "episode": "transpose-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "d2c7692ecdda07370f1826e345ae164404412d1281ebe2625dbd1097d23399d1"
+      },
+      "stored_baseline_bits": "110101110100",
+      "replayed_baseline_bits": "110101110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_322",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_322",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_322",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "59f91bf3f7c36e32877513feb436a5fcf050a7047230cbcaf089a16f8f01f37d",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_334",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_334",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_334",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "9b8a864edce0b7ed2d06d6e0a2890a1135c9ba53a789d8a8da8e47e29c64613c"
+      },
+      "stored_baseline_bits": "110100111100",
+      "replayed_baseline_bits": "110100111100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_418",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_418",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_418",
+      "episode": "spacing-padding-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "c173a913039b1c9b2f52a8dee0927dadda770759ce18e7206a3f8bcfae271155"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_444",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_444",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_444",
+      "episode": "spacing-padding-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "ab16269ed25be32b221b830200aa6b204469416a5ec46a270a71690acf6471d4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "110110111110",
+      "replayed_baseline_bits": "110110111110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_502",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_502",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_502",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "c422ad65e6288d5bb63f1ce84bee41c7bf9f982fc6c5866b3b64ced1a8df5ce7",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_514",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_514",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_514",
+      "episode": "missing-definitions-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "09e39528fb231942ad72c568bd505c862d3530630eccaa001e1f79cb5a4d8989"
+      },
+      "stored_baseline_bits": "111000110100",
+      "replayed_baseline_bits": "111000110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_517",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_517",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_517",
+      "episode": "missing-definitions-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "bd1394be115c151034405589184f97956794d63e2c0b7c323c9380ea241096fa",
+        "crypto_square.cpp": "2a22417e86579f43201b2be58ffeade2492c125f53439eb2554ff16dd711e6ea"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_533",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_533",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_533",
+      "episode": "missing-definitions-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "060d32a164d40c029b20a75b4a89c279b4de4368e0dd3346d98813bbbeb02690",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111010110100",
+      "replayed_baseline_bits": "111010110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_549",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_549",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_549",
+      "episode": "spacing-padding-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "2e52ef6a67cb78453ac1ba0ec20b55e15b8a0decca7da32089b834ac1534bc9a"
+      },
+      "stored_baseline_bits": "010011110010",
+      "replayed_baseline_bits": "010011110010",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_559",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_559",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_559",
+      "episode": "spacing-padding-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "2a207e4879d0f8a92b68606fca951f9235a5d3881d86f4e741a2c58c87121c81"
+      },
+      "stored_baseline_bits": "010010110010",
+      "replayed_baseline_bits": "010010110010",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_600",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_600",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_600",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "256230f96ea638b33a0925142ef36b6628ed211db90d0afd9abfd1e48a455e06",
+        "crypto_square.cpp": "71de79261a06fac79e080524c2c27200118ffabf73f687f0fce9325c2e73cc51"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_617",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_617",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_617",
+      "episode": "full-solve",
+      "candidate_sha256": {
+        "crypto_square.h": "a50f86a9a80d47baaecc21f5bb79cc281aa0ae28ce17906de8ff86497eb741a3",
+        "crypto_square.cpp": "654d22f4b9c3f491ec0e7a6f02f7acf8a3ae6fef3c7761d2c78b8bdbd9f6bf07"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_618",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_618",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_618",
+      "episode": "full-solve",
+      "candidate_sha256": {
+        "crypto_square.h": "4278ea7e95d1449f77c596931cf4b6aba23b287257be957a965f8f9ebda09148",
+        "crypto_square.cpp": "69a8c45752916ac3623df26efeed6b00eadc3ea8cd22eabac90eeb37cef01c70"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_649",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_649",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_649",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "e91cb4cd2fcc12fd26cd8909401a771bfd28c741113ff8a42319564cf5047bd0",
+        "crypto_square.cpp": "a0aad363eb132712735a344c5ce1f303b2464ad975d03ad50f1691dbd8188595"
+      },
+      "stored_baseline_bits": "010000110000",
+      "replayed_baseline_bits": "010000110000",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_748",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_748",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_748",
+      "episode": "square-size-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "fc841df3bfd26586827c3e108376be52782cafbc8fe8621576ff3072a759a784"
+      },
+      "stored_baseline_bits": "110010110100",
+      "replayed_baseline_bits": "110010110100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_881",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_881",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_881",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "6580e926de04ad42b59a3973787c7d270bc811e36bce399a2eab0f6aa74a71fc",
+        "crypto_square.cpp": "6785df94baec076fa07fcda25549ecdd62215e57347da675046e5734ef1e4280"
+      },
+      "stored_baseline_bits": "110001110000",
+      "replayed_baseline_bits": "110001110000",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_969",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_969",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_969",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "b99cbbd396ec09d24e03cb98d3199ed75442e87fbf2b118637e71754de00c7a7",
+        "crypto_square.cpp": "a0087a3a8e965c264230397c011fe571dba22d2c59c36a3bd47ac20678ceec2a"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_1004",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_1004",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_1004",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "39f6a91351706c5dd7ea2736f7bfbe18861650b6a9ebfaeaf62607f63a081fb7",
+        "crypto_square.cpp": "073708a2b6566a02be4322c8422797412b2316b4a6efcb8a1647c3f9db268b24"
+      },
+      "stored_baseline_bits": "110100110110",
+      "replayed_baseline_bits": "110100110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1353",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1353",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1353",
+      "episode": "missing-definitions-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "a1b9889f944fb6cb18f8607581ed89d20cc0499357173cfe9565dbd9f8278475",
+        "crypto_square.cpp": "64d38614787b80b8da524f546a38cad5dd2039652cfce5a4a26c79ccea8f37d8"
+      },
+      "stored_baseline_bits": "110001111101",
+      "replayed_baseline_bits": "110001111101",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "restriction"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1372",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1372",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1372",
+      "episode": "missing-definitions-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "5847b2d26e6f12035a31ce0f6c62c71196afd6eda1411ef2815722569cbd590a",
+        "crypto_square.cpp": "12b8f0c85b8e5648211f0f5a6d2f5a867096b97aa5700fcb9e041855721ccba3"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1413",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1413",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1413",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "8905877d83c0ee0f432934ea74cbda20a7dc3c8ed76d31d2aa8910e1f4103325"
+      },
+      "stored_baseline_bits": "111010110110",
+      "replayed_baseline_bits": "111010110110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "fail",
+      "official_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        -1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        1,
+        -1,
+        -1
+      ],
+      "classification": "agreement_fail"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1430",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1430",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1430",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "5a9cbf0fa5500eb5f9ad3714d9bd3f1f8ae53e23d990ed0ec3411360e9c4a7b8"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1434",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1434",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1434",
+      "episode": "segment-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "a9f623472a0c6efe608e89b2deb0c77e996d3b2631a84cdf4e0e2c9f08383775"
+      },
+      "stored_baseline_bits": "111100111100",
+      "replayed_baseline_bits": "111100111100",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        1,
+        -1
+      ],
+      "classification": "restriction"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1484",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1484",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1484",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "747a0e9358362496f267e270ee59cc481f248c71df053151e8c71e87764e0d2d"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1503",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1503",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1503",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "0770698acf3ab4e0f45ea183ac385a505d860211994519cde702653e8b5b02cc"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1520",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1520",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1520",
+      "episode": "spacing-padding-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "82d39558889bf9c2e11e22f54ee2c72ad41517c442dc95f8cc4cca9e07af8bc6"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1559",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1559",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1559",
+      "episode": "square-size-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "019a94af1810c46a52cb0a8db4f1930bd37009568859b5558ebcf3c00f0cbb7a"
+      },
+      "stored_baseline_bits": "111110111110",
+      "replayed_baseline_bits": "111110111110",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "fail",
+      "e05_kernel_vector": [
+        1,
+        1,
+        -1
+      ],
+      "e06_status": "fail",
+      "e06_kernel_vector": [
+        -1,
+        1,
+        -1
+      ],
+      "classification": "restriction"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1668",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1668",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1668",
+      "episode": "transpose-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "ac1f31d5ab8d59fe388ff0490cb6d1beebaabfce06fbe4a70f70ebbf104c645e"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1672",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1672",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1672",
+      "episode": "transpose-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "d25754efc0a1051e086a9178fe97efab4678c6e70d0ac8bb0e4beb8649ac43d4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1693",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1693",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1693",
+      "episode": "transpose-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "25423a23928cccd46c84b0cc3b440aa6743ef417bb495b3491bc3d4882e7d61a"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1941",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_07/sample_1941",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1941",
+      "episode": "eval-feedback-repair",
+      "candidate_sha256": {
+        "crypto_square.cpp": "e084e4c71d4a95761549bca35d2b641ed2d1dcda3d0815c8edbfd8f29ff3c6f9",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    },
+    {
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1969",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_07/sample_1969",
+      "source_path": "cases/crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1969",
+      "episode": "normalization-repair",
+      "candidate_sha256": {
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9",
+        "crypto_square.cpp": "cbf03c0b143f433d83db7f7491e9fd8f6e57b422d9e77ce3638e0ce9d7ab91e1"
+      },
+      "stored_baseline_bits": "111111111111",
+      "replayed_baseline_bits": "111111111111",
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "official_status": "pass",
+      "official_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e05_status": "pass",
+      "e05_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "e06_status": "pass",
+      "e06_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "classification": "agreement_pass"
+    }
+  ]
+}

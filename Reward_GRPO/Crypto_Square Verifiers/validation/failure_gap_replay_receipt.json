@@ -1,0 +1,2222 @@
+{
+  "baseline_commit": "133713036d844268086899342f300c987649ee72",
+  "baseline_hidden_sha256": "85666ccb159ecc8b2012b0d1bb0862a22a882a921a702973e2f91b11e775f524",
+  "classification_counts": {
+    "agreement_fail": 24,
+    "agreement_pass": 20,
+    "restriction": 5
+  },
+  "compiler": "13.3.0",
+  "official_test_sha256": "3770199d92bda7e4551742ac2d5a30a1970318f18f92f29088f9704a6e67a676",
+  "sample_count": 49,
+  "samples": [
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": -11,
+      "candidate_sha256": {
+        "crypto_square.cpp": "4257825ee2c7a0b42ab64e18ad7029a502e5258c24a99ac8a9e94bec86f315f6",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_000",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "8db7c6c1786a1b3b3862eed49cef09d0dc7da8b1351950f5b5cd62cd69ff3614",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "e250695144b706c3ac8a2d987cec82edee0a89bf8c2cbab744ca7531a22ead41",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "30ca920e41b0645e98dc60abe23f17d49c9492ba9ae385bdf7177733ed4fc645",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": null,
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_000",
+      "source_unchanged": true,
+      "stored_baseline_bits": "000000000000"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "0084a4aa4038d8b144433923fc9e67a0f5207a272a962ad3a10ab64353d5b6c4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_002",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "6feb2ec2264a6139f8bf1267d53459aaef91eddfb0f4085d25f0166786cbe31f",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "ff9e5aa45a2a0fa604939d03f4ec13e845ff4704c8fd599340dee60112844911",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "cc07d22ccda5d719ea688336fdc840d7174fea31b146e441166798c6aa88b7ef",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110100110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_002",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110100110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "3acde0a00ad0784aace80b82e8c13824575a9c2f8d3ce98d01f2230b966fc34e",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_003",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "097ea0d49ebb23ea1c080d7a87873791e4634d48e39c1bbd4dc7ab40d604304e",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "f5019f7ee7568b783c500c2ed97c1253c65dcb7ff9e127db601db157d8047d3a",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "19cc14231f71465ae5d8d78f40c2826d3b09b4e9da9997da0abb98e4e594bb8a",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110010110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_003",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110010110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "344847a9206a086b629a81251262e7722375321418bfe80bbff34889b29e77f5",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_006",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "8fac1bf10d411df4a6cab23782de865b3bc9e7428b245d9c210449a64234a178",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "d1bf7eea9823fe935b83ad555c5ce2768aaa9fc9c5c2b0fa7b8025507f934a6b",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "ed68bb4686e9a85c1d633055b6d916db1ab45d1781711e1ceead52d93224ad43",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "111110110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_006",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111110110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "f4e0cb0f6b77d01c0a5ffee93c60230b6874e957857476bddc11d53dc56bce6e",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_009",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "55b4643619283e37d6cbde8ac90df3d3bf26c287d9c2d9b75f0118a38145b6e3",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "f6ab0088cba7208725365d70b2236bcdf515e07578db1aa5b3266a9d7e189c53",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "9968f268acb9013c14e350a618903f0f165f340dc2b9a1f9bf5aea8deae333c9",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110110110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_009",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110110110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "75117f96e0fa9cff76730535c42fb8d0425788c3c96feca012aaf4c76f8d0a65",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_013",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "d5c77915298dae6a8d2a5fda022b797854f3b7075ad9a1945540d76ac3724f36",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "d7e38538190fac3367c56076ffc45559850c470cc313e9c14278b42cd3115981",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "2b6d3469607e9c32d74289d5ee2e24666b8b489f67f6d0942551be17aca79bb4",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110000110000",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_013",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110000110000"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "a7d26b202c681d5b636d03c2f68b84612c5f6fc4257b9dfeefdfc3cbcf7cd569",
+        "crypto_square.h": "06c23175e377648c99e64a499bd0a1d872cd5fb44212485bc783ca619d36feb2"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_022",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "a146cc9888255f38448717aed92c35566186cc039703d7dbf5065b074df0379c",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "206e1f61447449ff6e5f5cf950c7509fc767da880158113370f3de353cf328f4",
+        "status": "fail"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "cedf39021602db95ae08d7222317e7355e716f42ffd08e2bec2f7d5d0e658943",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110111111110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_022",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110111111110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "942992699172c4073dfb64249725b502aab81d2956bed2999e152908d3e42011",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_028",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "2d0b9d632f9030f534e9c2874112dff40b4e66f6f44a9d10f024cdf9f264ad96",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "4bbc87d765c38d7abbe520db97674407b8d40b90aa76004fd1563dc394558e8a",
+        "status": "pass"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "b34c05c2a59e6b5d076776c4ac13156d3a13bb646ffeaa3a1de8bbc3908c407d",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_028",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "82974db673ed2630bd83f118e06ebfc8ae45e606b56787285673b81284209f89",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_035",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "9dbeeff278eae4ff2c6f8c67e011db5e383733d90efd09715239d6926fafdfc4",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "6bc393c4f706564c50a3e8fef2be8b8cc4c64321cbb33989f7033955329ed3d2",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "6ad30fc2c107ab22480146a58a9c519feeb4f22ace41aa0b7b331225cf24dd27",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110111110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_035",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110111110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": -8,
+      "candidate_sha256": {
+        "crypto_square.cpp": "5c688993a984e4d2ca1275b57be5f46b9a4cfbded226b6cab5890aa86e8b949b",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_040",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "72be40f95b129bf9ed4733b18b6f5104802074344939b71ca12df8e245942e2f",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "ad86d50d43395b5305d5aca6dd21f751c206a41f8eee62ea8e7e27351b3b6dc9",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "5a547099b3377a5bc18942f310f3b8b91bed5f8f6e181fe9dc37ff038aefc55c",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": null,
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_040",
+      "source_unchanged": true,
+      "stored_baseline_bits": "000000000000"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "600c5d2d4da3a262f2d6bdd3eb0454d2d5f09d5a6a91bf45134dac2c658e3abc",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_053",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "1b31763002bf6d9eafe4757c5a1e53140bf44024e175b1d6ae6723b88f484d8a",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "22e269af9d9a4a7773ac2aaa8c96eb0a1b6c0180c13cfc266465416b1b00ea13",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "23a389e4fb4d0023f0d29d9e8695a2e6b8f022f6bc2a50107080421aee15c769",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110101111100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_053",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110101111100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "8b5ce1f1fb16a989d186933a40f34591758ce5e56b3ac8c934747027338763cf",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_063",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "be31619ebb4b40d4d600ba8f0a0a7e9af3dea07af0e94ae46ec9d6982521b620",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "670488b538febfe8916535b6ac98c683bb0d474561459aa1ea1f727af7341db3",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "af03a253ec8a8ca428d3046ae3696f262785edb930a897a6d4ce605ecde395a6",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110000110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_063",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110000110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "7a9370140114522914b2a7a4ae72748b1051e8b3a08c1aa1bc8f2ff87d91c4bc",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_115",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "833449431bf31fc082579368040eccfaaff214ec49b081d6c5344afae0558ee8",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "8e79081370e17f9187cfcdee2c7e75c5ad895e5e534e0f3e7b9e8b2c93896c1f",
+        "status": "fail"
+      },
+      "episode": "transpose-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "84e7fc0e65e2543cacd8193297863a78e1ed9c5104615b002573a2191910b8ff",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "111100110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_115",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111100110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "7e11fe7c979fa05991a9969969455166df7baef27db0208528f67f19fd4cadcd",
+        "crypto_square.h": "482774167e8809b5d6b0812b70d7c46662374c5765924619e50dddc7bc1af2c3"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_225",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "934c5b77a0bcef55ebc70d13651b785a97348091135ddf9d58a01d6cc5a9dbc1",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "7d4a92b33e78b57756b88c4203296f202afd5f78d1351b62de43dcd6057a93d2",
+        "status": "pass"
+      },
+      "episode": "full-solve",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "d87eef7f11e3451d33a53c724d780d750a25d0f51bf3adf1d45d3df25b605131",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_225",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "bb719c80c483cdd1a678c4aaf4ab3eff0d72a5f75d6095928b2968032d89017c",
+        "crypto_square.h": "37ea4f140dff2914cc3ae69cd812ba191c080c69af5595a00ed62d4d3f1d3757"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_00__sample_233",
+      "classification": "restriction",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "6387fffeda0cd833b0ad474e9348e223b26557595b6f1fe564c0e9b6ff315dd3",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "65554eca96ea7cd8270120c0b106403aae413eb2f878ffc18132e4f4df608491",
+        "status": "pass"
+      },
+      "episode": "full-solve",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "a86a132580237e2042a7c9b680b6fc58fec66befa9fa94c59483c779a2b5edac",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "110101111101",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_00/sample_233",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110101111101"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "234d8e08385b7141187dd872d0a8a97896375aa6776856ee22c136cf3938bc2e",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_261",
+      "classification": "restriction",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "910503ab9aa29b844e4077b7f4594badfeee32099360d86fc294562671cbe7d0",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "5932ca2d26d77ef803ba8aa35b96a14e5883cf8ff5d29c153a25d0a2b8eab62f",
+        "status": "pass"
+      },
+      "episode": "square-size-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "e67c4621724d43a50b1544636308dac85bdc0434d980e132f51f2c8dac5b93a5",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111101111101",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_261",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111101111101"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "d2c7692ecdda07370f1826e345ae164404412d1281ebe2625dbd1097d23399d1",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_306",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "9c6e3c90406be411faadd0d1532e848a07e97e004361e21ae13b30e25832465e",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "3721ade771a19a195ab48388b28f51eb2386ea9051a3426be2c6fe5ef6bba1aa",
+        "status": "fail"
+      },
+      "episode": "transpose-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "670425f3b8eb1f9b8939667408d96847dfdd77eef826829d058b3c1bcba61572",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110101110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_306",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110101110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "59f91bf3f7c36e32877513feb436a5fcf050a7047230cbcaf089a16f8f01f37d",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_322",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "03e395a6535a4b0457707d36afa802273f70daa5b7762b650078df5d6a0951c4",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "65d89f3be371c84253ce0f8d874716544257b95533cd765da97ab863d34f9219",
+        "status": "pass"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "3181ca5dc6b713c8b0cde17196f114d53939d04cce385878519c92b89903a4f5",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_322",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "9b8a864edce0b7ed2d06d6e0a2890a1135c9ba53a789d8a8da8e47e29c64613c",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_334",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "218d5120e56d67945bee648d51ad635f3e43695a5a57d2b8295d99cebb32b6d9",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "4bc0a52bf30011169fdebf15c6123519255e3a0743ed80ec21e7d3b7cdafb622",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "83371987f35b0d1792debd7925a6609b2d4a31ba8b042d0191f98a45f4b8ea2c",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110100111100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_334",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110100111100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "c173a913039b1c9b2f52a8dee0927dadda770759ce18e7206a3f8bcfae271155",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_418",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "f112af18a5a17e96d0c27929f10dde53b9e5fc4ee079961e74e38565a27f0ddc",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "9b7b7efd4ef00e094766d2f28c16cda8e30cde50134d840e8bed9174faf9fc1f",
+        "status": "pass"
+      },
+      "episode": "spacing-padding-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "155bd194d641d65e19313f60967b73c1ca56f44279ad37ec7e5280618c933d71",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_418",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "ab16269ed25be32b221b830200aa6b204469416a5ec46a270a71690acf6471d4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_444",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "8fb273d32a0a55f84f80e1374ce37b225fd914abdefdba12643de1b8dfb1fcc9",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "78fe9b06d02b9c0f8f5fba88662118150d9257c331d98ecc5b4888c0c956c42e",
+        "status": "fail"
+      },
+      "episode": "spacing-padding-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "58ffc47fdca0f9a9b2e86f1c2ed9b2c3b50d5fa91d6bc2fb6fbdc9cd337ffccc",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110110111110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_444",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110110111110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "c422ad65e6288d5bb63f1ce84bee41c7bf9f982fc6c5866b3b64ced1a8df5ce7",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_01__sample_502",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "0df729bb207bd44f8dcb2bcaac0d5dde7a30ec62251ea1b32fe4aeefe10c8d5e",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "4feaf91acffa996a99fcd21ad970538585cbcbc578775c963fd104df6a608f2c",
+        "status": "pass"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "7383f271321660e0ebeb9a3476adaaef5f7bb5c8a11b88733ad68f196dae2df1",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_01/sample_502",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "09e39528fb231942ad72c568bd505c862d3530630eccaa001e1f79cb5a4d8989",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_514",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "230702fa163953b27675956169be9d78bc2e8800a695d77fee8da4a673728327",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "3943ac51a2375ed8e56aa76637d219434656c2fa23661c15d2a0adbfbfd8ad08",
+        "status": "fail"
+      },
+      "episode": "missing-definitions-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "530d48418155ea51512715f36c775fccdc7a65495c3ae7a7929be78b4cfd5315",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "111000110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_514",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111000110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "2a22417e86579f43201b2be58ffeade2492c125f53439eb2554ff16dd711e6ea",
+        "crypto_square.h": "bd1394be115c151034405589184f97956794d63e2c0b7c323c9380ea241096fa"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_517",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "909675243b34426bf4a4323b2a17804daf502b9a763d2006f493d97695569ba8",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "c2c0dd6171afce60e5018d0f745aa2e8365298ee8b3f7b0683b558959073249e",
+        "status": "pass"
+      },
+      "episode": "missing-definitions-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "6a46d86eb90f17a5bc0c7ac522ac818a3cd74a5efb2bb15dff906fe86f6ae1a4",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_517",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "060d32a164d40c029b20a75b4a89c279b4de4368e0dd3346d98813bbbeb02690",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_533",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "9f15a0e11ebb22b2fc161947e35078037d60307acd5eaa30e684e48c62eef789",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "81f9b6437a434dc51b8ae457161a758264b906c1990e0eb6ea7e8e3c6a2c7bc2",
+        "status": "fail"
+      },
+      "episode": "missing-definitions-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "ce5a4de865c877978bc01cbf9a03243dd97980cbc64690d5540572fd67beef3b",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "111010110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_533",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111010110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "2e52ef6a67cb78453ac1ba0ec20b55e15b8a0decca7da32089b834ac1534bc9a",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_549",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "dcd805c3cc4c2e63543b1f6e1f54fec4e5b35349cfeec94826bcf3066ced381a",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "441c5ba6dca81c1b6bb2a992f8dc354ae82ad3c7d51fab5988fef767718a9d9d",
+        "status": "fail"
+      },
+      "episode": "spacing-padding-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "42bb371cd955b6749f7210e5f5297f17855fc9f3a766d63390de60bc82b90913",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "010011110010",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_549",
+      "source_unchanged": true,
+      "stored_baseline_bits": "010011110010"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "2a207e4879d0f8a92b68606fca951f9235a5d3881d86f4e741a2c58c87121c81",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_559",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "db00abe48fc57b5c7d1f8d6f3cb8081e481ddc6da61bd81ac6fb9442da0f9f58",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "3d3c3c731827e352ffeeca075908783203d3bfcea4772cfb42c310752b7544ce",
+        "status": "fail"
+      },
+      "episode": "spacing-padding-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "d6a9d433b1a63b698cebabed78faa2fb2835e1fdaeb1b67681bac6433555e8dc",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "010010110010",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_559",
+      "source_unchanged": true,
+      "stored_baseline_bits": "010010110010"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "71de79261a06fac79e080524c2c27200118ffabf73f687f0fce9325c2e73cc51",
+        "crypto_square.h": "256230f96ea638b33a0925142ef36b6628ed211db90d0afd9abfd1e48a455e06"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_600",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "283a5af4888727cc1e5d9d543898647eabdb7fb1b46eebad57e55d48dcab7d3e",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "2d3175c92290080fc0450b67b317cbdf3e69fb8a747bc48819b29c6022d9804c",
+        "status": "pass"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "33e56b127c989b52134b42c527145e688ed72a2acd10ff752d33fd0c916cf8de",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_600",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "654d22f4b9c3f491ec0e7a6f02f7acf8a3ae6fef3c7761d2c78b8bdbd9f6bf07",
+        "crypto_square.h": "a50f86a9a80d47baaecc21f5bb79cc281aa0ae28ce17906de8ff86497eb741a3"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_617",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "ea0d479c8935ac9580e650015a1e3012e1c9ed42d3c8bcdaf6ad10efd224c13b",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "7d90c6b13a1466834b525fa456b6beb94e63922096c359c2aa661f6364fde350",
+        "status": "pass"
+      },
+      "episode": "full-solve",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "f98e5da68fe07bed06b992ffddc7cdbda4eb7be5c3c7695e39ef5cc866e5c99a",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_617",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "69a8c45752916ac3623df26efeed6b00eadc3ea8cd22eabac90eeb37cef01c70",
+        "crypto_square.h": "4278ea7e95d1449f77c596931cf4b6aba23b287257be957a965f8f9ebda09148"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_618",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "2f6263f61511ba0c5ae52e6f28eec279e3c8d1fa1648e88344bdfc10d270beee",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "6bf3acba1c62295fe9651ff20ea9695a3a599dc42a36a0789889779648eb31dd",
+        "status": "pass"
+      },
+      "episode": "full-solve",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "95b9e616e015266c701291f98f6a839f4f62f7ea7655aa6739af672ee1f3c97a",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_618",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "a0aad363eb132712735a344c5ce1f303b2464ad975d03ad50f1691dbd8188595",
+        "crypto_square.h": "e91cb4cd2fcc12fd26cd8909401a771bfd28c741113ff8a42319564cf5047bd0"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_649",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "7852df2fbf48ddf9e8279ee81827c7afc54de7d90f3ac535b2ef690e0dd68c65",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "27a5aacc0929446045ab0be7b38b45a54567adf74bb7d28ecc1594a41cedc330",
+        "status": "fail"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "0c6ceb8d11833a745a46316ad500a55b2a038dee3ba803f915351a33ee441878",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "010000110000",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_649",
+      "source_unchanged": true,
+      "stored_baseline_bits": "010000110000"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "fc841df3bfd26586827c3e108376be52782cafbc8fe8621576ff3072a759a784",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_02__sample_748",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "384bb9678a61d1d76d158aaf190dd572c87edc6c088e05c7615b889ae835673a",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "15e6b5a3f0b99c6626507b73a76342b39d50991eb4db539419e90390528c41be",
+        "status": "fail"
+      },
+      "episode": "square-size-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "7223c79385b9587f99ff8ebee84a27ba4f9941503b5aaa139ec5357317117128",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110010110100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_02/sample_748",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110010110100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "073708a2b6566a02be4322c8422797412b2316b4a6efcb8a1647c3f9db268b24",
+        "crypto_square.h": "39f6a91351706c5dd7ea2736f7bfbe18861650b6a9ebfaeaf62607f63a081fb7"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_1004",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "2303349afb0e07046588cdb8370ab885540b0987c1e102d2757d388dd9810c91",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "4e07cb4eda40f5f51c3cb28979377268fc53c61f58a95f57d81a230ca3fa4533",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "c11b86ef6b6574c7a64d36712d704bc8fb6abac2d4bdc99f618333288ca6a45c",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110100110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_1004",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110100110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "6785df94baec076fa07fcda25549ecdd62215e57347da675046e5734ef1e4280",
+        "crypto_square.h": "6580e926de04ad42b59a3973787c7d270bc811e36bce399a2eab0f6aa74a71fc"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_881",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "7439900ebd2cff9b6119207fb645d781b7773b4a0dbcf75a4d4c4c6d2c09a8cc",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "1d242b8782e5d620b7c6d8a979c58543f1f636f0fccb392b817eedd98412198d",
+        "status": "fail"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "4f4e133738de2dadef77e220d0e6ed85b6b89eb604f725d739d05c5c069b598a",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "110001110000",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_881",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110001110000"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "a0087a3a8e965c264230397c011fe571dba22d2c59c36a3bd47ac20678ceec2a",
+        "crypto_square.h": "b99cbbd396ec09d24e03cb98d3199ed75442e87fbf2b118637e71754de00c7a7"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_03__sample_969",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "2e07b0c4785f7318ec2423544e8f1583a725877fe5cc24bff87a4dfb3c8a3e90",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "219826beffc0a1eb1741608ce53c2595c5a9173f07f168dcb39201dfba60cc12",
+        "status": "pass"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "611782508cbb4d0e1e6d4fbfccb93706f34ce3dbdb5470ad32182be9d05a7bec",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_03/sample_969",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "64d38614787b80b8da524f546a38cad5dd2039652cfce5a4a26c79ccea8f37d8",
+        "crypto_square.h": "a1b9889f944fb6cb18f8607581ed89d20cc0499357173cfe9565dbd9f8278475"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1353",
+      "classification": "restriction",
+      "e05": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "e5d819a34221b6aedc4805119c18b1109b1e64cc64470974a35e181f19baa324",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "e1e18d4e4cfdda76946a451bcee65a1e0bbc88881086720d13b72348c995b164",
+        "status": "pass"
+      },
+      "episode": "missing-definitions-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "8bf4e70ce4d79d57a4954de46b69d088366c1de752662cdc0cef6158b5964f93",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "110001111101",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1353",
+      "source_unchanged": true,
+      "stored_baseline_bits": "110001111101"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "12b8f0c85b8e5648211f0f5a6d2f5a867096b97aa5700fcb9e041855721ccba3",
+        "crypto_square.h": "5847b2d26e6f12035a31ce0f6c62c71196afd6eda1411ef2815722569cbd590a"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1372",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "a3d18327acdd33a7ed478e10689fff03c2158b0f9fc83a6cde06e6c23225ab2c",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "d4e4b640169e1d3d85c69510182420b5460c216c10614189c93fbd9a93661056",
+        "status": "pass"
+      },
+      "episode": "missing-definitions-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "04ef861721a5badc6fbaa4940d99d5625ad2a5154bcc8d6121c856a086f24a2d",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1372",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "8905877d83c0ee0f432934ea74cbda20a7dc3c8ed76d31d2aa8910e1f4103325",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1413",
+      "classification": "agreement_fail",
+      "e05": {
+        "kernel_vector": [
+          -1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "f84c06f7f3cda3dbf2b0870fb944eb8d09485f232574d2cc7262f1c23c2ace3c",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          -1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "a0ce62bbbf840dbe457594ed914a54c86c70f08d3b5f4d651b3c784208e3ba36",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "fa1a14c0b896b125ea9dbf6fd5f888b257a43488980187a71fd4667cd5f86cfe",
+        "status": "fail"
+      },
+      "replayed_baseline_bits": "111010110110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1413",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111010110110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "5a9cbf0fa5500eb5f9ad3714d9bd3f1f8ae53e23d990ed0ec3411360e9c4a7b8",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1430",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "cba5ac63a05bb87debf9dcf6f4741096c61af0c51d713be0c2e911d6a32b04fa",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "ef9a8be862b34b899545b0558cc20f2dd9594e0fe5f70d4ad44c6b56c1690e44",
+        "status": "pass"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "11f2760047b803599fe095088c50e160a684e5320bc72e8fd74afd7438d04cdb",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1430",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "a9f623472a0c6efe608e89b2deb0c77e996d3b2631a84cdf4e0e2c9f08383775",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1434",
+      "classification": "restriction",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "4e53c31c75ec7580ea081480d1929df71608ee2892a68b5634aa498500dde758",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "f651865a1e5d4a5e28004a7fe20952497bdebf484e88d2b59c8794cd21a2e1cd",
+        "status": "fail"
+      },
+      "episode": "segment-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "d77e47a89e31d3bc91de1552c87e5d7bdeb5f2b8418ff452a8a9b8aa8ba950cd",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111100111100",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1434",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111100111100"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "747a0e9358362496f267e270ee59cc481f248c71df053151e8c71e87764e0d2d",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1484",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "c377fa48da2931588163d76bedf35330f821cddc3837f122dff2b80372f4b729",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "435ebb8a78d8376564ed4e4f2d4ab9522a3f7ca8ccdabc6bb218754dbd2f8286",
+        "status": "pass"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "41083e4731f3ec968ffc1f5cc172db746dbe424e2c5e37f0146f2d76e4a9a351",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1484",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "0770698acf3ab4e0f45ea183ac385a505d860211994519cde702653e8b5b02cc",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1503",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "fe8871a631be8fb0a33488c90ea693c2effbc81d57b3e8125dd1b9dd886021a3",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "726b87d5396f1673d2d4d3bac2a396ce88db85eec659253464b6fa4cac4442c5",
+        "status": "pass"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "6266b36e3a41ff0f5c10888c05cdf56e3e62bc40c8f503ae64565fedc73e624a",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1503",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "82d39558889bf9c2e11e22f54ee2c72ad41517c442dc95f8cc4cca9e07af8bc6",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_05__sample_1520",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "cb97ecd05ce3007355c01178308e4af25ed381c593705fae7d4b70c98b5d88bf",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "88774f1279b3c4154cdc06ac2de900ade775bf85ac8783d46b2a220514dd3aaa",
+        "status": "pass"
+      },
+      "episode": "spacing-padding-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "70c329dedb6cfa817e0e12ae4b016c163ab0cc91738a3439ff1ec157eae6594c",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_05/sample_1520",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "019a94af1810c46a52cb0a8db4f1930bd37009568859b5558ebcf3c00f0cbb7a",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1559",
+      "classification": "restriction",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "b82a927c2073ce4a8a609343370c92d35ee1f77d112f4ee584e503215bc77074",
+        "status": "fail"
+      },
+      "e06": {
+        "kernel_vector": [
+          -1,
+          1,
+          -1
+        ],
+        "process_returncode": 1,
+        "receipt_sha256": "870f4a2dc4f0627097263ca96192a4debceda3d27294f4d4f8219d8138bc09b7",
+        "status": "fail"
+      },
+      "episode": "square-size-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "19b6d70267dff4df3d721412c1289171e868d15ebd9c08bab9227a2f1c3287d8",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111110111110",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1559",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111110111110"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "ac1f31d5ab8d59fe388ff0490cb6d1beebaabfce06fbe4a70f70ebbf104c645e",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1668",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "a2a92916be6c16a32419b3007bc49ff833353392f561a6d38a4a785c9ad115e9",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "0b5844092ff78eab6db6e5a8868b50a5ea8566bf37e8735e5272d335ef16e7b4",
+        "status": "pass"
+      },
+      "episode": "transpose-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "4039d4d5ee89bfc4af84beb2ace6a0ba2e073c13c70bccb75ef135f5c96abec2",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1668",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "d25754efc0a1051e086a9178fe97efab4678c6e70d0ac8bb0e4beb8649ac43d4",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1672",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "a6b9e3f04841720a01a33a57558b9074540665bb7f8f7f0ee93fb6357efa3aaf",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "d38fcfc14ecf5a1740ee5198ea14644d0458141e78b8492ed60ac8d6214008d4",
+        "status": "pass"
+      },
+      "episode": "transpose-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "badd3d0d4403b4e56a76576dbd203f5e1700bb8c069122dcb9a43f496127621b",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1672",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "25423a23928cccd46c84b0cc3b440aa6743ef417bb495b3491bc3d4882e7d61a",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_06__sample_1693",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "5e723043db993e7281b292cd12baa84e460d9db80e50ff769a22da2397a813ca",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "9d5d3febd51606b6942676d49327fd3f6c2bb066fde50393efc439d4471d29f4",
+        "status": "pass"
+      },
+      "episode": "transpose-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "b3620d55495428630f5efc18458fe8b707ee7655d76b1c494a9c06498f4c430f",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_06/sample_1693",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "e084e4c71d4a95761549bca35d2b641ed2d1dcda3d0815c8edbfd8f29ff3c6f9",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1941",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "5bbfa5dcc31f7156e3bd9aa3ef2799edb8f0fdce16262a58241b076a2646c8ec",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "af337f9eb817bd55e13da20aefe553d021b5c5fe5494902909a09f5b52ee7a73",
+        "status": "pass"
+      },
+      "episode": "eval-feedback-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "d5b266d2c421f716b83594bb76e0cfb678d23cb2c5f0c9dc23905c63d5d30aee",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_07/sample_1941",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    },
+    {
+      "baseline_compile_returncode": 0,
+      "baseline_run_returncode": 0,
+      "candidate_sha256": {
+        "crypto_square.cpp": "cbf03c0b143f433d83db7f7491e9fd8f6e57b422d9e77ce3638e0ce9d7ab91e1",
+        "crypto_square.h": "9aea01c2c5ac9f5c1ace6fe88e2d0c6c057e75eba0dbe20ae48f77eaef6794e9"
+      },
+      "case_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z__grpo_07__sample_1969",
+      "classification": "agreement_pass",
+      "e05": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "3d0585aff000ab1563ebdb8150c171183851ba0ce50c4e60eaa5c3c58e7569cf",
+        "status": "pass"
+      },
+      "e06": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "090849e4d8d5b7ffd26fdc4e9eff60d8726f41c4d21cd380a4a05c832188a943",
+        "status": "pass"
+      },
+      "episode": "normalization-repair",
+      "official": {
+        "kernel_vector": [
+          1,
+          1,
+          1
+        ],
+        "process_returncode": 0,
+        "receipt_sha256": "ee049806023816a85a3450f18873e96a8a17d02b7ef467562b10f3513613e4e4",
+        "status": "pass"
+      },
+      "replayed_baseline_bits": "111111111111",
+      "source_sample_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z/grpo_07/sample_1969",
+      "source_unchanged": true,
+      "stored_baseline_bits": "111111111111"
+    }
+  ],
+  "schema_version": 2,
+  "source_run_id": "crypto-square-kernel12-grpo20-rerun-20260821T173527Z",
+  "task_id": "crypto-square"
+}

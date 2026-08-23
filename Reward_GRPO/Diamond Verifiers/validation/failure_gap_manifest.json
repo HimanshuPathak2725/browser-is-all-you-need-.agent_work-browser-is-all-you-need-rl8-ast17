@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "local-aider-cpp/diamond",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_archive": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "evaluation_controls": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "model": "openai/glm-4.7-flash-grpo",
+    "edit_format": "whole",
+    "max_turns": 2,
+    "trial_count": 4
+  },
+  "current_verifier_sha256": {
+    "E01": "39cb158f94527e5a13289a098ff388e47adf1380b60e42e6a3b84e4038e8b310",
+    "E02": "39cc621d878af7202075d6456e7bbbd59147cafc13de10f2ddb5e01af30fe89d",
+    "E03": "029384caff3b56714ba21a868620abcead548b6b2f9a669e17bd017bab80ec5c",
+    "E04": "f700cecf12e2e29c547bc3b17269d17c972cf66761741692cf025499d2bfa692",
+    "E05": "86c77363008cb7b10e050dc94b22469aa86b11d9635f71d00b21c349f0561913",
+    "E06": "06f8b5de0cf95d76bda2b108de507dd6823a30387ec852f0afc8b02db4690a20",
+    "E07": "4ebda1fb269a52d3012a9bab300d890e955339e64647a4b22d3b95921dd67c46",
+    "E08": "24f83208b47c950d5f345e75d71d74e35331bd9370626fa5a3d99b3620ffa4ad",
+    "E09": "6915f460a0eca6fc7bad139d74d70212adfda75e742f7656600fa28ebb24a872",
+    "E10": "f1486c566d9825376ea9093900a30e9bfcfa7b03a24a2783496761138167eb6d"
+  },
+  "static_replay_policies": ["E01", "E02", "E03", "E04", "E05", "E06", "E09"],
+  "non_static_policies": {
+    "E07": "requires an authenticated two-turn feedback bundle",
+    "E08": "requires an authenticated Aider response/tree/log bundle",
+    "E10": "requires host Clang 18.1.3 plus the pinned offline Clang container"
+  },
+  "official": {
+    "policy_id": "E05",
+    "test_sha256": "235fc2baac052df9b1efd981d93924b37a738dc85e5b056547a78eeb8840da3f",
+    "expected_test_cases": 5
+  },
+  "source_evidence_sha256": {
+    "trial_1_chat": "a24a05507f0982f6531206b5ff328a8c64f3af4a992cb6c3b06c9475f2f59e3f",
+    "trial_1_results": "79c01931de4f33768138383f383bd4cb143696a90bddd751f9acc33b5e756b77",
+    "trial_2_chat": "e552d0c17fb764e691eef902669bafabfe5ad672df71e163a9a283ba45b7f3ce",
+    "trial_2_results": "71d839a357cf185f31c03d4a58bdaec68185798fea0794dd2e32e8e8f4f388f0",
+    "trial_3_chat": "9704298fb04a9f3be229e6e1c626a8c2b9936600876e559805635f780adcf2c9",
+    "trial_3_results": "b7a68b04f0c03d7b962c379c144098e0ee9c0685de6272c10c7dc40f3756caa1",
+    "trial_4_chat": "56c2089c455d7f5bf7e75444c8b52d283215ef60dbdf1db6b4601a9840cac125",
+    "trial_4_results": "bf2fbe466baab3f4bc2cd99a918c81986c74ebcd0f6212db31d48eb36154f881"
+  },
+  "observed_outcome": {
+    "pass_at_1": "0/4",
+    "pass_by_turn_2": "0/4",
+    "infrastructure_invalid": 0,
+    "context_exhausted_trials": 3
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "source_sample_id": "trial-1/diamond/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_1_turn_1",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993"},
+      "source_outcome": "fail",
+      "failure_class": "unsigned-spacing-underflow-and-invalid-allocation",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_1_final",
+      "source_sample_id": "trial-1/diamond/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_1_final",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b"},
+      "source_outcome": "fail",
+      "failure_class": "wrong-glyph-placement-and-filled-center",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_turn_1",
+      "source_sample_id": "trial-2/diamond/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_2_turn_1",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836"},
+      "source_outcome": "fail",
+      "failure_class": "char-int-minmax-template-mismatch",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_final",
+      "source_sample_id": "trial-2/diamond/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_2_final",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4"},
+      "source_outcome": "fail",
+      "failure_class": "wrong-width-glyph-and-padding-geometry",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "source_sample_id": "trial-3/diamond/turn-1-no-edit",
+      "source_path": "cases/midband_rl_v2_trial_3_turn_1",
+      "candidate_sha256": {"diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89", "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191"},
+      "source_outcome": "fail",
+      "failure_class": "pristine-wrong-public-api-after-no-edit-response",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_final",
+      "source_sample_id": "trial-3/diamond/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_3_final",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8"},
+      "source_outcome": "fail",
+      "failure_class": "inverted-outer-spacing-geometry",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "source_sample_id": "trial-4/diamond/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_4_turn_1",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77"},
+      "source_outcome": "fail",
+      "failure_class": "unused-variable-warning-and-wrong-geometry",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_final",
+      "source_sample_id": "trial-4/diamond/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_4_final",
+      "candidate_sha256": {"diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4", "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab"},
+      "source_outcome": "fail",
+      "failure_class": "wrong-width-duplicate-rows-and-glyph-geometry",
+      "expected_classification": "agreement_fail"
+    }
+  ]
+}

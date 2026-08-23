@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "task_id": "perfect-numbers",
+  "source_run_id": "execution-bank-RL-v2-think-r2",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_eval_root": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "official": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "polyglot_revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "pinned_instructions_sha256": "8db797c5f8e9c0efbb8c805ddefca892f764b4f3a72dff65c037f4bffb92b1cb",
+    "source_overlay_instructions_sha256": "6f06b35f9f78708451c8b5aab69cfeb2f72333abcafff5cd769b59f71d4b1506",
+    "test_sha256": "fa206f8feaa1f8aa63986db34fc96458b30ab0325c0855fd6659ab7cbcb50be3",
+    "selected_tests": 13
+  },
+  "current": {
+    "verifier_sha256": {
+      "E01": "6d402b5b311c5520dca0fbff5fd09f236acdf297c05419c7001d5156108c9781",
+      "E02": "4877ace2d9440860ae9f1c102c596e741a845a5f5e22d5fd6344e48a885b8c37",
+      "E03": "091a7e3d1f1cd50795781d3488ffae55c66b535ab937e54b73a9efe5c58bf51d",
+      "E04": "c98b7eaf529dd009cb9fd84873c539ef7b7dd017a161ca5e0cf24157f3b3d0ae"
+    },
+    "source_kernel_count": 11,
+    "trajectory_kernel_count": 4,
+    "terminal_source_gate": ["E01", "E02", "E03"]
+  },
+  "aggregate": {
+    "trials": 4,
+    "pass_at_1": "2/4",
+    "pass_by_turn_2": "3/4"
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "source_sample_id": "trial-1/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_1_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "missing public API; pristine skeleton reached compiler",
+      "candidate_sha256": {
+        "perfect_numbers.h": "9d84495c95cda18068954a2c389afa9e792cc534699dfda52f210b4648f99c80",
+        "perfect_numbers.cpp": "70dd79e4d85cee28284c68781066701f9928e23fbe7b58f73913463cf1c19e75"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_1_final",
+      "source_sample_id": "trial-1/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_1_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "successful API and semantic repair",
+      "candidate_sha256": {
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad",
+        "perfect_numbers.cpp": "eddb1f83ab26ffad71580f723b86bbfd98f5655880183870063d5394086c452c"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_final",
+      "source_sample_id": "trial-2/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_2_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "first-turn pass",
+      "candidate_sha256": {
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad",
+        "perfect_numbers.cpp": "960e67fe52b481b32f8ab445c4132958d2bd5dfd1418ebb64b0fd55b51d70c56"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_final",
+      "source_sample_id": "trial-3/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_3_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "first-turn pass",
+      "candidate_sha256": {
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad",
+        "perfect_numbers.cpp": "7bc00d64664a70496f61115fc54fd6bcdce333797b3355ca0f64c278cb6fadae"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "source_sample_id": "trial-4/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_4_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "classify(1) returned perfect; 12/13",
+      "candidate_sha256": {
+        "perfect_numbers.h": "71974fefd439c399e0ea1e4921c8da2f0aa4d3073b3e74d1ff324c7d832efc12",
+        "perfect_numbers.cpp": "74e1a1b120085511ea0e4ec44abda0a702c297b479fd51b6bfc146996735adb4"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_final",
+      "source_sample_id": "trial-4/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_4_final",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "repair fixed 1 but dropped divisor 1; perfect cases regressed; 10/13",
+      "candidate_sha256": {
+        "perfect_numbers.h": "71974fefd439c399e0ea1e4921c8da2f0aa4d3073b3e74d1ff324c7d832efc12",
+        "perfect_numbers.cpp": "dd93d380de5acbd961e6ccfdbb0fdbd1bc76044a4ff2fde244dfb191b8f6d779"
+      }
+    }
+  ],
+  "source_artifact_sha256": {
+    "trial_1_chat": "a49a1bb1c043cf413aa5bf47aaadf844a7508740299127383a923475358cdec0",
+    "trial_1_results": "464dd9f6cd9c54cd6bc8e7a2d9bf09aa589c8210de415be1e2cd02d58fa0fd2e",
+    "trial_2_chat": "02d7858e28931e310ad64b8e4fa1eefca9be1ae20d17f45c67f62970da9d0364",
+    "trial_2_results": "4d6cb3984fbedf2107fce32af7fe0806c75c8ed0c0e65f3ef28ccfc36c3a7867",
+    "trial_3_chat": "04435f346784d93bd591f7e4722448c7dd24268dbb263ed8348d3ecaf6e1cd15",
+    "trial_3_results": "fe1188ab6c0827a831f90159640b929efc47efda1897a8a4d9621537bc9cf9ab",
+    "trial_4_chat": "919455c2999b0cc4e6c21370c390db69ef0e7f6e8f7f1246155efce142dff66a",
+    "trial_4_results": "b6a25e1f5bee7cd0849001ef90cef4ffe8e525f49f527b7c7f5ed342726707c2"
+  }
+}

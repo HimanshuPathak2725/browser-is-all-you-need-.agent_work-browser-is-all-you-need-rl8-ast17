@@ -194,27 +194,46 @@ def _invalid(kernel_id: str, summary: str) -> KernelReceipt:
     return KernelReceipt(kernel_id, None, "INVALID", summary)
 
 
-def verify_2a_exact_member_signature(ctx: Context) -> KernelReceipt:
-    probe = _write_probe(ctx, "2a_exact_member_signature.cpp", """#include \"allergies.h\"
+def verify_2a_supported_member_signature(ctx: Context) -> KernelReceipt:
+    probe = _write_probe(ctx, "2a_supported_member_signature.cpp", """#include \"allergies.h\"
 #include <string>
+#include <type_traits>
 
-using required_signature = bool (allergies::allergy_test::*)(std::string const&) const;
-[[maybe_unused]] constexpr required_signature required_method = static_cast<required_signature>(&allergies::allergy_test::is_allergic_to);
+template <typename T, typename = void>
+struct has_string_reference_overload : std::false_type {};
+
+template <typename T>
+struct has_string_reference_overload<T, std::void_t<decltype(
+    static_cast<bool (T::*)(std::string const&) const>(&T::is_allergic_to)
+)>> : std::true_type {};
+
+template <typename T, typename = void>
+struct has_c_string_overload : std::false_type {};
+
+template <typename T>
+struct has_c_string_overload<T, std::void_t<decltype(
+    static_cast<bool (T::*)(char const*) const>(&T::is_allergic_to)
+)>> : std::true_type {};
+
+static_assert(
+    has_string_reference_overload<allergies::allergy_test>::value ||
+    has_c_string_overload<allergies::allergy_test>::value
+);
 
 int main()
 {
     return 0;
 }
 """)
-    obj = ctx.output_dir / "objects" / "2a_exact_member_signature.o"
+    obj = ctx.output_dir / "objects" / "2a_supported_member_signature.o"
     try:
         command = _compile(ctx, "2a_compile", probe, obj)
     except CommandStartError as error:
         return _invalid("2A", f"compiler process could not start: {error}")
     artifacts = {probe.name: _sha256(probe)} | _hash_if_artifact(obj)
     if command.returncode == 0 and not command.timed_out and _hash_if_artifact(obj):
-        return _pass("2A", "exact string-based member signature exists", [command], artifacts)
-    return _fail("2A", "required string-based member signature did not compile", [command], artifacts, {"timed_out": command.timed_out})
+        return _pass("2A", "an official-compatible string member signature exists", [command], artifacts)
+    return _fail("2A", "no official-compatible string member signature compiled", [command], artifacts, {"timed_out": command.timed_out})
 
 
 def _caller_kernel(ctx: Context, kernel_id: str, stem: str, source: str, success: str, failure: str) -> KernelReceipt:
@@ -260,12 +279,11 @@ int main()
 
 def verify_2c_const_object_call(ctx: Context) -> KernelReceipt:
     return _caller_kernel(ctx, "2C", "2c_const_object_call", """#include \"allergies.h\"
-#include <string>
 
 int main()
 {
     const allergies::allergy_test value{0u};
-    const bool result = value.is_allergic_to(std::string{"eggs"});
+    const bool result = value.is_allergic_to("eggs");
     (void)result;
     return 0;
 }
@@ -313,7 +331,7 @@ def main() -> int:
         if output_dir.exists() and output_dir.is_dir() and not any(output_dir.iterdir()):
             _write_receipt(output_dir, _invalid_receipt(str(error)))
         return 2
-    kernels = [verify_2a_exact_member_signature(ctx), verify_2b_string_literal_call(ctx), verify_2c_const_object_call(ctx)]
+    kernels = [verify_2a_supported_member_signature(ctx), verify_2b_string_literal_call(ctx), verify_2c_const_object_call(ctx)]
     receipt = _make_receipt(ctx, kernels)
     _write_receipt(output_dir, receipt)
     return 0 if receipt["overall_status"] == "PASS" else 1 if receipt["overall_status"] == "FAIL" else 2

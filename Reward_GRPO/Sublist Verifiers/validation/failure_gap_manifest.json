@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "task_id": "local-aider-cpp/sublist",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_archive": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "evaluation_controls": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "model": "openai/glm-4.7-flash-grpo",
+    "edit_format": "whole",
+    "max_turns": 2,
+    "trial_count": 4
+  },
+  "current_verifier_sha256": {
+    "E01": "b7685ce8c2532dbe39320b847e0748d269ae4bfa58499b1e33986cd33e3453a8",
+    "E02": "d6868be630fc5ad80767a4774abb3aebf11c480f1e4dd932050769747a471dd5",
+    "E03": "2690937fa015585dae441542bf02e722e2dad234e8fa2ceaf3401343fe7493d9",
+    "E04": "289e11b66f1845537579b9df1be08899967f66262ad5a6705d12294c99b259b3",
+    "E05": "e4d5db5c7e556a8fda421dbce1c49cfd7a2055861c28478bbba637ca907ed2b5",
+    "E06": "a96024bcf74bfe1474ee4730de142c8a8a6bc70673226d9008d87978d8d04116",
+    "E07": "f6203a5d846842785b39fb82e7334fb785717a1d01bba4d3b5dc79f1a26955f6",
+    "E08": "dd32e6ad89a0d87dabb4dd2d9df6d2d7f6f675b36d78618070e62e3ceef921e9",
+    "E09": "82c12f47e761a88c19d74908f49caa4dfae647347943eef2e41fb4207b78b9a4",
+    "E10": "419e4e4282208a82c5b9305258ac1e2de64873f85261a0397d165bf1a74eca20"
+  },
+  "shared_runtime_sha256": "2abd93bfa7f00f47ea506ef92c3ed366cf038d67ad8e56ae72a06d66b813a51c",
+  "candidate_replay_policies": ["E01", "E02", "E03", "E04", "E05", "E06", "E09"],
+  "portability_policy": {
+    "E10": "replayed separately under host Clang 18.1.3 and immutable offline Clang 18.1.8; the pinned GCC 13.3.0 image correctly reports missing clang++ as INVALID"
+  },
+  "bundle_policies": {
+    "E07": "requires a separately authenticated two-turn feedback bundle",
+    "E08": "requires a separately authenticated response/context/harness bundle"
+  },
+  "official": {
+    "policy_id": "E05",
+    "test_sha256": "7120a4a2fa383db1f2f0184c5cb58c46960b39458d37bb3965dfb382ed4f0d00",
+    "expected_test_cases": 18,
+    "instructions_sha256": "87fec6e1b999116669e838100fe3e1b3880317b667b8948f6a4f85de07a81288",
+    "task_manifest_sha256": "d45dc8c37c869f3c28248fe6aa3f4db2bf616cafa2e37b2a38b337ced4e1d0cf"
+  },
+  "source_evidence_sha256": {
+    "trial_1_chat": "7fbf308dfe0353dd9823aba2edff27f40d003cca3f150d93e78b296ba220551b",
+    "trial_1_results": "8597c7d943fc315c0f5c40586b1a51ae21dcb276599bbb7d7c462b9bc41d26d6",
+    "trial_2_chat": "e47cfa8aa8af23560a61b4d9740e9e31384544db4d6a84f7b6f71a200659f1ee",
+    "trial_2_results": "4a2648ea4b815fa9a86a78cbdd28a53d9cd1563a611856444821f5accb40d028",
+    "trial_3_chat": "3bf8a3e4bc5353d21e6f380be395b1df8b2aa5f78766bb15fb211b6d7764d03b",
+    "trial_3_results": "d26001a3d1521ebc64abf99e073536e44d586d0abffa7276ef064d1affeb9529",
+    "trial_4_chat": "54310048184e33e1475c9e411f581bb80910cf2201141cf251a519eaff7ddd2f",
+    "trial_4_results": "b4b3f4b04cd569b7f2d08df975805e2d28977c18b6d6991023a395da29bc269b"
+  },
+  "observed_outcome": {
+    "pass_at_1": "4/4",
+    "pass_by_turn_2": "4/4",
+    "infrastructure_invalid": 0,
+    "context_exhausted_trials": 1,
+    "context_note": "Trial 2 reported an Aider context-window metadata error after producing a candidate that passed 18/18; this is response/harness evidence, not a semantic candidate failure."
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_final",
+      "source_sample_id": "trial-1/sublist/final",
+      "source_path": "cases/midband_rl_v2_trial_1_final",
+      "candidate_sha256": {
+        "sublist.cpp": "1c41dca978044b03bb3b526d44fe468a18e0d968ad528bac55cb43c932e066f3",
+        "sublist.h": "61aa3d12d4b9523d663c9f2abb59a813a3d35eba6fd9f12c55e43cba5b463e62"
+      },
+      "source_outcome": "pass",
+      "failure_class": "none-std-search-contiguous-window",
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_final",
+      "source_sample_id": "trial-2/sublist/final",
+      "source_path": "cases/midband_rl_v2_trial_2_final",
+      "candidate_sha256": {
+        "sublist.cpp": "b1e4436d8cfe50891f0adc451693240ae216c04aaa4171e1777874fba9127501",
+        "sublist.h": "61aa3d12d4b9523d663c9f2abb59a813a3d35eba6fd9f12c55e43cba5b463e62"
+      },
+      "source_outcome": "pass",
+      "failure_class": "none-context-metadata-error-after-semantic-pass",
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_final",
+      "source_sample_id": "trial-3/sublist/final",
+      "source_path": "cases/midband_rl_v2_trial_3_final",
+      "candidate_sha256": {
+        "sublist.cpp": "0eda88a59bb0ff381f0a31d0921614c9f1a0d276eca79e3df69095cdf6885a4f",
+        "sublist.h": "61aa3d12d4b9523d663c9f2abb59a813a3d35eba6fd9f12c55e43cba5b463e62"
+      },
+      "source_outcome": "pass",
+      "failure_class": "none-explicit-contiguous-window",
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_final",
+      "source_sample_id": "trial-4/sublist/final",
+      "source_path": "cases/midband_rl_v2_trial_4_final",
+      "candidate_sha256": {
+        "sublist.cpp": "7b8c2144b52aae97422de80be238d37bfebb4324deac5e22ba903c07ae9390bf",
+        "sublist.h": "61aa3d12d4b9523d663c9f2abb59a813a3d35eba6fd9f12c55e43cba5b463e62"
+      },
+      "source_outcome": "pass",
+      "failure_class": "none-std-search-contiguous-window",
+      "expected_classification": "agreement_pass"
+    }
+  ]
+}

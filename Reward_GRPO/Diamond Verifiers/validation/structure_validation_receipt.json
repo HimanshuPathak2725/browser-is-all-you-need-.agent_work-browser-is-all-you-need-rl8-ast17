@@ -1,0 +1,205 @@
+{
+  "applicable_kernel_count_by_policy": {
+    "E01": 5,
+    "E02": 4,
+    "E03": 4,
+    "E04": 4,
+    "E05": 4,
+    "E06": 6,
+    "E07": 5,
+    "E08": 5,
+    "E09": 4,
+    "E10": 3
+  },
+  "candidate_source_kernel_count": 34,
+  "complete_campaign_kernel_count": 44,
+  "policies": {
+    "E01": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_01_compile_api_linker.py",
+      "path": "Verifier implementation policy/policy_01_compile_api_linker.md",
+      "sha256": "526a5b43a6dff55660587afe837c41cf89a1a88df223d6d06fd49e898ae0b611"
+    },
+    "E02": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_02_warning_clean_build.py",
+      "path": "Verifier implementation policy/policy_02_warning_clean_build.md",
+      "sha256": "a68193a34c487bad3f8cd36c4f0efcf81985d445634b92595a5fc1c96cade929"
+    },
+    "E03": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_03_public_api_contract.py",
+      "path": "Verifier implementation policy/policy_03_public_api_contract.md",
+      "sha256": "b4b53f9253e0abe2dad2187775704106c5aa2b9248b80b0d6acf37e6f62afa36"
+    },
+    "E04": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_04_include_dependency_integrity.py",
+      "path": "Verifier implementation policy/policy_04_include_dependency_integrity.md",
+      "sha256": "c041ea35ab91dda161b522680208bc843394894d8b83c98b25bd6abc645fef87"
+    },
+    "E05": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_05_functional_output_boundary.py",
+      "path": "Verifier implementation policy/policy_05_functional_output_boundary.md",
+      "sha256": "7972ec514d0bf8a286d515046ab0a8e0330fe4fdd50456bce2252c427abd7812"
+    },
+    "E06": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_06_diamond_geometry_relational_logic.py",
+      "path": "Verifier implementation policy/policy_06_diamond_geometry_relational_logic.md",
+      "sha256": "5b736100d95a9438a37a906b0c314665c058e8a99858681b7381a4474d11b8a1"
+    },
+    "E07": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_07_feedback_repair_context.py",
+      "path": "Verifier implementation policy/policy_07_feedback_repair_context.md",
+      "sha256": "27696c7b84dac84ada55f35cb34b03280382c709e12a77fb6cdc7d6636fbe812"
+    },
+    "E08": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_08_response_harness_integrity.py",
+      "path": "Verifier implementation policy/policy_08_response_harness_integrity.md",
+      "sha256": "fd9e28334c7613b10a90c06bc86cf977ec4dc121e77e4170b463024c79f276a2"
+    },
+    "E09": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_09_memory_ub_safety.py",
+      "path": "Verifier implementation policy/policy_09_memory_ub_safety.md",
+      "sha256": "3380f036a630a67a021a1404e2047c84f47d96b2139357ea457af922e059aa7a"
+    },
+    "E10": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_10_cross_compiler_toolchain_portability.py",
+      "path": "Verifier implementation policy/policy_10_cross_compiler_toolchain_portability.md",
+      "sha256": "5ff52c0de36aed23a0e5f444cb23c3648cd8a2a39a92ca0f1e2ce806161f5afd"
+    }
+  },
+  "policy_count": 10,
+  "schema_version": 1,
+  "status": "PASS",
+  "task_id": "local-aider-cpp/diamond",
+  "verifier_count": 10,
+  "verifiers": {
+    "E01": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "01",
+      "expected_kernel_count": 5,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_01_compile_api_linker.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "39cb158f94527e5a13289a098ff388e47adf1380b60e42e6a3b84e4038e8b310"
+    },
+    "E02": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "02",
+      "expected_kernel_count": 4,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_02_warning_clean_build.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "39cc621d878af7202075d6456e7bbbd59147cafc13de10f2ddb5e01af30fe89d"
+    },
+    "E03": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "03",
+      "expected_kernel_count": 4,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_03_public_api_contract.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "029384caff3b56714ba21a868620abcead548b6b2f9a669e17bd017bab80ec5c"
+    },
+    "E04": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "04",
+      "expected_kernel_count": 4,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_04_include_dependency_integrity.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "f700cecf12e2e29c547bc3b17269d17c972cf66761741692cf025499d2bfa692"
+    },
+    "E05": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "05",
+      "expected_kernel_count": 4,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_05_functional_output_boundary.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "86c77363008cb7b10e050dc94b22469aa86b11d9635f71d00b21c349f0561913"
+    },
+    "E06": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "06",
+      "expected_kernel_count": 6,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_06_diamond_geometry_relational_logic.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "06f8b5de0cf95d76bda2b108de507dd6823a30387ec852f0afc8b02db4690a20"
+    },
+    "E07": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "07",
+      "expected_kernel_count": 5,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_07_feedback_repair_context.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "4ebda1fb269a52d3012a9bab300d890e955339e64647a4b22d3b95921dd67c46"
+    },
+    "E08": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "08",
+      "expected_kernel_count": 5,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_08_response_harness_integrity.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "24f83208b47c950d5f345e75d71d74e35331bd9370626fa5a3d99b3620ffa4ad"
+    },
+    "E09": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "09",
+      "expected_kernel_count": 4,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_09_memory_ub_safety.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "6915f460a0eca6fc7bad139d74d70212adfda75e742f7656600fa28ebb24a872"
+    },
+    "E10": {
+      "ast_parse": "PASS",
+      "declared_policy_id": "10",
+      "expected_kernel_count": 3,
+      "main_function_count": 1,
+      "main_function_present": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_10_cross_compiler_toolchain_portability.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "f1486c566d9825376ea9093900a30e9bfcfa7b03a24a2783496761138167eb6d"
+    }
+  }
+}

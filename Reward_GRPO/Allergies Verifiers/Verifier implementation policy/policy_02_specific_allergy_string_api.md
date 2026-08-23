@@ -6,7 +6,7 @@ This policy decides whether `allergy_test` exposes the required string-based spe
 
 | Kernel | Verifier function | What it asks | Exact implementation | `+1` condition | `-1` condition | Evidence |
 |---|---|---|---|---|---|---|
-| 2A | `verify_2a_exact_member_signature()` | Does the exact required overload exist? | Cast the member address to `bool (allergy_test::*)(std::string const&) const` | The cast compiles under strict C++17 | Parameter, return, reference, visibility, or const qualification is incompatible | Signature probe, compiler logs, object hash |
+| 2A | `verify_2a_supported_member_signature()` | Does an official-compatible string overload exist? | Detect either `bool (allergy_test::*)(std::string const&) const` or `bool (allergy_test::*)(char const*) const` | At least one supported const overload compiles under strict C++17 | Only an enum or another incompatible API exists | Signature probe, compiler logs, object hash |
 | 2B | `verify_2b_string_literal_call()` | Can the official string-literal call shape compile and link? | Invoke `is_allergic_to("eggs")` from an external caller and link with `allergies.cpp` | Compile, link, and run exit 0 | Only an enum API exists, overload resolution fails, or the definition is missing | Caller probe, build/run logs, executable hash |
 | 2C | `verify_2c_const_object_call()` | Is the method callable through a const object? | Invoke the method on `allergy_test const` with `std::string` | Compile, link, and run exit 0 | Required const qualification or definition is absent | Const-caller probe, logs, executable hash |
 
@@ -14,17 +14,17 @@ This policy decides whether `allergy_test` exposes the required string-based spe
 
 The verifier uses the same authenticated fixed assets, immutable candidate-source checks, isolated output directory, GCC identity, safe subprocess execution, timeouts, and receipt schema as Policy 1.
 
-## 2A — Exact overload
+## 2A — Supported string overload
 
-The pointer-to-member cast selects the required overload without forbidding extra compatible overloads. A passing historical repair retained an enum overload, so source-text equality or an exact overload count would be an invalid restriction.
+The probe accepts the reference `std::string const&` form and the behaviorally equivalent `char const*` form accepted by every protected official call. It still rejects the observed enum-only API. A passing historical repair retained an additional enum overload, so source-text equality or an exact overload count would be an invalid restriction.
 
 ## 2B — String-literal call
 
-The external caller reproduces the official expression that triggered `cannot initialize a parameter of type <enum> with an lvalue of type const char[...]`. The returned boolean is consumed without imposing behavioral expectations.
+The non-const external caller reproduces the official expression that triggered `cannot initialize a parameter of type <enum> with an lvalue of type const char[...]`. The returned boolean is consumed without imposing behavioral expectations.
 
 ## 2C — Const-object call
 
-This probe proves the declaration and definition remain callable through the pinned const interface. It does not test which allergens should return true.
+This probe repeats the official string-literal call through a const object. It proves the declaration and definition preserve the required method constness without requiring the reference solution's parameter representation. It does not test which allergens should return true.
 
 ## Aggregation
 

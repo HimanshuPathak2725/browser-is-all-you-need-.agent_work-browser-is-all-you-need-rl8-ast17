@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "task_id": "robot-name",
+  "source_run_id": "execution-bank-RL-v2-think-r2",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_eval_root": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "official": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "polyglot_revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "instructions_sha256": "b2750750beea61e12bd1828720d21718771bde4b809a62582361be11cc68b2f7",
+    "test_sha256": "a61980d1065cad95bba9e8042e46fca8890b782367767a2a0e4b9c856de58fd5"
+  },
+  "current": {
+    "contract_sha256": "46717de4eba54844d1ac979b3ab2123f35b8b20f547ef7245093b69c7af89792",
+    "verifier_sha256": {
+      "E01": "1748a58ae95417469988fdc356b3d6a98296b138acd95f9d1d2872baaafeff1f",
+      "E02": "4e0f51db5b04efb769ebbc85209623d6fb92f299887469f9ba355c5d430a9355",
+      "E03": "432adf28fd666ead189efeae178fe1b646f2bc1f63a480bf1ade917b044c1ed0",
+      "E04": "5d4c4bf8427858ba082af4cdeeb9f549c4e0ee3b3b4433a69bb4203ff70d3d22",
+      "E05": "a9cf9f97a9a29bbca89e1b6cb14bd6fa56693f478e3c6c7a2633c667ace4b522"
+    },
+    "kernel_count": 15,
+    "official_terminal_policy": "E03",
+    "reward_decision_rule": "all five policies must pass"
+  },
+  "aggregate": {
+    "trials": 4,
+    "pass_at_1": "0/4",
+    "pass_by_turn_2": "1/4"
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "source_sample_id": "trial-1/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_1_unchanged",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "generate_name defined and called but absent from class declaration",
+      "candidate_sha256": {"robot_name.h": "f74ad42db88d69b4d390cb8da0e639babc21204177b67b05ec4e98de4d61ebaa", "robot_name.cpp": "534fd4419643bce7e2d3403a0569ae49634a71e5e865b5dfd20f7a72aa708a96"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_1_final",
+      "source_sample_id": "trial-1/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_1_unchanged",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "feedback did not change source; same missing generator declaration",
+      "candidate_sha256": {"robot_name.h": "f74ad42db88d69b4d390cb8da0e639babc21204177b67b05ec4e98de4d61ebaa", "robot_name.cpp": "534fd4419643bce7e2d3403a0569ae49634a71e5e865b5dfd20f7a72aa708a96"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_turn_1",
+      "source_sample_id": "trial-2/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_2_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "each position randomly selected letter or digit; invalid AA000 format; 3/5 tests",
+      "candidate_sha256": {"robot_name.h": "bf4c525aa30d72fe2270857aa5ad37a18f17c39dcf60c7a4c8f9bd7d225eb5db", "robot_name.cpp": "5fcc77e481677c66acce2859b625a7a2984db10756b188742e8996eb60215f6b"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_final",
+      "source_sample_id": "trial-2/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_2_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "successful positional-format repair; 2004 assertions passed",
+      "candidate_sha256": {"robot_name.h": "bf4c525aa30d72fe2270857aa5ad37a18f17c39dcf60c7a4c8f9bd7d225eb5db", "robot_name.cpp": "a6d5e1878abab387c4edb3b8a799715c08c07bcc0e96ce08606932f350984541"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "source_sample_id": "trial-3/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_3_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "random values reused as loop bounds while building pool; premature namespace exhaustion; 3/5 tests",
+      "candidate_sha256": {"robot_name.h": "863133627ec2b10c4a78bb9a6594b1c2c15456b5f9d4a04fc0e9c63b97760f7d", "robot_name.cpp": "a7630cd88162f2111d59480620c66cac45824d35f04f898dd522aed71ceb3b2e"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_final",
+      "source_sample_id": "trial-3/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_3_final",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "call_once preserved an undersized random-bounds pool; exhaustion remained; context exhausted; 4/5 tests",
+      "candidate_sha256": {"robot_name.h": "863133627ec2b10c4a78bb9a6594b1c2c15456b5f9d4a04fc0e9c63b97760f7d", "robot_name.cpp": "d5c78837d9c5708e75a7b5cdee75a425f7a77c388fe03cf852822eecd200d26d"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "source_sample_id": "trial-4/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_4_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "collision retry appends five characters instead of replacing candidate; invalid length after collision; 4/5 tests",
+      "candidate_sha256": {"robot_name.h": "55d1ce5a9784638fb46f974106eb245de208f72be86ed5cd8274d0c42f26cf6e", "robot_name.cpp": "3ccc335700b2514e970a1ff2ec036266d2af675d3059b307b510037f373bcb93"}
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_final",
+      "source_sample_id": "trial-4/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_4_final",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "removed unused include only; collision-append defect remained; context exhausted; 4/5 tests",
+      "candidate_sha256": {"robot_name.h": "55d1ce5a9784638fb46f974106eb245de208f72be86ed5cd8274d0c42f26cf6e", "robot_name.cpp": "9e26e264ec918adf78f09d73fc9132e8563fd7dcb581a7d128bebdbcf9a98bb8"}
+    }
+  ],
+  "source_artifact_sha256": {
+    "trial_1_chat": "f5cf559d65726f8008cf8f88a30f1b20fd5db28bf22a1d61eb211d7512b757ba",
+    "trial_1_results": "570aa528ffb8f8e1be5092a50783c60dd03f35df9961e6a4088172c6c25ee20d",
+    "trial_2_chat": "63c57211df43d032f99a0413b55fcd19da874f974aef54382155975b6767900f",
+    "trial_2_results": "cd5730bf929edc5a5bd75b88c9d0bd455de4adefdb13d4c9fe6965cdf501758d",
+    "trial_3_chat": "871255d46541763cf2c5132a53adfc26fdff56d0980e43ae5be72883501b4c69",
+    "trial_3_results": "dbe9181188d9c5d5cf99baf5a887ebed5e4c7f09a6cebb9e27328b5a79d7b03b",
+    "trial_4_chat": "14808088381715cb2fe4f85b9983adf7a1b94c74742d5a5a38a25ccf8c9929fb",
+    "trial_4_results": "c24bf96098fa4905806036a0600982fdc47e0e3c99bdfb0a6bd60467a1ff584b"
+  }
+}

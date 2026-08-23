@@ -1,0 +1,2197 @@
+{
+  "classification_counts": {
+    "agreement_fail": 8
+  },
+  "compiler": "13.3.0",
+  "manifest_sha256": "b5e2be0bae7950fc65a38d76147d2c4c7e6586852fa1dd5d1a7ff61263eae385",
+  "non_static_policies": {
+    "E07": "requires an authenticated two-turn feedback bundle",
+    "E08": "requires an authenticated Aider response/tree/log bundle",
+    "E10": "requires host Clang 18.1.3 plus the pinned offline Clang container"
+  },
+  "pinned_instructions_sha256": "ff20bbc2d91cf1ffb8b35ffbe4715867a8e0fdec29a83bf8d9ef8a18da2d9d68",
+  "sample_count": 8,
+  "samples": [
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "unsigned-spacing-underflow-and-invalid-allocation",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "implementation compiled",
+            "official and API consumers compiled",
+            "official executable linked",
+            "clean CMake build produced diamond"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "0b73fd397e911da18ce43b164776f2e4235ca2cd99710a73893ab3e48a2d7221",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "no new warning",
+            "no new warning",
+            "no new warning",
+            "complete warning-as-error build passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "cd59ef9cce9f0e0393c2caf9df271870c31c4a75b3c0a11c9485910be572ec1d",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "linked API smoke passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "1ff975cef21c0a66f36ea9abd538700d36883e79a20ebae7ccf5b3c1c124556f",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate dependency graph is isolated",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "69e183a70aa558c82b4d83f5ce8e0663ffa4f82e004806c5371c756272644e17",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official executable built",
+            "official inventory contains exactly five expected cases",
+            "candidate failed the official suite",
+            "candidate output or status varied across repetitions"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "b016a3825b97c6a44679e0007c353dcbfa6a99e47cc6a99cc3fe0a8009e52597",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "bfbacb944efb4fbd634161b4fd2542b2e78edcaa2498f2c7797e4401724d3625",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "77b9fa066c34687476bffe826dde32ea352cce3fa867276b7ce03e30441d1993",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "f1589dd861e8d384ee24afd8f38a9f364a0d311f4ac31282aa268cb4d1ecfbd6",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/diamond/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_1_final",
+      "classification": "agreement_fail",
+      "failure_class": "wrong-glyph-placement-and-filled-center",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "implementation compiled",
+            "official and API consumers compiled",
+            "official executable linked",
+            "clean CMake build produced diamond"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "39e0b6d0abf24def8cfca079b9b34d939bb58667f0a1a6f2aa83c36847ef2a11",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "no new warning",
+            "no new warning",
+            "no new warning",
+            "complete warning-as-error build passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "6fc67b0aba43464cbc05258b5a554c93e502ee39ff542a09531d0abec1519da0",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "linked API smoke passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "e9d3618529725d6cfd3d036851bebd52a80a1a83f725a9d9fd453ad14fa2b69a",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate dependency graph is isolated",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "6ce404bd8235eaea84f49085e52ba0e76445eeb39ed54522258257655806322f",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official executable built",
+            "official inventory contains exactly five expected cases",
+            "candidate failed the official suite",
+            "candidate output or status varied across repetitions"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "084a14216450e568b070542d2056aa8d6a21913aae94ca1b0e1e53656b480232",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "semantic relation passed",
+            "candidate violated semantic relation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "02fc61874c58d745f43a6edf5741575fb68870a01262025017e1369184116f4f",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "4c9c75935aed1f575441c447ca8cc50204da80782dcc069c6004cb630f6b282b",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "f5b5496a04a80f94c4be5cae0d2c3881fee9fce83c8e31029f0f32fc50eda3ac",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/diamond/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_2_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "char-int-minmax-template-mismatch",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            -1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "candidate implementation did not compile",
+            "official and API consumers compiled",
+            "blocked by candidate compile failure",
+            "candidate clean build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "1a6f1473052e4c08a26a29e6748773032cfa856eaea5c1b9a51e459768eb444d",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "complete strict build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "4b6530cb078a3e5a344db905ee9c6639da46f2933cf31897944a4daf41d605c2",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "candidate rejected exact API probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "6cbf67d52a0aa9964c12cb922b7d8c008c0ed9ee99dfcb286500e3bb7343a1d4",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate compilation failed or used forbidden task dependencies",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "14c95c88091208c1a6ebde47d9622151ae2629e4ee1047326466459bcef8b215",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not build with official suite",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "d78e5aea465cfcfa6a19b6c5bceeb794464a37b12f5f86d9e7f0bffe3cfba7d9",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "daf2a23ee01bfcb638fef13bd9cc3b115570ce910ebce4eee112149a464fed12",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "f63239ebe052717d12d6ff4fa72bbade4fcaac753179d4c444deab7ed667d836",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "7397a883ab2595c6cb97cea0652505c0d03af034f625d9eddf284f0155eeecda",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-2/diamond/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_2_final",
+      "classification": "agreement_fail",
+      "failure_class": "wrong-width-glyph-and-padding-geometry",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "implementation compiled",
+            "official and API consumers compiled",
+            "official executable linked",
+            "clean CMake build produced diamond"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "98cc0014b801280f14e3c046326c3b97ba5c090fb741bff204d7c1b588f9adc1",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "no new warning",
+            "no new warning",
+            "no new warning",
+            "complete warning-as-error build passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "24a9ed2bd6c7c18c2019eb2f7d291cc1eedca65ef92d64c8cae125a91b722a2d",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "linked call failed or returned the wrong A result"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "e0e5bddfe51ab76ed6d199d443b01b52f23f26c4d606b32ba0f58a368002fab1",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate dependency graph is isolated",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "1f88dda56a09803a7cd81391e202614010a679b8a56bc452cf9aec313ba93e48",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official executable built",
+            "official inventory contains exactly five expected cases",
+            "candidate failed the official suite",
+            "candidate output or status varied across repetitions"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "3f612b201e7db0673ebba48f53858790f99d7dee7e4564cc45830d8d8da2e727",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "semantic relation passed",
+            "candidate violated semantic relation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "254fa227a523c9846f717b91e8eaba8c668fb221db14b837361f18ce275d61a2",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "95536854528ec4ec7c4117800b7ad1e30b2adea7898c8f9ee704f7d5655ac6a4",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "b639e3d543f2474582833d222332f574978fdf3dda4ee1213ed42033f04dfbd2",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-2/diamond/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+        "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+      },
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "pristine-wrong-public-api-after-no-edit-response",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "candidate implementation did not compile",
+            "candidate public declarations rejected a consumer",
+            "blocked by candidate compile failure",
+            "candidate clean build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "afb2868dcf368d6cb07bcb328434bdc417282b285dc3c07eceb695b5e0a9874c",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "complete strict build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "092a58bbeea9f4edc1dd48af052be159eccf6d9c8aa9fc6162fcd7cacd71d7f1",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "candidate rejected exact API probe",
+            "candidate rejected exact API probe",
+            "candidate rejected exact API probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "e1cff2096d28329ba69417a6043ed7d0ca5ab9538cc168fbebfaba2f5028ba0e",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate compilation failed or used forbidden task dependencies",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "3c2481e757bcb052c3a1ee2f54277f23d5dfb32e8927edc3609f5b9ba0e9b643",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not build with official suite",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "ac3efd8863b2bf7e7945f63a843eeef65e8fc1cb5537cb850071c0c5bee22d8e",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "c5a95e0467376e4490f4ce93fe57782788f8d142421767e18b57f8ccdc805bf8",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "e00479186ca108fbbdcf79e6449d23394037ed33bdc88d2fd0591314284f6191",
+            "diamond.h": "5a6201ebbeb95f2d19c2749080bfa1ce4408eb5889731d9fe92a75df8ee13c89"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation",
+            "candidate failed sanitizer compilation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "170087466a8e4478ac41903cd0426dc31df64e1a93eaf9e07f82bf285b1ff50f",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-3/diamond/turn-1-no-edit",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_3_final",
+      "classification": "agreement_fail",
+      "failure_class": "inverted-outer-spacing-geometry",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "implementation compiled",
+            "official and API consumers compiled",
+            "official executable linked",
+            "clean CMake build produced diamond"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "abb7d238201a6d4ad5547af078a7246bf4d9e610e748bdb6357929d5b1d8b475",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "no new warning",
+            "no new warning",
+            "no new warning",
+            "complete warning-as-error build passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "4b032382ae44d3cba26e76253bea64542e906d95dedd8bde9629f2948eded0be",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "linked API smoke passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "edb5b987f7d662e76f79c3d9749845658d61d9c03f6f9f6f3c1038af6de3df4d",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate dependency graph is isolated",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "1dcaf71b6dc8a2d6fd72a4b7b727ebde19754a2017745967b2f4bbcb5a288c08",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official executable built",
+            "official inventory contains exactly five expected cases",
+            "candidate failed the official suite",
+            "candidate output or status varied across repetitions"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "09635c673d128959205f5687f9ddd689982eb608b94754d17f62fb6f86458f37",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            1,
+            -1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "fail",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate violated semantic relation",
+            "semantic relation passed",
+            "candidate violated semantic relation",
+            "semantic relation passed",
+            "semantic relation passed",
+            "candidate violated semantic relation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "863fa53c165163e1b8a819004443b8f81510683804897612ef3ad52ddf286fee",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "8ac7b78b0125145de60e6df8fc25d3d5b61732c433e32e4ddcc36beb5f55fda8",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "63978a550fa4a601442044abe158c22b4d18bf45311bb1ee3f1584a60a793f9b",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-3/diamond/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "unused-variable-warning-and-wrong-geometry",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            -1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "candidate implementation did not compile",
+            "official and API consumers compiled",
+            "blocked by candidate compile failure",
+            "candidate clean build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "eabb29dc10772e09825d713ce3bb00077a6eafa8d9ab56f94e45e4cd64605d0c",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            -1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "warning tier introduced diagnostics or candidate failed to compile",
+            "no new warning",
+            "no new warning",
+            "complete strict build failed"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "d964751680910b51f970c4ef98ed2f3f53cf85ddd060a6c87ae188be40c44949",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "candidate rejected exact API probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "45cb386ed3fefe0796c9b93701857db006654cd76c255d25b176cb46df070456",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate compilation failed or used forbidden task dependencies",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "7f9c6ba491d665dd54fa80620fcd86db5fff001a774e8727086520b54a1bd412",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not build with official suite",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure",
+            "blocked by candidate official-build failure"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "b9fdabf6eb53ed50e17d3bac64fc15795d9252070e47852d5eb85ae139617afd",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe",
+            "candidate did not compile with semantic probe"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "83dca2960fe9d727573bdd7a1db9c068ce396423de36cdfe35d9787bf9064939",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "b4bab86f3fa2b3280f3cd55defd33b1f82af30867b5eea392fabe818d9d32b77",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "885472423f7465d8d35cb10a52d379a345b5313b1eb51425d77dbd04b3c82a9d",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-4/diamond/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+        "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+      },
+      "case_id": "midband_rl_v2_trial_4_final",
+      "classification": "agreement_fail",
+      "failure_class": "wrong-width-duplicate-rows-and-glyph-geometry",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "1A",
+            "1B",
+            "1C",
+            "1D",
+            "1E"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "toolchain and configure passed",
+            "implementation compiled",
+            "official and API consumers compiled",
+            "official executable linked",
+            "clean CMake build produced diamond"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "1395c126aaa6e66a28c2286b5a648624a6a77af028ff428b6739555bea1e4b9e",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "2A",
+            "2B",
+            "2C",
+            "2D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "no new warning",
+            "no new warning",
+            "no new warning",
+            "complete warning-as-error build passed"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "ba2326e1005fdabcc4aac5cf64f62fc1cecfa3f20c50bc46710caeea709af812",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "3A",
+            "3B",
+            "3C",
+            "3D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "probe compiled",
+            "probe compiled",
+            "probe compiled",
+            "linked call failed or returned the wrong A result"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "fcaed95cfc65ca058b549b53d127e1aa7421a969f3bab220eaa53814805a55ac",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "4A",
+            "4B",
+            "4C",
+            "4D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all standard symbols have direct owning includes",
+            "header compiled independently",
+            "candidate dependency graph is isolated",
+            "pinned dependencies and CMake contract match"
+          ],
+          "process_returncode": 0,
+          "reason": null,
+          "receipt_sha256": "f2661e02bb8edeaf38d8b575a70e2785ba1b3e1b3bfe2ced600c3f1a6248369e",
+          "source_immutable": true,
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "5A",
+            "5B",
+            "5C",
+            "5D"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official executable built",
+            "official inventory contains exactly five expected cases",
+            "candidate failed the official suite",
+            "candidate output or status varied across repetitions"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "4887b0241864a741197f57f956bc71d2c46833547930936d8f91691b5e383fb0",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "6A",
+            "6B",
+            "6C",
+            "6D",
+            "6E",
+            "6F"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation",
+            "candidate violated semantic relation"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "8bf8ced3bbb77e3812afeab72424a83b1511a73291d242e7e2d65e7e145fcba3",
+          "source_immutable": true,
+          "status": "fail"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "diamond.cpp": "82998317af66b471dcb02989a4fab623e14278b3ce540076838bf8b2cb5cfbab",
+            "diamond.h": "7ea4aeb4196e6d2c42f65d690960ead8e6710748eac378a7f5b4d26f6fa3ffa4"
+          },
+          "kernel_ids": [
+            "9A",
+            "9B",
+            "9C",
+            "9D"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue",
+            "candidate failed workload or sanitizer reported an issue"
+          ],
+          "process_returncode": 1,
+          "reason": null,
+          "receipt_sha256": "3879febdeb02a491cef5a3826120e885ca5e9e88918ae871127e5af7ca4a4384",
+          "source_immutable": true,
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-4/diamond/turn-2",
+      "source_unchanged": true
+    }
+  ],
+  "schema_version": 1,
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "static_policies": [
+    "E01",
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E09"
+  ],
+  "task_id": "local-aider-cpp/diamond"
+}

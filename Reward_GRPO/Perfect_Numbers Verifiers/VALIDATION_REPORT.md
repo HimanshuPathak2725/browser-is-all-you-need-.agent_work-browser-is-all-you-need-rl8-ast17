@@ -3,61 +3,66 @@
 | Report field | Value |
 |---|---|
 | Topic | `perfect-numbers` |
-| Verifier commit | Workspace base `3e3e1ace6fec6c18a56b48c03e09b3a1fa78ce81`; verifier package is uncommitted |
-| Policies | 4 |
-| Kernels | 15 total: 11 per-candidate and 4 trajectory |
-| Validation date | 2026-08-18 |
-| GRPO readiness | `READY` for the pinned canonical contract |
+| Method | Real Midband outputs → current-verifier gap audit → positive/mutation/`INVALID` controls |
+| Source run | `execution-bank-RL-v2-think-r2` |
+| Source checkpoint | `execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter` |
+| Source evaluation | `fixed26-mt2-4x-20260818`; four independent trials, up to two Aider turns |
+| Source result | Pass@1 `2/4`; pass by turn 2 `3/4` |
+| Current package | 4 policies, 4 verifiers, 11 source kernels, 4 trajectory kernels |
+| Validation environment | Offline pinned image, GCC `13.3.0`, repository mounted read-only |
+| Validation date | 2026-08-23 |
+| Verifier-layer readiness | `READY` |
+| Live GRPO readiness | `CONDITIONALLY READY` pending independent reward projection and trusted E04 bundle production |
 
-## Step 1: Structure and frozen-contract validation
+## Step 1: Replay real model outputs against the current verifier
 
-I parsed all four verifier programs, matched them one-to-one with four policy documents, counted exactly one Python source comment per verifier, and authenticated the nine protected task assets. The traceability review maps the exact namespace, scoped enum, three enumerators, function signature, all 13 official assertions, deterministic divisor cases, and two-turn repair requirements to 15 kernels.
+I recovered the exact Perfect Numbers task artifacts from all four Midband-RL-v2 evaluation trials and saved six candidate snapshots: Trial 1 before and after repair, the passing Trial 2 and Trial 3 outputs, and Trial 4 before and after its harmful repair. Every snapshot is bound in `failure_gap_manifest.json` to the source run, checkpoint, GCS evaluation root, candidate hashes, and original chat/results hashes.
 
-All structural checks passed. Validation tightened only verifier-layer integrity: unsafe output paths are rejected before any receipt write, trajectory source directories permit only the two authorized files, evaluation receipts bind each turn's combined source digest, and a terminal success now requires the `complete` stage plus 13 explicit passing outcomes; infrastructure and training files were not changed.
+The combined E01–E03 source gate agreed with all six official outcomes: three agreement-passes and three agreement-fails, with zero missed failures and zero restrictions. Trial 1 initially exposed no API and then reached 13/13; Trial 4 first failed only `classify(1)` at 12/13, then changed `sum = 1` to `sum = 0`, fixed that edge, and regressed the three perfect-number cases to finish 10/13.
 
-| Check | Expected condition | Result | Evidence |
+| Saved model output | Official outcome | E01 API | E02 semantics | E03 domain error | Terminal gate | Audit class |
+|---|---:|---:|---:|---:|---:|---|
+| Trial 1, turn 1 | FAIL: compile, API absent | `[-1,-1,-1,-1]` | `[-1,-1,-1,-1]` | `[-1,-1,-1]` | FAIL | Agreement-fail |
+| Trial 1, turn 2 | PASS: 13/13 | `[+1,+1,+1,+1]` | `[+1,+1,+1,+1]` | `[+1,+1,+1]` | PASS | Agreement-pass |
+| Trial 2, turn 1 | PASS: 13/13 | `[+1,+1,+1,+1]` | `[+1,+1,+1,+1]` | `[+1,+1,+1]` | PASS | Agreement-pass |
+| Trial 3, turn 1 | PASS: 13/13 | `[+1,+1,+1,+1]` | `[+1,+1,+1,+1]` | `[+1,+1,+1]` | PASS | Agreement-pass |
+| Trial 4, turn 1 | FAIL: 12/13, `classify(1)` | `[+1,+1,+1,+1]` | `[-1,+1,+1,+1]` | `[+1,+1,+1]` | FAIL | Agreement-fail |
+| Trial 4, turn 2 | FAIL: 10/13, perfect cases regressed | `[+1,+1,+1,+1]` | `[+1,-1,+1,-1]` | `[+1,+1,+1]` | FAIL | Agreement-fail |
+
+## Step 2: Protect valid implementations and keep policies focused
+
+I replayed the pinned reference implementation and all three real Midband implementations that passed the official task. They produced 44/44 applicable source-kernel passes; a repeated reference run added 11/11 more, for 55/55 positive-control passes with no source mutation and no alternate-valid restriction.
+
+I also constructed source-bound E04 bundles from the exact Trial 1 and Trial 4 turn snapshots and their observed test counts. The successful Trial 1 repair passed all four trajectory checks, while Trial 4 passed targeting and diagnostic removal but failed non-regression and full repair; this is the exact boundary the evaluation logs require, so no additional policy is justified.
+
+| Control | Expected boundary | Result | Evidence |
 |---|---|---|---|
-| Policy/verifier pairing | One numbered policy per verifier | PASS | 4 policies and 4 verifiers |
-| Python structure | AST parses; exactly one source comment each | PASS | 4/4 AST parses; comment vector `[1, 1, 1, 1]` |
-| Policy simplicity | No `Evidence Boundary` or `Conclusion` sections | PASS | 4/4 policy documents clean |
-| Frozen assets | Every protected digest matches the setup | PASS | 9/9 hashes matched; official test SHA-256 `fa206f8f…50be3` |
-| Contract coverage | Every public clause and official assertion family is mapped | PASS | API E01; positive semantics E02; invalid inputs E03; trajectory E04; uncovered official requirements: none |
-| Output/source isolation | No candidate/bundle writes and exact source authorization | PASS | 8/8 nested/symlink attacks rejected; candidate and bundle trees unchanged |
-| Final verifier digests | Record post-fix verifier identity | PASS | E01 `6d402b5b…c9781`; E02 `4877ace2…b8c37`; E03 `091a7e3d…f51d`; E04 `c98b7eaf…d0ae` |
+| Pinned reference | E01–E03 all pass | PASS | 11/11 kernels |
+| Real Trial 1 final | Accept alternate correct implementation | PASS | 11/11 kernels |
+| Real Trial 2 final | Accept square-root pair implementation | PASS | 11/11 kernels |
+| Real Trial 3 final | Accept formatting and local-name variation | PASS | 11/11 kernels |
+| Trial 1 repair trajectory | Target edit, remove diagnostic, no regression, reach 13/13 | PASS | E04 `[+1,+1,+1,+1]` |
+| Trial 4 regressing trajectory | Detect that a nominal edge repair loses earlier passing cases | KILLED | E04 `[+1,+1,-1,-1]` |
+| New-policy decision | Add only for an observed miss not covered safely | KEEP CURRENT 4 | Zero misses, zero restrictions |
 
-## Step 2: Known-good and metamorphic validation
+## Step 3: Reject focused defects and distinguish evaluator invalidity
 
-I staged the exact pinned task in a temporary directory, installed an independent warning-clean correct implementation, and ran Policies 1–3 plus the pinned 13-test executable. I then repeated the check with three behavior-preserving implementations that rename locals, reorder classification branches, or use an equivalent lambda-based divisor calculation; Policy 4 received a source-bound two-turn bundle that repaired the historical `classify(1)` error.
+I ran three focused compile-clean mutants through the source verifiers. E02-A alone exposed the `classify(1)` mutant, E02-B and E02-D exposed omission of divisor one, and E03 rejected `std::invalid_argument` for all zero/negative partitions while E01 and unrelated semantic kernels stayed positive.
 
-The known-good candidate passed all 11 per-candidate kernels and all 13 official assertions, while the repair bundle passed all four trajectory kernels. The three harmless variants passed 33/33 kernels and 39/39 official assertions. An API-correct always-deficient adversary still passed E01 and E03, but E02 rejected it and the official suite recorded 7 passes and 6 failures, proving that compile/API rewards cannot create a standalone semantic success.
+Two evaluator faults—a nonexistent compiler and a modified official test—returned `INVALID`, never candidate `-1`. E01–E03 reproduced identical status and kernel vectors on the repeated reference, all candidate bytes remained unchanged, and the offline container had no network, no added capabilities, a read-only repository, and a separate writable receipt mount.
 
-| Control | Scope | Result | Evidence |
+| Control | Intended result | Observed result | Boundary evidence |
 |---|---|---|---|
-| Canonical known-good | E01–E03 and official suite | PASS | 11/11 kernels; 13/13 assertions |
-| Valid repair trajectory | E04-A through E04-D | PASS | Vector `[+1, +1, +1, +1]` |
-| Harmless metamorphic controls | Three independently written equivalent candidates | PASS | 33/33 kernels; 39/39 official assertions |
-| API-correct semantic adversary | Always returns `deficient` for positive input | KILLED | E01 `[+1,+1,+1,+1]`; E02 `[+1,-1,-1,-1]`; E03 `[+1,+1,+1]`; official 7/13 |
-| Candidate immutability | Source before and after verifier execution | PASS | Combined source digests unchanged |
-| Candidate campaign receipt | Machine-readable positive/adversary evidence | PASS | Summary SHA-256 `38ea1b67…7a80` |
-
-## Step 3: Mutation, `INVALID`, and repeatability validation
-
-I exercised one controlled candidate failure for every E01–E03 kernel and one bundle failure for every E04 kernel, then ran 12 warning-clean semantic mutants through the pinned official test executable before scoring them. The mutants cover the unit edge, category-return swaps, self inclusion, square-root double counting, paired-divisor omission, wrong exception type, nonpositive handling, and hard-coded behavior.
-
-Every intended kernel boundary produced `-1`; E04-C also caused the documented dependent E04-D failure because a regressed test prevents 13/13 completion. All 12 authoritative-suite-failing mutants were killed with no survivors. Five evaluator-corruption controls returned `INVALID`, eight isolation attacks made no writes, and eight positive/negative rerun pairs reproduced identical status, kernel vector, counts, and summaries.
-
-| Policy or control | Controlled fault | Expected | Observed |
-|---:|---|---|---|
-| E01-A–E01-D | Unscoped enum, wrong signature, missing definition, broken official caller | Intended kernel `-1` | 4/4 isolated vectors matched |
-| E02-A–E02-D | Wrong `1`, official case, square case, generated case | Intended kernel `-1` | 4/4 isolated vectors matched |
-| E03-A–E03-C | Zero, negative one, negative partition violate exact exception rule | Intended kernel `-1` | 3/3 isolated vectors matched |
-| E04-A–E04-D | Untargeted edit, retained diagnostic, regression, incomplete repair | Intended kernel `-1` | 4/4 matched; E04-C also failed dependent E04-D |
-| Mutation adequacy | 12 compile-clean official-suite-failing mutants | All rejected | 12/12 killed, 100%; survivors: none |
-| Evaluator integrity | Three missing compilers, source-binding corruption, unauthorized snapshot file | `INVALID`, never `-1` | 5/5 `INVALID` |
-| Output isolation | Nested and symlinked outputs across four CLIs | Reject without writes | 8/8 rejected; no output target created |
-| Repeatability | Positive and negative pair for each policy | Identical normalized decisions | 8/8 pairs matched |
-| Evidence summaries | Candidate, trajectory, integrity, repeatability JSON | SHA-256 bound | `38ea1b67…7a80`, `073dc700…5d3`, `13686fc1…7b36`, `0f435a25…1fbd` |
+| `classify(1)` returns perfect | E02-A `-1`; unrelated kernels positive | KILLED | E01 pass; E02 `[-1,+1,+1,+1]`; E03 pass |
+| Proper-divisor accumulator starts at zero | E02 semantic rejection | KILLED | E02 `[+1,-1,+1,-1]` |
+| Throws `std::invalid_argument` | E03 exact-type rejection | KILLED | E03 `[-1,-1,-1]` |
+| Missing compiler | `INVALID` | PASS | Preflight status `invalid` |
+| Tampered official test | `INVALID` | PASS | Pinned-asset status `invalid` |
+| Repeatability | Same normalized status/vector | PASS | 3/3 source policies matched |
+| Structure and fixed contract | 4 pairs; 15 kernels; pinned bytes | PASS | 4/4 AST, 4/4 comments, 6/6 recorded fixed hashes |
 
 ## Final conclusion
 
-The canonical Perfect Numbers package is `READY` as a GRPO verifier layer for the pinned task. `strange` fixes the contract and builds the policy pairs, `strange-validate-verifiers` supplies positive, metamorphic, semantic-adversary, mutation, isolation, `INVALID`, and repeatability evidence, and `strange-build-validation-reports` records the decision here. Policies 1–3 can provide per-sample signals, but a terminal success must require both the API layer and semantic Policies 2–3; Policy 4 consumes trusted two-turn evaluation bundles. Live reward-worker wiring and trusted bundle production were not executed, so the next integration check is one real reward-worker invocation that preserves these receipt bindings. No infrastructure or training file was changed.
+The Perfect Numbers verifier package is `READY`: the current four policies cover every failure observed in the Midband evaluation without restricting any observed valid implementation. The decisive terminal source condition is that E01, E02, and E03 all pass; no API-only or partial semantic score is a full success.
+
+Live GRPO integration is `CONDITIONALLY READY`: project the 11 source kernels independently for shaped reward, require the combined E01–E03 gate for a full pass, discard `INVALID`, and feed E04 only source-bound trusted two-turn evaluation bundles. No verifier, policy, infrastructure, training, or launch file needed modification during this audit.

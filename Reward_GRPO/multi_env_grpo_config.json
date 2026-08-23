@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "curriculum": "multi-env-strange-v1",
+  "dataset_kind": "aider-polyglot-cpp-shadow-grpo",
+  "expected_train_count": 62,
+  "expected_topic_count": 12,
+  "verifier_image": "glm47-strange-multi-env:gcc13.3-v1",
+  "topics": [
+    {
+      "slug": "allergies",
+      "package": "Allergies Verifiers",
+      "editable_files": ["allergies.h", "allergies.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E06"],
+      "terminal_policies": ["E06"]
+    },
+    {
+      "slug": "circular-buffer",
+      "package": "Circular_Buffer Verifiers",
+      "editable_files": ["circular_buffer.h", "circular_buffer.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "clock",
+      "package": "Clock Verifiers",
+      "editable_files": ["clock.h", "clock.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "complex-numbers",
+      "package": "Complex_Numbers Verifiers",
+      "editable_files": ["complex_numbers.h", "complex_numbers.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "crypto-square",
+      "package": "Crypto_Square Verifiers",
+      "editable_files": ["crypto_square.h", "crypto_square.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "diamond",
+      "package": "Diamond Verifiers",
+      "editable_files": ["diamond.h", "diamond.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"]
+    },
+    {
+      "slug": "grade-school",
+      "package": "Grade_School Verifiers",
+      "editable_files": ["grade_school.h", "grade_school.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"]
+    },
+    {
+      "slug": "parallel-letter-frequency",
+      "package": "Parallel_Letter_Frequency Verifiers",
+      "editable_files": ["parallel_letter_frequency.h", "parallel_letter_frequency.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "perfect-numbers",
+      "package": "Perfect_Numbers Verifiers",
+      "editable_files": ["perfect_numbers.h", "perfect_numbers.cpp"],
+      "live_policies": ["E01", "E02", "E03"],
+      "terminal_policies": ["E01", "E02", "E03"]
+    },
+    {
+      "slug": "robot-name",
+      "package": "Robot_Name Verifiers",
+      "editable_files": ["robot_name.h", "robot_name.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E01", "E02", "E03", "E04", "E05"]
+    },
+    {
+      "slug": "spiral-matrix",
+      "package": "Spiral_Matrix Verifiers",
+      "editable_files": ["spiral_matrix.h", "spiral_matrix.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E01", "E02", "E03", "E04", "E05"]
+    },
+    {
+      "slug": "sublist",
+      "package": "Sublist Verifiers",
+      "editable_files": ["sublist.h", "sublist.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"],
+      "runner_kind": "sublist"
+    }
+  ]
+}
