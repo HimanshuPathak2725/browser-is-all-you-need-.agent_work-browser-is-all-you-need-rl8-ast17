@@ -1,75 +1,56 @@
-# Diamond Verifier Validation Report
+# Diamond verifier final validation report
 
-| Report field | Value |
-|---|---|
-| Topic | `diamond` |
-| Workspace base commit | `3e3e1ace6fec6c18a56b48c03e09b3a1fa78ce81` |
-| Verifier package state | Uncommitted workspace package |
-| Policy/verifier package SHA-256 | `08baac993bd70d70c21de87155e77894affa2d764661a4f003542901b861ff5f` |
-| Policies | 10 |
-| Applicable kernels | 44 for a complete two-turn campaign: 34 candidate-source kernels and 10 bundle kernels |
-| Validation date | 2026-08-18 |
-| Semantic mutation adequacy | Official-suite-failing mutants `10/10`; full canonical-contract union `13/13`; no survivors |
-| GRPO readiness | `READY` for the pinned canonical task; live reward-worker wiring remains unverified |
+The final Diamond package contains six independently executable policies and one aggregate runner. C01-C05 cover build, API, integration, shape, state, geometry, full-domain bytes, and runtime safety; C06 authenticates the protected task assets and runs the complete official suite.
 
-## Step 1: Structure and frozen-contract validation
-
-The structure audit read the Diamond setup, all ten policy documents, all ten Python verifiers, the pinned Aider parser, and the protected task assets. It matched policy numbers one-to-one, parsed every verifier with Python's AST, counted comments with the tokenizer, checked subprocess argument lists and receipt logic, and traced the namespace, `rows(char)` API, five official cases, exact fixed-width A–Z geometry, authorized files, toolchains, and exclusions to kernels.
-
-All ten pairs pass structure review and contain exactly one Python source comment each. Validation fixed four verifier-layer defects: unsafe nested or symlinked outputs, Policy 8's filename-only response binding, Policy 4 reading hidden `.meta/example.*` reference files, and Policy 9 missing logical container-bound checks. The final package rejects 12/12 sampled isolation attacks without writes, never loads hidden examples at candidate time, and leaves invalid characters explicitly outside the pinned A–Z contract; no infrastructure or training file was changed.
+Diamond was selected because the four midband-rl-v2 iter-19 evaluations recorded 0/4 pass@1 and 0/4 success by turn two, the weakest observed task. The final package now rejects every tested fault, accepts every tested valid implementation, and defaults to the complete strict contract while retaining official-only mode for compatibility analysis.
 
 | Component or category | Role or failure pattern | Evidence or current status | How to verify | Files, controls, or next action |
-|---|---|---|---|---|
-| Python structure | Syntax and one-comment convention | PASS: 10/10 AST parses; comment vector is ten `1`s | Parse with `ast`; count `tokenize.COMMENT` | `verifiers/verifier_01_*.py` through `verifier_10_*.py` |
-| Policy pairing | One documented contract per executable verifier | PASS: ten numbered Markdown/Python pairs | Compare numbered basenames and kernel functions | `Verifier implementation policy/`; `verifiers/` |
-| Kernel inventory | Stable `+1`/`-1` decisions | PASS: `5+4+4+4+4+6+5+5+4+3 = 44` | Compare tables with `verify_*` functions | 34 source kernels; 10 full two-turn bundle kernels |
-| Frozen contract | Exact API, five official assertions, and A–Z byte geometry | PASS: no uncovered canonical requirement | Review setup traceability against Policies 3, 5, and 6 | `strange/strange/diamond-setup.md` |
-| Protected assets | Prevent test/CMake/parser substitution | PASS: pinned CMake/test/Catch/parser hashes validated | Modify one protected file or parser digest | Tampered test and response controls return `INVALID` |
-| Hidden-reference isolation | Candidate verifier must not use `.meta/example.*` | PASS after fix: no verifier source references it; Policy 4 passes when examples are absent | Search verifier sources; run Policy 4 on stripped candidate tree | Verifier 04 SHA-256 `f700cecf…fa692` |
-| Output isolation | Keep evidence outside candidate and bundle trees | PASS after fix: 10/10 nested outputs plus symlink input/output rejected; no target created | Invoke each CLI with nested output; test symlink traversal | All failures exit `2` before receipt creation |
-| Toolchains | Primary, sanitizer, and portable builds | PASS | Run clean controls | GCC 13.3.0; Clang 18.1.3; CMake 3.31.6; pinned Clang container |
-| Change boundary | Keep VM and training systems immutable | PASS | Review touched paths | Changes limited to Diamond policy/verifier/report files |
+| --- | --- | --- | --- | --- |
+| Canonical source | Freeze the task and independent solution basis | PASS: Aider Polyglot commit `7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f`; nine protected hashes pinned | Compare the local task assets with the pinned commit and `_contract.py` | [Pinned Aider Diamond source](https://github.com/Aider-AI/polyglot-benchmark/tree/7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f/cpp/exercises/practice/diamond); `verifiers/_contract.py` |
+| Iter-19 selection | Choose the weakest measured topic without assumption | VERIFIED: four trials, 0/4 pass@1 and 0/4 by turn two | Re-read the four iter-19 run receipts | Keep Diamond first; Crypto Square is the next measured weak task |
+| Observed failures | Real checkpoint failure coverage | PASS: 4/4 final candidates rejected; all failed C04-C06 and 3/4 also failed C03 | Replay the archived final `diamond.h`/`diamond.cpp` pairs in strict mode | Dominant pattern is compile-clean but incorrect geometry |
+| Valid controls | Guard against reference-shape overfitting | PASS: 5/5 implementations and all 16 kernels per implementation | Run canonical, three metamorphic implementations, and the legal no-`#pragma once` header | Preserve behavior-based include idempotence |
+| Fault campaign | Exercise observed and contract-level defects | PASS: 31/31 rejected, 0 `INVALID` fault outcomes | Run 13 prior mutants, four iter-19 failures, and 14 new targeted faults | Campaign summary SHA-256 `a6d46737…c686` |
+| Original comparison | Check retained coverage fairly | Original P05-P06 rejected 28/31; P03-P04 rejected the three survivors; combined P03-P06 coverage is 31/31 | Run P05-P06 on all faults, then P03-P04 on the three survivors and five positives | This is a source-policy union, not a rerun of bundle/container Policies 7-10 |
+| Evaluator boundaries | Separate bad candidates from bad evidence | PASS: altered protected asset and missing compiler both returned aggregate `INVALID`; canonical reference passed 16/16 | Repeat the three boundary runs with new output directories | `INVALID` always disables reward |
+| Reward boundary | Prevent narrow official examples from accepting incomplete solutions | Default `strict` requires C01-C06; `official` uses C06 only for compatibility analysis | Inspect `acceptance_mode`, `reward_ready`, and per-policy statuses in the aggregate receipt | Shadow strict rewards on unseen outputs before production weighting |
 
-## Step 2: Known-good and metamorphic validation
+## Creation method
 
-Positive validation staged the exact pinned task, copied the hidden reference only into an isolated validation candidate, and ran all ten public CLIs. Policies 1–6, 9, and 10 consumed source; Policy 7 consumed a complete hash-bound two-turn repair bundle; Policy 8 consumed a parser-, response-, tree-, log-, and task-bound integrity bundle. The official suite ran five assertions, while Policy 6 independently checked exact outputs and invariants for every letter A through Z.
+1. Select Diamond from the four iter-19 receipts using measured pass rate.
+2. Pin the official task and reference solution from the Aider Polyglot benchmark commit above.
+3. Recover the four exact final checkpoint candidates and group their failures by build, API, dimensions/state, geometry, and terminal behavior.
+4. Extend the prior 13 semantic mutants with 14 targeted faults and five independent positive controls.
+5. Compare the final policies with the original source-policy boundary, then consolidate overlapping checks into six policies.
+6. Authenticate protected assets, preserve `FAIL` versus `INVALID`, and require cross-policy candidate-source digest consistency.
 
-The known-good campaign passes 44/44 applicable kernels. Three behavior-preserving implementations—parameter renaming, a row-index formula, and a brace-clean reserve/reflect algorithm—pass 102/102 candidate-source kernels. An API-correct always-A adversary passes all 17 build/warning/API/dependency kernels but Policy 5 records only 1/5 official assertions and returns `-1` for execution and repetition, proving auxiliary rewards cannot create standalone semantic success.
+Each consolidated contract and its implementation rationale is in [`Verifier implementation policy/`](Verifier%20implementation%20policy/).
 
-| Component or category | Role or failure pattern | Evidence or current status | How to verify | Files, controls, or next action |
-|---|---|---|---|---|
-| Canonical known-good | Full policy campaign | PASS: 44/44 | Run Policies 1–10 with complete two-turn evidence | Validation summary SHA-256 `991c189e…32fc` |
-| Build, warnings, API, dependencies | Auxiliary per-sample structure signals | PASS: 17/17 | Run Policies 1–4 with GCC 13.3 | Clean compile/link, exact API, isolated dependency graph |
-| Official behavior | Pinned public examples and determinism | PASS: 5/5 assertions; ten identical reruns | Run Policy 5 | Kernels 5A–5D all `+1` |
-| Independent semantics | Exact A–Z dimensions, bytes, glyph order, spacing, and symmetry | PASS: all 26 letters in six modes | Run Policy 6 | Kernels 6A–6F all `+1` |
-| Bundle controls | Repair and Aider/harness integrity | PASS: Policy 7 `+5`; Policy 8 `+5` | Run authenticated two-turn and integrity bundles | First-turn-pass Policy 7 path also passes applicable `+2` |
-| Sanitizer and portability | Bounds, ASan/UBSan, host/container Clang | PASS: Policy 9 `+4`; Policy 10 `+3` | Run official plus full-domain workloads | libstdc++ assertions, sanitizers, immutable container |
-| Harmless transformations | Avoid reference-shape overfitting | PASS: three variants × 34 kernels = 102/102 | Rerun all source policies on each implementation | Parameter rename, row formula, reserve/reflect |
-| Warning-sensitive control | One-line loop looked equivalent but violated strict build | Correctly rejected, then replaced with brace-clean version | Inspect `-Wmisleading-indentation`; rerun corrected source | Uncompilable control excluded from semantic mutation counts |
-| API-correct semantic adversary | Always returns `{"A"}` | KILLED: Policies 1–4 `+17/17`; Policy 5 official result 1/5 | Compare auxiliary and official receipts | Standalone success requires Policies 5 and 6 |
-| Candidate immutability | Prevent verifier edits to submitted source | PASS | Compare source manifests before and after runs | Reference SHA-256 values remain `a18f55e3…1ce6f` and `360626dd…4c33b` |
+## Validation summary
 
-## Step 3: Mutation, `INVALID`, and repeatability validation
+| Validation set | Final result | Original comparison |
+| --- | --- | --- |
+| Canonical reference | Passed 16/16 kernels | Passed relevant original source policies |
+| Valid alternatives | 5/5 implementations passed | 5/5 passed original P03-P06 controls |
+| Prior semantic mutants | 13/13 rejected | Covered by original semantic union |
+| Observed iter-19 failures | 4/4 rejected | 4/4 rejected by original P05-P06 |
+| New targeted faults | 14/14 rejected | Original P05-P06 missed three structural faults; P03-P04 rejected those three |
+| Complete fault set | 31/31 rejected; 0 invalid | Original P03-P06 union also 31/31 |
+| Protected-asset tamper | Aggregate `INVALID` | Not a candidate failure |
+| Missing compiler | Aggregate `INVALID` | Not a candidate failure |
 
-Failure validation used one targeted defect per policy role: missing definitions, warning-only code, wrong API names, absent or hidden-reference includes, incorrect output, mismatched feedback, parsed-body/tree disagreement, two forms of out-of-bounds access, and Clang-only rejection. Thirteen warning-clean semantic mutants were compiled and run through Policy 5 first; the three mutants that deliberately evaded A/B/C/D/Z examples were then run through the independent A–Z oracle.
+One corpus label was corrected during validation: removing `#pragma once` from the declaration-only reference header remains legal and repeated-inclusion safe. It was moved from the fault set to the positive controls, and a real protected test-harness dependency replaced it. This prevents a false rejection from being counted as coverage.
 
-Policy 5 kills all 10 mutants that fail the official suite, and Policy 6 kills all three official-suite survivors, so the combined canonical semantic layer kills 13/13 with no survivor. One evaluator dependency per policy returns `INVALID` for 10/10 controls, never candidate `-1`; 5 representative positive and 6 representative negative rerun pairs reproduce identical status and kernel vectors. Overlapping failures are not double-counted, and live reward-worker invocation plus trusted production of Policies 7–8 bundles remain unverified.
+## Evidence boundaries
 
-| Component or category | Role or failure pattern | Evidence or current status | How to verify | Files, controls, or next action |
-|---|---|---|---|---|
-| Policy 1 | Missing `rows` definition | KILLED: 1D and 1E `-1` | Run compile/link policy | Compile units succeed; link and clean build fail |
-| Policy 2 | Unused local under strict warnings | KILLED: 2A and 2D `-1` | Run warning tiers | GCC reports controlled unused variable |
-| Policy 3 | `rows` renamed to `make` | KILLED: 3B–3D `-1` | Run exact API probes | Header remains syntactically self-contained |
-| Policy 4 | Missing `<vector>` and hidden `.meta/example.cpp` include | KILLED: ownership/self-containment and dependency kernels `-1` | Inspect depfile and header probe | 4C reports forbidden `.meta/example.cpp` |
-| Policies 5–6 | Thirteen compile-clean semantic mutants | KILLED: official `10/10`; three official survivors killed by A–Z oracle | Run Policy 5 first, then Policy 6 on survivors | Union `13/13`; survivors: none |
-| Policy 7 | Delivered feedback differs from generated feedback | KILLED: 7B `-1` | Run hash-consistent mismatch bundle | Correct two-turn control remains `+5` |
-| Policy 8 | Parsed body differs from authenticated after tree; malformed response | KILLED: 8B `-1`; malformed 8A/8B `-1` | Rebind all hashes, preserve contradiction | Hash corruption separately returns `INVALID` |
-| Policy 9 | Heap OOB and small-string logical OOB | KILLED: ASan catches heap; libstdc++ assertions catch logical bounds | Run official and A–Z sanitizer workloads | Reference remains `+4` after hardening |
-| Policy 10 | Candidate rejects only Clang | KILLED: 10A–10C `-1` | Run host and pinned-container Clang | GCC auxiliary controls remain separate |
-| Evaluator faults | Missing tools, changed tests, wrong source digest, corrupted bundles | PASS: 10/10 policy controls are overall `INVALID` | Break one dependency per policy | No evaluator fault becomes candidate `-1` |
-| Repeatability | Positive and negative representative controls | PASS: 11/11 normalized pairs match | Compare status, applicability, kernel IDs, and scores | 5 positive and 6 negative pairs; paths/times excluded |
-| Mutation adequacy | All sampled non-equivalent contract faults | PASS: 13/13 union; no survivor | Recompute from official-first receipts | Official denominator 10; full-domain extension 3 |
+Directly verified facts are the pinned source identity, the four iter-19 outcomes, 5/5 positive acceptance, 31/31 fault rejection, original P03-P06 union coverage, canonical 16/16 kernel success, and both `INVALID` controls. The campaign, canonical, tampered-asset, and missing-compiler receipt digests are respectively `a6d46737…c686`, `ee980c28…00fd`, `755fea38…d9b7`, and `215ac841…0b82`.
 
-## Final conclusion
+The inference is that the consolidated strict boundary is a cleaner reward signal than official-only success because it detects intermediate-letter, exact-API, and protected-dependency faults. This validation does not prove an improvement in model training or generalization.
 
-The pinned canonical Diamond package is `READY` as a GRPO verifier layer: `strange` freezes the contract and builds the policy pairs, `strange-validate-verifiers` exercises positive, metamorphic, mutation, isolation, `INVALID`, and repeatability boundaries, and `strange-build-validation-reports` records the evidence here. Policies 1–6 are suitable for per-sample signals with Policies 5–6 mandatory for semantic success; Policies 7–8 require trusted conversation/evaluation bundles; Policies 9–10 should normally run as periodic audit or promotion gates. The verifier CLIs need no further logic change before consumption, but the next concrete check is one real reward-worker invocation that proves bundle production and score ingestion end to end.
+Unverified boundaries are unseen or deliberately adversarial implementations, live reward-worker ingestion, reward-weight calibration, and non-GCC portability. The original comparison intentionally covers source Policies 3-6; conversation-bundle Policies 7-8 and portability/audit Policies 9-10 were not part of this per-candidate comparison.
+
+Policy failures overlap. Per-policy rejection totals must not be added, and the original 31/31 union is established by P05-P06 over all faults plus P03-P04 over their three survivors, not by treating policy outcomes as independent samples.
+
+## Conclusion
+
+The dominant iter-19 Diamond failure is compile-clean but incorrect geometry. The final package rejects all 31 sampled faults, accepts all five valid controls, preserves the original source-policy union coverage, and handles evaluator faults safely; the next concrete check is shadow execution on unseen checkpoint outputs before enabling production reward weights.

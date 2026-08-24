@@ -1,45 +1,59 @@
 # Clock verifier validation report
 
-## Step 1: Positive and metamorphic controls
+The final Clock package contains six independently executable policies. C01-C05 provide granular build, API, integration, formatting, and semantic signals; C06 authenticates the protected benchmark assets and runs the complete official suite. The aggregate runner records every policy while keeping task correctness separate from shaping diagnostics.
 
-The pinned clock contract was reconstructed from Polyglot commit 7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f. The known-good reference was installed only in a temporary fixture; protected tests, metadata, Catch2, and build files remained hash-bound.
+The verifiers were created from the pinned Clock contract, observed model failure families, and controlled fault injection. Overlapping checks were consolidated so each policy owns a clear boundary, evaluator failures remain `INVALID`, and only authenticated terminal success can establish official correctness.
 
-All fifteen kernels passed the reference. A second behavior-preserving fixture renamed the private hour and minute fields consistently; all fifteen kernels passed again, showing that scoring depends on the public contract and behavior rather than one exact reference spelling.
+## Final verifier set
 
-| Check | Result | Decision |
-|---|---:|---|
-| Known-good reference | 15/15 kernels passed | Positive control passed |
-| Harmless metamorphic rewrite | 15/15 kernels passed | No observed false negative |
-| GCC identity | 13.3.0 | Pinned compiler matched |
-| Official terminal suite | Compiled, linked, and all selected tests passed | Canonical behavior authenticated |
+| Policy | Boundary | Why it exists |
+| --- | --- | --- |
+| CLF-C01 | C++17 build and dependency integrity | Rejects invalid language mode, incomplete includes, warnings, and basic link failures |
+| CLF-C02 | Exact public API | Checks required signatures, constructor visibility, default arguments, and free inequality |
+| CLF-C03 | Integration and ODR | Exercises repeated includes, multiple translation units, linkage, and state isolation |
+| CLF-C04 | Formatting and observation | Checks canonical rendering, signed boundaries, and stable const observation |
+| CLF-C05 | Time properties | Checks construction, normalization, arithmetic, and equality relations |
+| CLF-C06 | Official terminal suite | Authenticates protected assets and runs all official Clock tests |
 
-## Step 2: Fault and evaluator-integrity controls
+## Creation method
 
-The controlled semantic mutant added one extra minute in plus(). It kept the task API available but was rejected by the semantic and/or official policy, so the pack did not accept this known faulty candidate.
+1. Pin the benchmark contract, compiler mode, protected assets, and required public API.
+2. Group observed failures by the boundary that can identify them without depending on another category.
+3. Build independent compile, link, execution, and property probes for those boundaries.
+4. Keep candidate failures distinct from missing tools, altered assets, malformed receipts, and other evaluator faults.
+5. Preserve the complete official suite as the terminal oracle and expose stricter canonical conformance only as an explicit mode.
 
-Two evaluator faults were then injected separately. Modifying one byte of the official test and selecting a nonexistent compiler both produced INVALID, never -1, which keeps infrastructure and evidence failures out of candidate reward.
+Each consolidated contract and its implementation rationale is in [`Verifier implementation policy/`](Verifier%20implementation%20policy/).
 
-| Check | Result | Decision |
-|---|---:|---|
-| API-compatible semantic mutant | Killed | Known fault rejected |
-| Actual midbreak-RL-v2 failed output | Rejected by the added task-specific policies | Observed eval fault reached a -1 boundary |
-| Modified official test | INVALID | Contract tampering detected |
-| Missing compiler | INVALID | Infrastructure fault not charged to candidate |
-| Surviving controlled mutants | 0/1 | No known false positive |
+## Validation summary
 
-## Step 3: Repeatability and GRPO readiness
+| Control | Result |
+| --- | --- |
+| Canonical reference | Passed all 6 policies and 18 kernels |
+| Expanded targeted fault set | 23/23 rejected in strict mode |
+| Prior comparison fault set | 14/14 remained rejected in strict mode |
+| Official-only fault | Passed shaping policies and failed C06, confirming the terminal gate is independently necessary |
+| Altered protected assets | Reported `INVALID`, not candidate failure |
+| Missing compiler | Reported `INVALID`, not candidate failure |
 
-Every policy was rerun from a new empty output directory. The second run again passed 15/15 kernels, and candidate-source digests stayed identical across all policies, proving deterministic decisions and source immutability for this campaign.
+These aggregate results show that the final package preserves the tested coverage while using one consolidated verifier set. They do not claim complete coverage of every future implementation or adversarial candidate.
 
-Policies 1, 2, 4, and 5 provide granular +1/-1 reward signals. Policy 3 is mandatory for terminal correctness because it authenticates and executes the complete official suite; a candidate cannot be called correct from compile or partial semantic checks alone.
+## Reward semantics
 
-| Check | Result | Decision |
-|---|---:|---|
-| Repeat run | 15/15 kernels passed | Deterministic decision |
-| Candidate-source digest | Stable across 5/5 policies | Source remained immutable |
-| Receipt creation | Complete for pass, fail, and INVALID paths | Evidence is machine-readable |
-| Terminal rule | Policy 3 requires 3/3 | Full official success is mandatory |
+The runner defaults to `--acceptance-mode official`. In this mode, authenticated C06 success determines `reward_ready`; C01-C05 remain available as shaping and diagnostic signals.
 
-## Final conclusion
+Use `--acceptance-mode strict` only when the training objective requires the pinned canonical API and every shaping policy to pass. Both modes reject invalid evaluator state rather than assigning candidate reward.
 
-The Clock package is READY as a verifier layer for the pinned canonical task. It passed reference, harmless-change, mutation, evaluator-fault, repeatability, and immutability controls, and its authenticated official suite blocks known faulty answers from terminal success. Fast API and semantic kernels can provide GRPO sample rewards; live reward-worker wiring and production-scale throughput remain separate integration checks.
+## Run
+
+```bash
+python3 "Reward_GRPO/Clock Verifiers/verifiers/run_all.py" \
+  --exercise-dir /path/to/pinned/clock \
+  --output-dir /new/empty/output
+```
+
+Add `--acceptance-mode strict` for canonical conformance. The output directory must be new and empty so receipts from different candidates cannot be mixed.
+
+## Conclusion
+
+The final package has one terminal correctness gate, five focused shaping boundaries, deterministic receipts, and explicit invalid-state handling. The remaining boundary is production calibration: category rewards should be shadowed on unseen model outputs before they are assigned training weights.
