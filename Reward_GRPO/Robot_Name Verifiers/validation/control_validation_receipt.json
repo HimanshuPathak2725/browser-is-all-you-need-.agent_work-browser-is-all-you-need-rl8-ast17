@@ -1,0 +1,1052 @@
+{
+  "cases": [
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "7723754d4c589fb896145ce76990051474da3b4d2a05e1d0f1f986c792a54e95",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "reference_positive",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "eb868904ed752d1cb415de645297387518d19514f26519ec27a210da84af10ae",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset passed",
+            "uniqueness passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d8fe2827000de2ee6ca5b0bdbe90037629b0e359ba710f4baae3aa4c7e655ce9",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "3329a244a1ed2cd72d5b06c36db95f539a3c52ddccbe5970f1b708f6e6e8e231",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "b35a9926034e9ede8c83898ab79a69a3272cc2091e0a9df180a3550e35ca2d6d",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "constructor_carry passed",
+            "reset_carry passed",
+            "mixed_progression passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "86ba8f271b9ae0be129305c594280c17b347e792f97c424aa52725ece9803063",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "a6d5e1878abab387c4edb3b8a799715c08c07bcc0e96ce08606932f350984541",
+        "robot_name.h": "bf4c525aa30d72fe2270857aa5ad37a18f17c39dcf60c7a4c8f9bd7d225eb5db"
+      },
+      "case_id": "midband_trial_2_final_positive",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "c436da9af2cfd3ba94f4ef9ef58b377340e3365556f617fbc824a2ec6d6d32bf",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ec362a31b820b69b3c7fc68816cc6c4897ed30daf7898362af7bac88e603fa27",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "c436da9af2cfd3ba94f4ef9ef58b377340e3365556f617fbc824a2ec6d6d32bf",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset passed",
+            "uniqueness passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "fb791142e7947009b094574b8e8f2dbfbddbb1e2afa2e4c1e533feabbc8fead7",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "c436da9af2cfd3ba94f4ef9ef58b377340e3365556f617fbc824a2ec6d6d32bf",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "bf044994d685341bb30803228ae1c1aad0c86fba081d6b117ddea002c83ed6ca",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "c436da9af2cfd3ba94f4ef9ef58b377340e3365556f617fbc824a2ec6d6d32bf",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "3972b46b6b26ee25575a0d03806c4f56fbf95cafde0870f362e124ab20543509",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "c436da9af2cfd3ba94f4ef9ef58b377340e3365556f617fbc824a2ec6d6d32bf",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "constructor_carry passed",
+            "reset_carry passed",
+            "mixed_progression passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "879eea1f4c15c73f2190dad7ddbb9d17e4f31f8491759b4ec3048aa6c3db9c8c",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "b7319644988e8133d73810d3cc2e16ca28bfb008a933aeaec157981e8108b61f",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "renamed_helper_positive",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "b70160e3652bfa145593ae6ee40e492ac91e579d316b08c9ea6b9837e00ab4a0",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "09775659bd216290f9b979028ff2bd21e9e937b99a12273d48349dd4b551698b",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "b70160e3652bfa145593ae6ee40e492ac91e579d316b08c9ea6b9837e00ab4a0",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset passed",
+            "uniqueness passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "4da17e7754860a4ddf6e9934f5982ad2a80a9724dd32d45c612ade6f879bf132",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "b70160e3652bfa145593ae6ee40e492ac91e579d316b08c9ea6b9837e00ab4a0",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ffbbf05c8e4db891b436aeb278b73a340c3546dec7f45850c01a3458be64a585",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "b70160e3652bfa145593ae6ee40e492ac91e579d316b08c9ea6b9837e00ab4a0",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ad7fa37767297aa6b5c31c192f759847ccf4bac83a8ebbd06607b1b668e702e4",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "b70160e3652bfa145593ae6ee40e492ac91e579d316b08c9ea6b9837e00ab4a0",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "constructor_carry passed",
+            "reset_carry passed",
+            "mixed_progression passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ce11cacd7cc88d29cf58b86903111c463d4dab325a1f5a4f3285bfe1026c1cb3",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "cb7f44c3c31d0481d6f91b179ed5b0414618594aa63f8f2db8293c0aca286b22",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "reset_preserves_name_mutant",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "630f54882e8fadb61ff2f31216da4af026845ee743edc3a4d03758e31b15f6b4",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "4c9c5c13e313113e49d00b761fb6fcb7a4ff90749b9909d0c6c334ac6952199d",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "630f54882e8fadb61ff2f31216da4af026845ee743edc3a4d03758e31b15f6b4",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset behavior check failed",
+            "uniqueness passed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "71d7e93b1420b5de9ceaf76f8ed4b70c1a0058ebaa7c0e556d494ac17f252047",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "630f54882e8fadb61ff2f31216da4af026845ee743edc3a4d03758e31b15f6b4",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "ac7c54f4babd250336b011d375550eba9c0d74127ecf606a1d5d697a3501cde5",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "630f54882e8fadb61ff2f31216da4af026845ee743edc3a4d03758e31b15f6b4",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "eab74ab88c3ef1579b9596cd0e9e088c7553f8d38b67df3f9ecfb3a11f090691",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "630f54882e8fadb61ff2f31216da4af026845ee743edc3a4d03758e31b15f6b4",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "constructor_carry passed",
+            "reset_carry behavior check failed",
+            "mixed_progression behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "c0db2819185a4bba8aa07ec2a767edfad4237b2b0e3271bd8868e6cfebb39b3a",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "19b5746c7ff1fb165081e028dd2c255f631b31cd4272aa0ffdad0d992ef0500b",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "malformed_prefix_mutant",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "a54e8127af494f095bfd6bce3024ba54cd9b6e447a40d110b233e7b966bb68df",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "8acb7bbb4a264f53ff59959187ebe6debc3e58147d3f14b01c544a4046d30e8a",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "a54e8127af494f095bfd6bce3024ba54cd9b6e447a40d110b233e7b966bb68df",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "format_stability behavior check failed",
+            "reset behavior check failed",
+            "uniqueness behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "35698aeeca73df4e4642c46b9dbe1b90df461f5f614d831877c6dfe5a9a4e24e",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "a54e8127af494f095bfd6bce3024ba54cd9b6e447a40d110b233e7b966bb68df",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "d9054634b8824c6af6e1458a53971240e12a1cde9f64201caccb6e3a9617fa15",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "a54e8127af494f095bfd6bce3024ba54cd9b6e447a40d110b233e7b966bb68df",
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "construction behavior check failed",
+            "stable_observer passed",
+            "reset_lifecycle behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "4ff1ab63ce3a328bf3ff49439ad13db12ee892b712810bc3bd5ee7dd1116869d",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "a54e8127af494f095bfd6bce3024ba54cd9b6e447a40d110b233e7b966bb68df",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "constructor_carry behavior check failed",
+            "reset_carry behavior check failed",
+            "mixed_progression behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "f93628e2f020cedda9eed25e96a0a615d9ee818762e9dfcde7558747bb11dd35",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "05816aa798b52d361aa0228d28a8900dd8596d354069716a74e0f1acd19c2f0b",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "duplicate_namespace_mutant",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "f021562486818ba5164899faec4b62033b19ed3836e3e1de01121684af8f983a",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "71e41ae9ac6d60c8691ea183c5004f465710d9315a451db21f032b45a126779f",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "f021562486818ba5164899faec4b62033b19ed3836e3e1de01121684af8f983a",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset behavior check failed",
+            "uniqueness behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "ffb37b27b533b7839049d68770526414a8eada1cf75613c9c18c2e4fbc0937f4",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "f021562486818ba5164899faec4b62033b19ed3836e3e1de01121684af8f983a",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "bc9a8eb9248525b584c7bdea24d3a668ac996e279e7e01c1f593d7c572b153e7",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "f021562486818ba5164899faec4b62033b19ed3836e3e1de01121684af8f983a",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "22a261cb133064d39cda737316e236e8ae958ead179b166d17e3c75804710dac",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "f021562486818ba5164899faec4b62033b19ed3836e3e1de01121684af8f983a",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "constructor_carry behavior check failed",
+            "reset_carry behavior check failed",
+            "mixed_progression behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "ae21b43cfbadaa3aed3d86748e3647196372fcae1eceffac2a87bf7b5fc3c6e2",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    },
+    {
+      "candidate_sha256": {
+        "robot_name.cpp": "7723754d4c589fb896145ce76990051474da3b4d2a05e1d0f1f986c792a54e95",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "reference_repeat",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d1e8245df2c748d917f5cc7a828c1053a6023553330c755289b5aa49df693982",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "format_stability passed",
+            "reset passed",
+            "uniqueness passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d95fab7a22b6de78c3275c9b223e375bf11acbe8c5e5bb5de553f5c9b85b4f1d",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "da952d1f31b9b08ca2e35d07e3267f26b2ecc205c9a6e1095207faf7232ab905",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "construction passed",
+            "stable_observer passed",
+            "reset_lifecycle passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "2d814378bcf7c5875e60f67dd0f88d750c60968a723e3183200f42555d697d34",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "2303e4319af3970f76b0fbd63ef235b0741072e79fca9594b6b50428853d6c88",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "constructor_carry passed",
+            "reset_carry passed",
+            "mixed_progression passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d96e2edd7af83758b4facf7fff57191d9eda5528dc55b4fc76899534c4e4911d",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    }
+  ],
+  "compiler": "13.3.0",
+  "invalid": {
+    "missing_compiler": {
+      "candidate_sha256": {
+        "robot_name.cpp": "7723754d4c589fb896145ce76990051474da3b4d2a05e1d0f1f986c792a54e95",
+        "robot_name.h": "0887f0ebd0fe974d16e11dc24eeeadc5d936821cddfad13e996387e2ec74fa44"
+      },
+      "case_id": "missing_compiler",
+      "pack_status": "invalid",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": null,
+          "kernel_statuses": [],
+          "kernel_summaries": [],
+          "kernel_vector": [],
+          "preflight_error": "compiler not found: robot-name-validator-compiler-does-not-exist",
+          "process_returncode": 2,
+          "receipt_sha256": "9a6e29b1d4321c3548c5498f20e991894de528f077548d9e348ca54912ec9ffc",
+          "status": "invalid"
+        },
+        "E02": {
+          "candidate_source_sha256": null,
+          "kernel_statuses": [],
+          "kernel_summaries": [],
+          "kernel_vector": [],
+          "preflight_error": "compiler not found: robot-name-validator-compiler-does-not-exist",
+          "process_returncode": 2,
+          "receipt_sha256": "412258bc2d15e246d6b302c04cb76897a01fafad722df5888f86f6b1591e70be",
+          "status": "invalid"
+        },
+        "E03": {
+          "candidate_source_sha256": null,
+          "kernel_statuses": [],
+          "kernel_summaries": [],
+          "kernel_vector": [],
+          "preflight_error": "compiler not found: robot-name-validator-compiler-does-not-exist",
+          "process_returncode": 2,
+          "receipt_sha256": "9e44332a616d384aa511f9d477fb2af77a79b914debb1393c756d892c366910b",
+          "status": "invalid"
+        },
+        "E04": {
+          "candidate_source_sha256": null,
+          "kernel_statuses": [],
+          "kernel_summaries": [],
+          "kernel_vector": [],
+          "preflight_error": "compiler not found: robot-name-validator-compiler-does-not-exist",
+          "process_returncode": 2,
+          "receipt_sha256": "7697c3902795fb016b49bcc2b71d9f88e7b64cfbe59c6cacc8738d56a21bce56",
+          "status": "invalid"
+        },
+        "E05": {
+          "candidate_source_sha256": null,
+          "kernel_statuses": [],
+          "kernel_summaries": [],
+          "kernel_vector": [],
+          "preflight_error": "compiler not found: robot-name-validator-compiler-does-not-exist",
+          "process_returncode": 2,
+          "receipt_sha256": "eda212f31b5b938eee5d7d1aac5278d88ceced6f020cedf0f6aee56e4a345722",
+          "status": "invalid"
+        }
+      },
+      "source_unchanged": true,
+      "terminal_gate_status": "invalid"
+    },
+    "tampered_official_test": {
+      "candidate_source_sha256": null,
+      "kernel_statuses": [],
+      "kernel_summaries": [],
+      "kernel_vector": [],
+      "preflight_error": "fixed contract asset hash mismatch: robot_name_test.cpp",
+      "process_returncode": 2,
+      "receipt_sha256": "afd8322c0242be0f5aee7a742ba11797e0688e78881c98ef35ea52dcbec6318c",
+      "status": "invalid"
+    }
+  },
+  "invalid_cases": [
+    "missing_compiler",
+    "tampered_official_test"
+  ],
+  "invalid_statuses": [
+    "invalid",
+    "invalid"
+  ],
+  "mutant_cases": [
+    "reset_preserves_name_mutant",
+    "malformed_prefix_mutant",
+    "duplicate_namespace_mutant"
+  ],
+  "mutant_kill_expectations": {
+    "duplicate_namespace_mutant": [
+      "E02",
+      "E03",
+      "E04",
+      "E05"
+    ],
+    "malformed_prefix_mutant": [
+      "E02",
+      "E03",
+      "E04",
+      "E05"
+    ],
+    "reset_preserves_name_mutant": [
+      "E02",
+      "E03",
+      "E04"
+    ]
+  },
+  "mutants_killed": 3,
+  "positive_cases": [
+    "reference_positive",
+    "midband_trial_2_final_positive",
+    "renamed_helper_positive",
+    "reference_repeat"
+  ],
+  "positive_kernel_passes": 60,
+  "repeatability": {
+    "E01": {
+      "first_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "matched": true,
+      "repeat_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E02": {
+      "first_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "matched": true,
+      "repeat_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E03": {
+      "first_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "matched": true,
+      "repeat_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E04": {
+      "first_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "matched": true,
+      "repeat_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E05": {
+      "first_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "matched": true,
+      "repeat_kernel_vector": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    }
+  },
+  "schema_version": 1,
+  "task_id": "robot-name"
+}

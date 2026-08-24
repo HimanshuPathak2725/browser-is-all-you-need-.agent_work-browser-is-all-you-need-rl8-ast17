@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "curriculum": "multi-env-strange-global-v2",
+  "dataset_kind": "aider-polyglot-cpp-shadow-grpo",
+  "expected_train_count": 73,
+  "expected_topic_count": 17,
+  "verifier_image": "glm47-strange-multi-env:gcc13.3-v2",
+  "topics": [
+    {
+      "slug": "allergies",
+      "package": "Allergies Verifiers",
+      "editable_files": ["allergies.h", "allergies.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E06"],
+      "terminal_policies": ["E06"]
+    },
+    {
+      "slug": "circular-buffer",
+      "package": "Circular_Buffer Verifiers",
+      "editable_files": ["circular_buffer.h", "circular_buffer.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "clock",
+      "package": "Clock Verifiers",
+      "editable_files": ["clock.h", "clock.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E06"]
+    },
+    {
+      "slug": "complex-numbers",
+      "package": "Complex_Numbers Verifiers",
+      "editable_files": ["complex_numbers.h", "complex_numbers.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "crypto-square",
+      "package": "Crypto_Square Verifiers",
+      "editable_files": ["crypto_square.h", "crypto_square.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E06"]
+    },
+    {
+      "slug": "diamond",
+      "package": "Diamond Verifiers",
+      "editable_files": ["diamond.h", "diamond.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"]
+    },
+    {
+      "slug": "grade-school",
+      "package": "Grade_School Verifiers",
+      "editable_files": ["grade_school.h", "grade_school.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"]
+    },
+    {
+      "slug": "parallel-letter-frequency",
+      "package": "Parallel_Letter_Frequency Verifiers",
+      "editable_files": ["parallel_letter_frequency.h", "parallel_letter_frequency.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E03"]
+    },
+    {
+      "slug": "perfect-numbers",
+      "package": "Perfect_Numbers Verifiers",
+      "editable_files": ["perfect_numbers.h", "perfect_numbers.cpp"],
+      "live_policies": ["E01", "E02", "E03"],
+      "terminal_policies": ["E01", "E02", "E03"]
+    },
+    {
+      "slug": "robot-name",
+      "package": "Robot_Name Verifiers",
+      "editable_files": ["robot_name.h", "robot_name.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E01", "E02", "E03", "E04", "E05"]
+    },
+    {
+      "slug": "spiral-matrix",
+      "package": "Spiral_Matrix Verifiers",
+      "editable_files": ["spiral_matrix.h", "spiral_matrix.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05"],
+      "terminal_policies": ["E01", "E02", "E03", "E04", "E05"]
+    },
+    {
+      "slug": "sublist",
+      "package": "Sublist Verifiers",
+      "editable_files": ["sublist.h", "sublist.cpp"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E05", "E06"],
+      "runner_kind": "sublist"
+    },
+    {
+      "slug": "binary-search-tree",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["binary_search_tree.cpp", "binary_search_tree.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/binary-search-tree.json",
+      "global_manifest_sha256": "1a9a65b79b3153715fdfed5eba3e8707c48361a779ea4c30b7ab16efaf91e8ff"
+    },
+    {
+      "slug": "kindergarten-garden",
+      "package": "Kindergarten_Garden Verifiers",
+      "editable_files": ["kindergarten_garden.cpp", "kindergarten_garden.h"],
+      "live_policies": ["E01", "E02", "E03", "E04", "E05", "E06"],
+      "terminal_policies": ["E06"]
+    },
+    {
+      "slug": "linked-list",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["linked_list.cpp", "linked_list.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/linked-list.json",
+      "global_manifest_sha256": "88e5ec210f9cbb0cf582711f8fd42cd1a25fc82d832c4203cdd635c7b90b2a92"
+    },
+    {
+      "slug": "meetup",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["meetup.cpp", "meetup.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/meetup.json",
+      "global_manifest_sha256": "6894475ed671c884867e5ea5ac021161e17dedb5413aab31ec1c758f63e90f91"
+    },
+    {
+      "slug": "zebra-puzzle",
+      "package": "Global Cpp Verifiers",
+      "editable_files": ["zebra_puzzle.cpp", "zebra_puzzle.h"],
+      "live_policies": ["G01", "G02", "G03", "G04", "G05", "G07"],
+      "dataset_policies": ["G01"],
+      "terminal_policies": ["G02", "G03", "G04", "G05", "G07"],
+      "runner_kind": "global",
+      "global_manifest": "multi_env_global_manifests/zebra-puzzle.json",
+      "global_manifest_sha256": "f385421aefda5b81c529e5bb31361f286694d23407b16b2762b893273f5fa0c0"
+    }
+  ]
+}

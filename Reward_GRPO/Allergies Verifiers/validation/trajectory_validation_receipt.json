@@ -1,0 +1,412 @@
+{
+  "baseline": {
+    "counts": {
+      "failed": 0,
+      "invalid": 1,
+      "passed": 4
+    },
+    "kernel_sum": null,
+    "kernels": [
+      {
+        "evidence": {
+          "artifact_count": 11,
+          "artifact_hashes": {
+            "delivered_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+            "generated_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+            "turn_1_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "turn_1_allergies_h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "turn_1_response": "58329ae0c845257b2d179b67b06feb8f59a3e78dae8618a88d5b255a56ef0e30",
+            "turn_1_score_receipt": "221dcdc3905aaabfed28dc3e3594b3a6ff0f473dc8edd0c1841726116e732c8a",
+            "turn_2_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "turn_2_allergies_h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "turn_2_response": "edc3385044fbcb5e3fee731c10bcb3818ebcea625948e6ac80369720a8de82e2",
+            "turn_2_score_receipt": "e9f730ce54957eb0d357522a1bff458110541706a250dc9a3f7c2a6f66a51d0a",
+            "turn_2_source_diff": "9cd0dd0a9723a55bab2d066236f5f9c478033c61e17136d3b1b2285cd69e9314"
+          }
+        },
+        "kernel": "5A",
+        "reason": "bundle paths, hashes, and task identities are authenticated",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "byte_count": 171,
+          "feedback_sha256": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734"
+        },
+        "kernel": "5B",
+        "reason": "the delivered feedback is byte-identical to the generated feedback",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {},
+        "kernel": "5C",
+        "reason": "turn-one receipt lacks the policy's authenticated parameter-type diagnostic",
+        "result": "INVALID",
+        "score": null
+      },
+      {
+        "evidence": {
+          "compile_or_link_error_marker": false,
+          "returncode": 0
+        },
+        "kernel": "5D",
+        "reason": "turn two completed without compile or link failure",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "returncode": 0,
+          "status": "passed",
+          "summary": "All tests passed (50 assertions in 50 test cases)"
+        },
+        "kernel": "5E",
+        "reason": "turn two closes the repair with all 50 official assertions passing",
+        "result": "PASS",
+        "score": 1
+      }
+    ],
+    "overall_status": "INVALID",
+    "process_returncode": 2,
+    "receipt_sha256": "193511c34b4baa5b9c379a76f76b4332f5aa1af4055ff2cef78b4bb3045c8423",
+    "verifier_sha256": "96bb2af9825ca6c18b9e317d27d33d09eff3aa6d766528f5d75f9e598f50150f"
+  },
+  "baseline_commit": "56edd9767fc8426776fe3f5379c5815a18383e59",
+  "bundle_manifest_sha256": "a6eec446108b5e5f233a29df83cf10e0791aab7bc8eba28b2e32b5bf3bebdd7f",
+  "current": {
+    "counts": {
+      "failed": 0,
+      "invalid": 0,
+      "passed": 5
+    },
+    "kernel_sum": 5,
+    "kernels": [
+      {
+        "evidence": {
+          "artifact_count": 11,
+          "artifact_hashes": {
+            "delivered_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+            "generated_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+            "turn_1_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "turn_1_allergies_h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "turn_1_response": "58329ae0c845257b2d179b67b06feb8f59a3e78dae8618a88d5b255a56ef0e30",
+            "turn_1_score_receipt": "221dcdc3905aaabfed28dc3e3594b3a6ff0f473dc8edd0c1841726116e732c8a",
+            "turn_2_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "turn_2_allergies_h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "turn_2_response": "edc3385044fbcb5e3fee731c10bcb3818ebcea625948e6ac80369720a8de82e2",
+            "turn_2_score_receipt": "e9f730ce54957eb0d357522a1bff458110541706a250dc9a3f7c2a6f66a51d0a",
+            "turn_2_source_diff": "9cd0dd0a9723a55bab2d066236f5f9c478033c61e17136d3b1b2285cd69e9314"
+          }
+        },
+        "kernel": "5A",
+        "reason": "bundle paths, hashes, and task identities are authenticated",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "byte_count": 171,
+          "feedback_sha256": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734"
+        },
+        "kernel": "5B",
+        "reason": "the delivered feedback is byte-identical to the generated feedback",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "diagnostic": "build.missing_unordered_map_include",
+          "present_in_turn_2": false,
+          "turn_2_diagnostic_class": null
+        },
+        "kernel": "5C",
+        "reason": "the authenticated turn-one diagnostic is absent from turn two",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "compile_or_link_error_marker": false,
+          "returncode": 0
+        },
+        "kernel": "5D",
+        "reason": "turn two completed without compile or link failure",
+        "result": "PASS",
+        "score": 1
+      },
+      {
+        "evidence": {
+          "returncode": 0,
+          "status": "passed",
+          "summary": "All tests passed (50 assertions in 50 test cases)"
+        },
+        "kernel": "5E",
+        "reason": "turn two closes the repair with all 50 official assertions passing",
+        "result": "PASS",
+        "score": 1
+      }
+    ],
+    "overall_status": "PASS",
+    "process_returncode": 0,
+    "receipt_sha256": "d7cc3e47b817f36d4e11e4ab151cf5111081b64bd7c733c8ee6e932e4cd7bb78",
+    "verifier_sha256": "4f0768b9d489f6d5a2d3d79d07fa78062fcf6604d947c992d4358c1c80740d0d"
+  },
+  "evidence_controls": {
+    "persistent_diagnostic": {
+      "counts": {
+        "failed": 3,
+        "invalid": 0,
+        "passed": 2
+      },
+      "kernel_sum": -1,
+      "kernels": [
+        {
+          "evidence": {
+            "artifact_count": 11,
+            "artifact_hashes": {
+              "delivered_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+              "generated_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+              "turn_1_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_1_allergies_h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+              "turn_1_response": "58329ae0c845257b2d179b67b06feb8f59a3e78dae8618a88d5b255a56ef0e30",
+              "turn_1_score_receipt": "221dcdc3905aaabfed28dc3e3594b3a6ff0f473dc8edd0c1841726116e732c8a",
+              "turn_2_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_2_allergies_h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+              "turn_2_response": "edc3385044fbcb5e3fee731c10bcb3818ebcea625948e6ac80369720a8de82e2",
+              "turn_2_score_receipt": "51bf5642b84506ff09a61dde3543eaf946f86141ad933d9d6a62902a7dbcb682",
+              "turn_2_source_diff": "9cd0dd0a9723a55bab2d066236f5f9c478033c61e17136d3b1b2285cd69e9314"
+            }
+          },
+          "kernel": "5A",
+          "reason": "bundle paths, hashes, and task identities are authenticated",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "byte_count": 171,
+            "feedback_sha256": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734"
+          },
+          "kernel": "5B",
+          "reason": "the delivered feedback is byte-identical to the generated feedback",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "diagnostic": "build.missing_unordered_map_include",
+            "present_in_turn_2": true
+          },
+          "kernel": "5C",
+          "reason": "the reported Allergies diagnostic remains after feedback",
+          "result": "FAIL",
+          "score": -1
+        },
+        {
+          "evidence": {
+            "compile_or_link_error_marker": true,
+            "returncode": 2
+          },
+          "kernel": "5D",
+          "reason": "turn two did not produce a clean official consumer build and run",
+          "result": "FAIL",
+          "score": -1
+        },
+        {
+          "evidence": {
+            "returncode": 2,
+            "status": "failed",
+            "summary_present": false
+          },
+          "kernel": "5E",
+          "reason": "turn two does not close the repair with the complete official suite",
+          "result": "FAIL",
+          "score": -1
+        }
+      ],
+      "overall_status": "FAIL",
+      "process_returncode": 1,
+      "receipt_sha256": "bc00182335372074ecacc9b758e5c287f8a760fce0544e1623ab297c58747ecc",
+      "verifier_sha256": "4f0768b9d489f6d5a2d3d79d07fa78062fcf6604d947c992d4358c1c80740d0d"
+    },
+    "single_turn": {
+      "counts": {
+        "failed": 0,
+        "invalid": 0,
+        "passed": 0
+      },
+      "kernel_sum": null,
+      "kernels": [],
+      "overall_status": "NOT_APPLICABLE",
+      "process_returncode": 0,
+      "receipt_sha256": "3e33c2c52c09e4ce643cdfdd32bdc6c7332a9e1e5d1ce87b16e9a9ae249eab23",
+      "verifier_sha256": "4f0768b9d489f6d5a2d3d79d07fa78062fcf6604d947c992d4358c1c80740d0d"
+    },
+    "tampered_feedback": {
+      "counts": {
+        "failed": 0,
+        "invalid": 1,
+        "passed": 4
+      },
+      "kernel_sum": null,
+      "kernels": [
+        {
+          "evidence": {
+            "artifact_count": 11,
+            "artifact_hashes": {
+              "delivered_feedback": "119577160695fb0a6e2f51c7750fcaa6f384ff93edbed06f30451e4840918909",
+              "generated_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+              "turn_1_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_1_allergies_h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+              "turn_1_response": "58329ae0c845257b2d179b67b06feb8f59a3e78dae8618a88d5b255a56ef0e30",
+              "turn_1_score_receipt": "221dcdc3905aaabfed28dc3e3594b3a6ff0f473dc8edd0c1841726116e732c8a",
+              "turn_2_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_2_allergies_h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+              "turn_2_response": "edc3385044fbcb5e3fee731c10bcb3818ebcea625948e6ac80369720a8de82e2",
+              "turn_2_score_receipt": "e9f730ce54957eb0d357522a1bff458110541706a250dc9a3f7c2a6f66a51d0a",
+              "turn_2_source_diff": "9cd0dd0a9723a55bab2d066236f5f9c478033c61e17136d3b1b2285cd69e9314"
+            }
+          },
+          "kernel": "5A",
+          "reason": "bundle paths, hashes, and task identities are authenticated",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {},
+          "kernel": "5B",
+          "reason": "generated and delivered feedback differ",
+          "result": "INVALID",
+          "score": null
+        },
+        {
+          "evidence": {
+            "diagnostic": "build.missing_unordered_map_include",
+            "present_in_turn_2": false,
+            "turn_2_diagnostic_class": null
+          },
+          "kernel": "5C",
+          "reason": "the authenticated turn-one diagnostic is absent from turn two",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "compile_or_link_error_marker": false,
+            "returncode": 0
+          },
+          "kernel": "5D",
+          "reason": "turn two completed without compile or link failure",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "returncode": 0,
+            "status": "passed",
+            "summary": "All tests passed (50 assertions in 50 test cases)"
+          },
+          "kernel": "5E",
+          "reason": "turn two closes the repair with all 50 official assertions passing",
+          "result": "PASS",
+          "score": 1
+        }
+      ],
+      "overall_status": "INVALID",
+      "process_returncode": 2,
+      "receipt_sha256": "62a85b9f96983cd6dc40eb2857fd5102c1655853e669e7bbf1d695bb16bd3d4f",
+      "verifier_sha256": "4f0768b9d489f6d5a2d3d79d07fa78062fcf6604d947c992d4358c1c80740d0d"
+    },
+    "unknown_repair_class": {
+      "counts": {
+        "failed": 0,
+        "invalid": 1,
+        "passed": 4
+      },
+      "kernel_sum": null,
+      "kernels": [
+        {
+          "evidence": {
+            "artifact_count": 11,
+            "artifact_hashes": {
+              "delivered_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+              "generated_feedback": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734",
+              "turn_1_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_1_allergies_h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+              "turn_1_response": "58329ae0c845257b2d179b67b06feb8f59a3e78dae8618a88d5b255a56ef0e30",
+              "turn_1_score_receipt": "221dcdc3905aaabfed28dc3e3594b3a6ff0f473dc8edd0c1841726116e732c8a",
+              "turn_2_allergies_cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+              "turn_2_allergies_h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+              "turn_2_response": "edc3385044fbcb5e3fee731c10bcb3818ebcea625948e6ac80369720a8de82e2",
+              "turn_2_score_receipt": "e9f730ce54957eb0d357522a1bff458110541706a250dc9a3f7c2a6f66a51d0a",
+              "turn_2_source_diff": "9cd0dd0a9723a55bab2d066236f5f9c478033c61e17136d3b1b2285cd69e9314"
+            }
+          },
+          "kernel": "5A",
+          "reason": "bundle paths, hashes, and task identities are authenticated",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "byte_count": 171,
+            "feedback_sha256": "c592305c1be4046bda381f7bb76af9fd7102ef41ee812da8fb87f675197cc734"
+          },
+          "kernel": "5B",
+          "reason": "the delivered feedback is byte-identical to the generated feedback",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {},
+          "kernel": "5C",
+          "reason": "manifest repair_class is not an authenticated Allergies repair class",
+          "result": "INVALID",
+          "score": null
+        },
+        {
+          "evidence": {
+            "compile_or_link_error_marker": false,
+            "returncode": 0
+          },
+          "kernel": "5D",
+          "reason": "turn two completed without compile or link failure",
+          "result": "PASS",
+          "score": 1
+        },
+        {
+          "evidence": {
+            "returncode": 0,
+            "status": "passed",
+            "summary": "All tests passed (50 assertions in 50 test cases)"
+          },
+          "kernel": "5E",
+          "reason": "turn two closes the repair with all 50 official assertions passing",
+          "result": "PASS",
+          "score": 1
+        }
+      ],
+      "overall_status": "INVALID",
+      "process_returncode": 2,
+      "receipt_sha256": "93c5def6cde5b07bb69b7af2e99b3c9d0e99f1a83d933807edbee62115cf3b92",
+      "verifier_sha256": "4f0768b9d489f6d5a2d3d79d07fa78062fcf6604d947c992d4358c1c80740d0d"
+    }
+  },
+  "legacy_repair_class_control": {
+    "diagnostic_sha256": "c569e8a37dd365792629349033e80785bcfb0558415249aa2da367dfa52130d9",
+    "expected_repair_class": "api.is_allergic_to.parameter_type",
+    "observed_repair_class": "api.is_allergic_to.parameter_type",
+    "source_request_sha256": "9603b0f84646d5c4e9b16b20356e757e81ba987c76e939678c0f504ab2d62581",
+    "source_sample_id": "luna-fixed26-20260805/trial-2/allergies/turn-1-feedback",
+    "status": "PASS"
+  },
+  "repair_class": "build.missing_unordered_map_include",
+  "schema_version": 1,
+  "source_chat_sha256": "640cd0447e37b98c32bfa291325386f068cfe2f887acb42f537c016ca3ba041b",
+  "source_results_sha256": "13445fc267e0251859006d3ea5160860e3fe6d1e4194b6fd385f1249d4615ef6",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "source_sample_id": "trial-1/allergies/turn-1-to-turn-2",
+  "task_id": "local-aider-cpp/allergies"
+}

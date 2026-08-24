@@ -1,0 +1,79 @@
+{
+  "fixed_hashes": {
+    "config": "5ed306e3c419a01c3f7404c2cfe27ac6793591b913bb64714c455ba28956e0ec",
+    "example_cpp": "068dec0c2dcb773232ec622cddd55951fd6d13421bf77155219f12d058f54262",
+    "example_h": "216164fb4b94a80a05b93785d787c92bca08d1712c851ade21c807df9e4469ed",
+    "instructions": "8db797c5f8e9c0efbb8c805ddefca892f764b4f3a72dff65c037f4bffb92b1cb",
+    "official_test": "fa206f8feaa1f8aa63986db34fc96458b30ab0325c0855fd6659ab7cbcb50be3",
+    "tests_toml": "8b0d194af6ebbefe95efab1fdb6958d3a88ee12cd50501869373b4b72be202b6"
+  },
+  "policy_checks": [
+    {
+      "path": "Verifier implementation policy/policy_01_exact_public_api.md",
+      "policy_id": "E01",
+      "sha256": "cbf43c8d250f80f5aa88422b0d703c80e3f97175076e6a11a90996d6a0cff3ab",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_02_aliquot_sum_semantics.md",
+      "policy_id": "E02",
+      "sha256": "656c91d2a53aa80c929b9f4de1f111931eff8bc364c2c74fc8d087eae4d785d2",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_03_nonpositive_domain_error.md",
+      "policy_id": "E03",
+      "sha256": "665a9546fdfd1b044e7fbac7b2e6ebe5734654588568fbce0b3a16d7f1560b73",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_04_feedback_repair_non_regression.md",
+      "policy_id": "E04",
+      "sha256": "5556d49f8962c63f60da8a1afb4692c5e489c80d79c169d7e756da5155c7781a",
+      "template_check": "pass"
+    }
+  ],
+  "policy_count": 4,
+  "schema_version": 1,
+  "source_kernel_count": 11,
+  "status": "pass",
+  "task_id": "perfect-numbers",
+  "terminal_source_gate": [
+    "E01",
+    "E02",
+    "E03"
+  ],
+  "total_kernel_count": 15,
+  "trajectory_kernel_count": 4,
+  "verifier_checks": [
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_01_exact_public_api.py",
+      "policy_id": "E01",
+      "sha256": "6d402b5b311c5520dca0fbff5fd09f236acdf297c05419c7001d5156108c9781",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_02_aliquot_sum_semantics.py",
+      "policy_id": "E02",
+      "sha256": "4877ace2d9440860ae9f1c102c596e741a845a5f5e22d5fd6344e48a885b8c37",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_03_nonpositive_domain_error.py",
+      "policy_id": "E03",
+      "sha256": "091a7e3d1f1cd50795781d3488ffae55c66b535ab937e54b73a9efe5c58bf51d",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_04_feedback_repair_non_regression.py",
+      "policy_id": "E04",
+      "sha256": "c98b7eaf529dd009cb9fd84873c539ef7b7dd017a161ca5e0cf24157f3b3d0ae",
+      "source_comment_count": 1
+    }
+  ],
+  "verifier_count": 4
+}

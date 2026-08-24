@@ -1,0 +1,595 @@
+{
+  "classification_counts": {
+    "agreement_fail": 3,
+    "agreement_pass": 3
+  },
+  "compiler": "13.3.0",
+  "conclusion": "no current-verifier misses or restrictions; E04 rejects the exact repair regression",
+  "manifest_sha256": "3ada20eeed0da6b6959bc9bc2af0edabbfd2947d5e710086c19d0a54ecc9bc7d",
+  "schema_version": 1,
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_run_id": "execution-bank-RL-v2-think-r2",
+  "source_samples": [
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "70dd79e4d85cee28284c68781066701f9928e23fbe7b58f73913463cf1c19e75",
+        "perfect_numbers.h": "9d84495c95cda18068954a2c389afa9e792cc534699dfda52f210b4648f99c80"
+      },
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "missing public API; pristine skeleton reached compiler",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "98f87d8e5dab71daa5dec2188c24ebb19d5e06cbaff09396a5fba7d2fff4f7fb",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping did not compile",
+            "function_signature did not compile",
+            "candidate definition did not compile and link",
+            "official caller did not compile against candidate declarations"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "4bdf1b5db260e0af7e1068df15bdb64eaa2a646010f505f5bf87876eabdeb6d0",
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": "98f87d8e5dab71daa5dec2188c24ebb19d5e06cbaff09396a5fba7d2fff4f7fb",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "number_one probe did not compile and link",
+            "official_positive probe did not compile and link",
+            "square_divisors probe did not compile and link",
+            "generated_oracle probe did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "48c1d5656a83f958662149a36821a77521788813ef110316bf342f8cb249407f",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "98f87d8e5dab71daa5dec2188c24ebb19d5e06cbaff09396a5fba7d2fff4f7fb",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "zero exception probe did not compile and link",
+            "negative_one exception probe did not compile and link",
+            "negative_partition exception probe did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "0606135208f46c5664ff5b4af8c339946bb9e486f5295accfc2e40932ebf1c36",
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/turn-1",
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    },
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "eddb1f83ab26ffad71580f723b86bbfd98f5655880183870063d5394086c452c",
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad"
+      },
+      "case_id": "midband_rl_v2_trial_1_final",
+      "classification": "agreement_pass",
+      "failure_class": "successful API and semantic repair",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "8f83771201f0b26f4fb462c5318853c57806cbba780a477e07cb9db2ad51b332",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping compiled",
+            "function_signature compiled",
+            "candidate definition linked to an external caller",
+            "all 13 official callers compiled against the candidate header"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "a0d5f6d04aaa17d94ad807386e169b267a264d6ed0d6f01d1f22056fb30846d7",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "8f83771201f0b26f4fb462c5318853c57806cbba780a477e07cb9db2ad51b332",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "number_one semantic check passed",
+            "official_positive semantic check passed",
+            "square_divisors semantic check passed",
+            "generated_oracle semantic check passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "1aa4bb1727299f4a33f623e250fed2dcea8ada8143a8bec796d843a6fa5781b8",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "8f83771201f0b26f4fb462c5318853c57806cbba780a477e07cb9db2ad51b332",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero threw std::domain_error for every input",
+            "negative_one threw std::domain_error for every input",
+            "negative_partition threw std::domain_error for every input"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "81782bc6d68cc5d7d537c29efcdfd18617894f90b1c12fa8b9f1905acf2090e5",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-1/turn-2",
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "960e67fe52b481b32f8ab445c4132958d2bd5dfd1418ebb64b0fd55b51d70c56",
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad"
+      },
+      "case_id": "midband_rl_v2_trial_2_final",
+      "classification": "agreement_pass",
+      "failure_class": "first-turn pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "655df9790841caafb5617713378980d82e0f86726a8fa8a587a7865d8b392af8",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping compiled",
+            "function_signature compiled",
+            "candidate definition linked to an external caller",
+            "all 13 official callers compiled against the candidate header"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "0db26a741d4a4d0d88ee9769b6d4f633b1101f6b51bdebcb279846ef4a93e172",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "655df9790841caafb5617713378980d82e0f86726a8fa8a587a7865d8b392af8",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "number_one semantic check passed",
+            "official_positive semantic check passed",
+            "square_divisors semantic check passed",
+            "generated_oracle semantic check passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "a5875bebd0c8b46480e412d8c019f28e15d822d527ab1aa9968ad05b103e06f9",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "655df9790841caafb5617713378980d82e0f86726a8fa8a587a7865d8b392af8",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero threw std::domain_error for every input",
+            "negative_one threw std::domain_error for every input",
+            "negative_partition threw std::domain_error for every input"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "791be1df7bebaf5eeb27d95435a7762706ce311b3ecba28ce6c960213b44d8ca",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-2/turn-1",
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "7bc00d64664a70496f61115fc54fd6bcdce333797b3355ca0f64c278cb6fadae",
+        "perfect_numbers.h": "74abc3dd2aa666c8b9f1674b3a48ef3d8c191425cd8ab2321191df2c5e8f7dad"
+      },
+      "case_id": "midband_rl_v2_trial_3_final",
+      "classification": "agreement_pass",
+      "failure_class": "first-turn pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "122e3d167170f102cdee43c30614b33ea8be230835807e8975e98b1aef43676d",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping compiled",
+            "function_signature compiled",
+            "candidate definition linked to an external caller",
+            "all 13 official callers compiled against the candidate header"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "9b38dc46698b83ff5fe39bba1010daffefa045508f8597cfa25a4c6fe3e06e4d",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "122e3d167170f102cdee43c30614b33ea8be230835807e8975e98b1aef43676d",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "number_one semantic check passed",
+            "official_positive semantic check passed",
+            "square_divisors semantic check passed",
+            "generated_oracle semantic check passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d5e49ed709e7794e9b1736c1001d00ae898b2e6bea85a79365fa52d2077d2318",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "122e3d167170f102cdee43c30614b33ea8be230835807e8975e98b1aef43676d",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero threw std::domain_error for every input",
+            "negative_one threw std::domain_error for every input",
+            "negative_partition threw std::domain_error for every input"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "c0c074e5fe1fe28eda2e09bf5cf0b925abc76a5d817569778f6708a95dae5115",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-3/turn-1",
+      "source_unchanged": true,
+      "terminal_gate_status": "pass"
+    },
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "74e1a1b120085511ea0e4ec44abda0a702c297b479fd51b6bfc146996735adb4",
+        "perfect_numbers.h": "71974fefd439c399e0ea1e4921c8da2f0aa4d3073b3e74d1ff324c7d832efc12"
+      },
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "classify(1) returned perfect; 12/13",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "95bfe3f406861b84049d79c561986f9587d481e9938d311fa7baada56aef4fda",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping compiled",
+            "function_signature compiled",
+            "candidate definition linked to an external caller",
+            "all 13 official callers compiled against the candidate header"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "130dfdc1443ff294fcad56b4168bbbfa450dc89b858e0191157019f8f2e3953a",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "95bfe3f406861b84049d79c561986f9587d481e9938d311fa7baada56aef4fda",
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "number_one semantic check failed",
+            "official_positive semantic check passed",
+            "square_divisors semantic check passed",
+            "generated_oracle semantic check passed"
+          ],
+          "kernel_vector": [
+            -1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "e883c75b49e6979088031026dcc103b4cfdb940e0153897567e218089c004c49",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "95bfe3f406861b84049d79c561986f9587d481e9938d311fa7baada56aef4fda",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero threw std::domain_error for every input",
+            "negative_one threw std::domain_error for every input",
+            "negative_partition threw std::domain_error for every input"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d368d7cbbe16bdf4f2afde0d4691ded1e179fce135f6daccda292031a8d91ed7",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-4/turn-1",
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    },
+    {
+      "candidate_sha256": {
+        "perfect_numbers.cpp": "dd93d380de5acbd961e6ccfdbb0fdbd1bc76044a4ff2fde244dfb191b8f6d779",
+        "perfect_numbers.h": "71974fefd439c399e0ea1e4921c8da2f0aa4d3073b3e74d1ff324c7d832efc12"
+      },
+      "case_id": "midband_rl_v2_trial_4_final",
+      "classification": "agreement_fail",
+      "failure_class": "repair fixed 1 but dropped divisor 1; perfect cases regressed; 10/13",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "34dc8757d895c1116aa9a33a8dcbc5c9d7cbfaf58d3b955ba562931ae739fe47",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "names_and_scoping compiled",
+            "function_signature compiled",
+            "candidate definition linked to an external caller",
+            "all 13 official callers compiled against the candidate header"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "b308fe70a5f0d6305098282e040a2657c2d9320c6844d3df6e7751a454e60428",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "34dc8757d895c1116aa9a33a8dcbc5c9d7cbfaf58d3b955ba562931ae739fe47",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "number_one semantic check passed",
+            "official_positive semantic check failed",
+            "square_divisors semantic check passed",
+            "generated_oracle semantic check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "c51481bc71c1fdcc34dab4e1e93fdb593dd5376b45a17ae45f878d943557a6f3",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "34dc8757d895c1116aa9a33a8dcbc5c9d7cbfaf58d3b955ba562931ae739fe47",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero threw std::domain_error for every input",
+            "negative_one threw std::domain_error for every input",
+            "negative_partition threw std::domain_error for every input"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "c42d2dc8cd47ec25e0158d63e7a05c8605c2ff099f57ee8b045ae789ece3aabc",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-4/turn-2",
+      "source_unchanged": true,
+      "terminal_gate_status": "fail"
+    }
+  ],
+  "task_id": "perfect-numbers",
+  "trajectories": [
+    {
+      "result": {
+        "candidate_source_sha256": null,
+        "kernel_statuses": [
+          "pass",
+          "pass",
+          "pass",
+          "pass"
+        ],
+        "kernel_summaries": [
+          "turn 2 changed every diagnostic-mapped source file",
+          "turn 2 eliminated every turn-1 diagnostic",
+          "turn 2 preserved every passing test and evaluation stage",
+          "trajectory reached an authenticated 13/13 pass"
+        ],
+        "kernel_vector": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "preflight_error": null,
+        "process_returncode": 0,
+        "receipt_sha256": "e568c775683dd738dc9c67f6566d46a8e468bf1568379fa66427843fed32d3f2",
+        "status": "pass"
+      },
+      "trajectory_id": "trial_1_repair"
+    },
+    {
+      "result": {
+        "candidate_source_sha256": null,
+        "kernel_statuses": [
+          "pass",
+          "pass",
+          "fail",
+          "fail"
+        ],
+        "kernel_summaries": [
+          "turn 2 changed every diagnostic-mapped source file",
+          "turn 2 eliminated every turn-1 diagnostic",
+          "turn 2 regressed a passing test or evaluation stage",
+          "trajectory did not reach an authenticated 13/13 pass"
+        ],
+        "kernel_vector": [
+          1,
+          1,
+          -1,
+          -1
+        ],
+        "preflight_error": null,
+        "process_returncode": 1,
+        "receipt_sha256": "30323ebae9c2d9a66dcc4b0abfdcd1bf59c4376e2ce0464cb60588cc69455e36",
+        "status": "fail"
+      },
+      "trajectory_id": "trial_4_regression"
+    }
+  ]
+}

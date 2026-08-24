@@ -1,0 +1,105 @@
+{
+  "candidate_files": [
+    "meetup.cpp",
+    "meetup.h"
+  ],
+  "policies": {
+    "G02": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "strict-build",
+          "--task",
+          "meetup",
+          "--candidate-dir",
+          "/workspace/candidate/meetup"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G03": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "api-link",
+          "--task",
+          "meetup",
+          "--candidate-dir",
+          "/workspace/candidate/meetup"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G04": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "official-functional",
+          "--task",
+          "meetup",
+          "--candidate-dir",
+          "/workspace/candidate/meetup"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G05": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "safety",
+          "--task",
+          "meetup",
+          "--candidate-dir",
+          "/workspace/candidate/meetup"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G07": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "portability",
+          "--task",
+          "meetup",
+          "--candidate-dir",
+          "/workspace/candidate/meetup"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ]
+  },
+  "protected_files": {
+    ".docs/instructions.md": "7fe0003115d9d10a589579c6a7eae523278e09a89bc9f967243ed2679ff1144d",
+    ".docs/introduction.md": "4d99b634efebd36d21cd853b21d7ef08fe496fef00ccd8cf45f8f13944dfafdf",
+    ".meta/config.json": "12df8012221babb578b8793d94e8c1a670b17e10b61592e44cde0e540ceda336",
+    ".meta/example.h": "239e3a2dca861675c6d77f37023ca92eb28a4babd8e47c6ea0f1dc854157592d",
+    ".meta/tests.toml": "ad903dedc98f2f1ffbd7f86c28ef446bf0f332020481d8d7f9e0aa1e14de9ccf",
+    "CMakeLists.txt": "606ad89681c16232db5e7a3e5616bc766bddaa8868b26f56079a53d5593b5eda",
+    "meetup_test.cpp": "2eda2b18b6fb6bf7bd5aa3785b64493a699d6d31a026a3964f8605005f87a83a",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260"
+  },
+  "schema_version": 1,
+  "source": {
+    "commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "repository": "Aider-AI/polyglot-benchmark"
+  },
+  "task_id": "meetup"
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "task_id": "local-aider-cpp/allergies",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_archive": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "evaluation_controls": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "model": "openai/glm-4.7-flash-grpo",
+    "edit_format": "whole",
+    "max_turns": 2,
+    "trial_count": 4
+  },
+  "baseline": {
+    "kind": "current-diagnostic-pack-after-failure-gap-and-alternate-valid-audit",
+    "policy_ids": ["E01", "E02", "E03", "E04"],
+    "verifier_sha256": {
+      "E01": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d",
+      "E02": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d",
+      "E03": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769",
+      "E04": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+    }
+  },
+  "official": {
+    "policy_id": "E06",
+    "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb",
+    "test_sha256": "1eb815ad37a6792bba827c994d0db4cc0edaa57c4428271bef002901e43da798",
+    "expected_assertions": 50,
+    "expected_test_cases": 50
+  },
+  "source_evidence_sha256": {
+    "trial_1_chat": "640cd0447e37b98c32bfa291325386f068cfe2f887acb42f537c016ca3ba041b",
+    "trial_1_results": "13445fc267e0251859006d3ea5160860e3fe6d1e4194b6fd385f1249d4615ef6",
+    "trial_2_chat": "3ec852cbd8dca8c62854e5019e4494de73b5f9d55da392c6d94256e8f1bea815",
+    "trial_2_results": "f3f0e13d1dc5ceea59d9ee49f72c162b1b2b06ace6ffac77a9991f93e2ed6d75",
+    "trial_3_chat": "fb04bb7d4f113b696c1e3b31bd61ec2fd64015582612f07829926b28ec2450ce",
+    "trial_3_results": "37556845d2f2e2cfce337292cb5320559e74d3fd38567e30be2a2da8bf394269",
+    "trial_4_chat": "944297553b7dd52abbd37753a9d57235907cd6f85002ba1f72cf7a1a1e6790c0",
+    "trial_4_results": "00c2c0f8a429a836c89f01f9f1710e963cf7cf326d4582c998364c3fd28ed281"
+  },
+  "observed_outcome": {
+    "pass_at_1": "3/4",
+    "pass_by_turn_2": "4/4",
+    "failed_first_turns": 1,
+    "infrastructure_invalid": 0,
+    "malformed_responses": 0,
+    "context_exhausted_trials": 1
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "source_sample_id": "trial-1/allergies/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_1_turn_1",
+      "candidate_sha256": {
+        "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+        "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01"
+      },
+      "source_outcome": "fail",
+      "failure_class": "missing-required-header-unordered-map",
+      "expected_classification": "agreement_fail"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_2",
+      "source_sample_id": "trial-1/allergies/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_1_turn_2",
+      "candidate_sha256": {
+        "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+        "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01"
+      },
+      "source_outcome": "pass",
+      "failure_class": null,
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_turn_1",
+      "source_sample_id": "trial-2/allergies/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_2_turn_1",
+      "candidate_sha256": {
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+        "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281"
+      },
+      "source_outcome": "pass",
+      "failure_class": null,
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "source_sample_id": "trial-3/allergies/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_3_turn_1",
+      "candidate_sha256": {
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+        "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a"
+      },
+      "source_outcome": "pass",
+      "failure_class": null,
+      "expected_classification": "agreement_pass"
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "source_sample_id": "trial-4/allergies/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_4_turn_1",
+      "candidate_sha256": {
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+        "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e"
+      },
+      "source_outcome": "pass",
+      "failure_class": null,
+      "expected_classification": "agreement_pass"
+    }
+  ]
+}

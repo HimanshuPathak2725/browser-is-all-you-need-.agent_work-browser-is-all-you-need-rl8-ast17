@@ -1,0 +1,106 @@
+{
+  "candidate_files": [
+    "zebra_puzzle.cpp",
+    "zebra_puzzle.h"
+  ],
+  "policies": {
+    "G02": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "strict-build",
+          "--task",
+          "zebra-puzzle",
+          "--candidate-dir",
+          "/workspace/candidate/zebra-puzzle"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G03": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "api-link",
+          "--task",
+          "zebra-puzzle",
+          "--candidate-dir",
+          "/workspace/candidate/zebra-puzzle"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G04": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "official-functional",
+          "--task",
+          "zebra-puzzle",
+          "--candidate-dir",
+          "/workspace/candidate/zebra-puzzle"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G05": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "safety",
+          "--task",
+          "zebra-puzzle",
+          "--candidate-dir",
+          "/workspace/candidate/zebra-puzzle"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G07": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "portability",
+          "--task",
+          "zebra-puzzle",
+          "--candidate-dir",
+          "/workspace/candidate/zebra-puzzle"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ]
+  },
+  "protected_files": {
+    ".docs/instructions.md": "475239352eed823e34a2677b65d861d58e0ca37a7da9ae399141c0c95758a8e6",
+    ".docs/introduction.md": "5579722519373eecc2559b9a6301a4e65408bb2888f34b0542de36c33f052c3d",
+    ".meta/config.json": "4cff1043ed43b8807086ba8575106570c1c61fd48bfb5c08519e37372cb005a5",
+    ".meta/example.cpp": "baae708ef020252b817acefb67c90b7afcb76135a3f6eaed4bd74d3ad198c23b",
+    ".meta/example.h": "0ca0391e0bbf021209a572c8f3657b845e17b371d0765e4e7413c8e0825fa633",
+    ".meta/tests.toml": "e2917cf9a2454627b01a664956543f136af615daf27ece076f8107ab432b6a60",
+    "CMakeLists.txt": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260",
+    "zebra_puzzle_test.cpp": "2b95fb480833ad730748e742145f1789b9eddafc300b977baba80663b3443c9e"
+  },
+  "schema_version": 1,
+  "source": {
+    "commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "repository": "Aider-AI/polyglot-benchmark"
+  },
+  "task_id": "zebra-puzzle"
+}

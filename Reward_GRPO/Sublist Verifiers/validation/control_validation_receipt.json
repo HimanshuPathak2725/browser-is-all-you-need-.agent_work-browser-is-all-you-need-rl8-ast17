@@ -1,0 +1,1624 @@
+{
+  "candidate_policies": [
+    "E01",
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E09"
+  ],
+  "compiler": "13.3.0",
+  "invalid_cases": [
+    {
+      "case_id": "tampered_official_test",
+      "kind": "tampered_official_test",
+      "policy": "E05",
+      "result": {
+        "candidate_source_sha256": {
+          "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+          "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+        },
+        "integrity_error": null,
+        "kernel_ids": [
+          "5a",
+          "5b",
+          "5c",
+          "5d",
+          "5e",
+          "5f"
+        ],
+        "kernel_scores": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "kernel_statuses": [
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID"
+        ],
+        "kernel_summaries": [
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+          "preflight failed: fixed-file hash mismatch: sublist_test.cpp"
+        ],
+        "preflight_error": "preflight failed: fixed-file hash mismatch: sublist_test.cpp",
+        "process_returncode": 2,
+        "receipt_sha256": "62a7c1cc9f42513fdcf8c5f11c959325ae7f998a6ce0da6e4e6445a42b56c78e",
+        "status": "INVALID"
+      }
+    },
+    {
+      "case_id": "missing_compiler",
+      "kind": "missing_compiler",
+      "policy": "E05",
+      "result": {
+        "candidate_source_sha256": {
+          "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+          "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+        },
+        "integrity_error": null,
+        "kernel_ids": [
+          "5a",
+          "5b",
+          "5c",
+          "5d",
+          "5e",
+          "5f"
+        ],
+        "kernel_scores": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "kernel_statuses": [
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID",
+          "INVALID"
+        ],
+        "kernel_summaries": [
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+          "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist"
+        ],
+        "preflight_error": "preflight failed: required compiler is unavailable: sublist-validator-compiler-does-not-exist",
+        "process_returncode": 2,
+        "receipt_sha256": "d33d0b2ecd4ce9c7aed90f06310f5edd15bb5c8747821e4c846ecdf9ae3a69d0",
+        "status": "INVALID"
+      }
+    }
+  ],
+  "mutant_cases": [
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "86f52d6cf9f4ebf7fd8539a0729a0773bb5f72d0ee8137b42970ab05b9035cd7",
+        "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+      },
+      "case_id": "direction_reversal_mutant",
+      "policies": {
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "86f52d6cf9f4ebf7fd8539a0729a0773bb5f72d0ee8137b42970ab05b9035cd7",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            -1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "fail",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official tests failed",
+            "functional-equality-empty failed",
+            "functional-sublist-positions failed",
+            "functional-superlist-positions failed",
+            "functional-unequal-values passed",
+            "official repetition failed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "a6e3e0cc65941cd6b47b280f88927decd5013078e4502ce9f6470c8bced97674",
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "86f52d6cf9f4ebf7fd8539a0729a0773bb5f72d0ee8137b42970ab05b9035cd7",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            -1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle failed",
+            "semantic-contiguity-order-identity failed",
+            "semantic-false-start-overlap failed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "a87d5efe043f7c4c356bf24df46d937c86bae696e89646568edae98426887fb8",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "88ea1aa3632b4ef73b90b4d577dead9e3e048248c2f3445ddbf22078da273da5",
+        "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+      },
+      "case_id": "loose_subsequence_mutant",
+      "policies": {
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "88ea1aa3632b4ef73b90b4d577dead9e3e048248c2f3445ddbf22078da273da5",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            -1,
+            1,
+            1,
+            1,
+            -1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "pass",
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official tests failed",
+            "functional-equality-empty passed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values failed",
+            "official repetition failed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "5b8118b52db6768d04bc3b71b90740117e2973ad1337044e1f14afd986ac69cc",
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "88ea1aa3632b4ef73b90b4d577dead9e3e048248c2f3445ddbf22078da273da5",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle failed",
+            "semantic-contiguity-order-identity failed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "63b067d733fef79d7d04f691e1f977fd0f4ff7ef3dff8e4438f9df218f86b987",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "8d94fd1149627aeb9506d0038be941df02f5558710e77c30f6c6751b24f472ab",
+        "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+      },
+      "case_id": "wrong_empty_mutant",
+      "policies": {
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "8d94fd1149627aeb9506d0038be941df02f5558710e77c30f6c6751b24f472ab",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            -1,
+            -1,
+            1,
+            1,
+            1,
+            -1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "pass",
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "official tests failed",
+            "functional-equality-empty failed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values passed",
+            "official repetition failed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "67c1cfe38cff670905638a22fe589f6f67dcc0ff13c42eadd2af0538b3f48faa",
+          "status": "fail"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "8d94fd1149627aeb9506d0038be941df02f5558710e77c30f6c6751b24f472ab",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            -1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "fail",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle failed",
+            "semantic-contiguity-order-identity passed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "5f6d7009f6f53e4ce099fef226cbadfb2f9dd1dc59ebbbedf81597bb28bea7b9",
+          "status": "fail"
+        }
+      },
+      "source_unchanged": true
+    }
+  ],
+  "pinned_instructions_sha256": "87fec6e1b999116669e838100fe3e1b3880317b667b8948f6a4f85de07a81288",
+  "positive_cases": [
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+        "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+      },
+      "case_id": "reference_positive",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "1a",
+            "1b",
+            "1c",
+            "1d",
+            "1e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "primary compiler and pinned fixtures are usable",
+            "candidate translation unit compiled",
+            "official and external callers compiled",
+            "official executable linked",
+            "clean CMake test target passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "2100d0683fcb914e85fc426d72facfe45e97e170f4073d65470643fc3ea7f787",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "2a",
+            "2b",
+            "2c",
+            "2d"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "candidate and header consumer are Wall clean",
+            "candidate and header consumer are Wextra clean",
+            "candidate and header consumer are Wpedantic clean",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "8086a1eddfe7672b0512a14f9fa70b774ba726e1df47d5e38698df7a72c38fc0",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "3a",
+            "3b",
+            "3c",
+            "3d",
+            "3e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "api-enum-type passed",
+            "required lowercase enumerators exist and known wrong aliases are absent",
+            "api-exact-signature passed",
+            "api-braced-calls passed",
+            "api-distinct-smoke passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "3ef364bf941adf588b40010752e3621d84ea0900f462ca6bcf5fc2b4388b2892",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "4a",
+            "4b",
+            "4c",
+            "4d",
+            "4e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "sublist.h directly owns its vector dependency",
+            "header-self-contained compiled",
+            "candidate dependency graph is isolated",
+            "all fixed dependencies match pinned hashes",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "fed5a4d184586d6d57168aeb83d328426b3d0ab862a2fdfa82136b4c4fb5fa14",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all 18 official tests passed",
+            "functional-equality-empty passed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values passed",
+            "five fresh official executions passed deterministically"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "7dfbfc531a022153df893b2725448bb255c05177ba10aa3de5c8e9d6bb35c877",
+          "status": "pass"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle passed",
+            "semantic-contiguity-order-identity passed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "969c7fa82741ebec2e72f55ce2139006ac87e50c50078237b5d58504eda11cba",
+          "status": "pass"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "9a",
+            "9b",
+            "9c"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "official and generated workloads are asan-clean",
+            "official and generated workloads are ubsan-clean",
+            "repeated sanitized stress remained clean"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d2ecdab9c54066c098797b487715d329b8adb5fffef176345b3fc0e95f7c432a",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+        "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+      },
+      "case_id": "manual_window_positive",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "1a",
+            "1b",
+            "1c",
+            "1d",
+            "1e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "primary compiler and pinned fixtures are usable",
+            "candidate translation unit compiled",
+            "official and external callers compiled",
+            "official executable linked",
+            "clean CMake test target passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "a0eb581137142540d220f89662ceedea7c8ab90f1c64424e7b0fde535869be7a",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "2a",
+            "2b",
+            "2c",
+            "2d"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "candidate and header consumer are Wall clean",
+            "candidate and header consumer are Wextra clean",
+            "candidate and header consumer are Wpedantic clean",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "e8c2b25f34cb1a7fd71697569c2d855892dcbd0514816b3af75ed088842f39ba",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "3a",
+            "3b",
+            "3c",
+            "3d",
+            "3e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "api-enum-type passed",
+            "required lowercase enumerators exist and known wrong aliases are absent",
+            "api-exact-signature passed",
+            "api-braced-calls passed",
+            "api-distinct-smoke passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "f1c6cb2f2cba619f2538aec5ba80fe3b111ca8c25a60833ee84973b4c4e474dd",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "4a",
+            "4b",
+            "4c",
+            "4d",
+            "4e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "sublist.h directly owns its vector dependency",
+            "header-self-contained compiled",
+            "candidate dependency graph is isolated",
+            "all fixed dependencies match pinned hashes",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "b1dbd5c61fccd380e37ef13d1f1221b255b7c1f324e7c2d0510082b261379f01",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all 18 official tests passed",
+            "functional-equality-empty passed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values passed",
+            "five fresh official executions passed deterministically"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "1abff9637b84d167e1221ab3503e1f2b9b96399fe404d5f965537048e40e9222",
+          "status": "pass"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle passed",
+            "semantic-contiguity-order-identity passed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ad6ed861b23dcf1e8f553e25839f103346f200fcec457ba9519b3f7bc66c13df",
+          "status": "pass"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "6c52e9cec35e3e126f98ec6131713452b27963ecd6aac18bb389a7aa18b9e219",
+            "sublist.h": "158a9b0f18b1007eb72ef4e6624961485dfdab7f0b2cc1cdb8b4f4145e0df515"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "9a",
+            "9b",
+            "9c"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "official and generated workloads are asan-clean",
+            "official and generated workloads are ubsan-clean",
+            "repeated sanitized stress remained clean"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "8c8d78a24ce36fa4304e7db71c58506989e1e180f458af483de82a931ab50668",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+        "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+      },
+      "case_id": "header_only_positive",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "1a",
+            "1b",
+            "1c",
+            "1d",
+            "1e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "primary compiler and pinned fixtures are usable",
+            "candidate translation unit compiled",
+            "official and external callers compiled",
+            "official executable linked",
+            "clean CMake test target passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "04da9421c3df1e52f6e9a4d025514ebe1807c27390813d7bc95d9679caeb5e30",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "2a",
+            "2b",
+            "2c",
+            "2d"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "candidate and header consumer are Wall clean",
+            "candidate and header consumer are Wextra clean",
+            "candidate and header consumer are Wpedantic clean",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "12cfd520100b065a82ca135f30ab638b894bec1fdcae84f1a66cb1cb7de57e1e",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "3a",
+            "3b",
+            "3c",
+            "3d",
+            "3e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "api-enum-type passed",
+            "required lowercase enumerators exist and known wrong aliases are absent",
+            "api-exact-signature passed",
+            "api-braced-calls passed",
+            "api-distinct-smoke passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "da26bacf60a19ce0cbeda3ac95969e32ece67da466ff0a98fb28d69b92e7d864",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "4a",
+            "4b",
+            "4c",
+            "4d",
+            "4e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "sublist.h directly owns its vector dependency",
+            "header-self-contained compiled",
+            "candidate dependency graph is isolated",
+            "all fixed dependencies match pinned hashes",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "bff852b67bcf34ca0ba26a2ba15c983ab877f2de98bb567a09f3565df4f9e793",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all 18 official tests passed",
+            "functional-equality-empty passed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values passed",
+            "five fresh official executions passed deterministically"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "b9537cbb3da08e7bb51dea79c02cbaa26dd55636b157452a5b8bb6ee661c2747",
+          "status": "pass"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle passed",
+            "semantic-contiguity-order-identity passed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "822f75118dbf62399640601823ce29656ccbdfcbbf7848e6e44f11390e196a14",
+          "status": "pass"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "b5dd17916ea035f641182b13554452a9a212042117cd619e76f26b14bc4b2328",
+            "sublist.h": "0085f95c516186e9ea7679b1c65ec2ea09a08c19ad15b986fdab06898d08ab31"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "9a",
+            "9b",
+            "9c"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "official and generated workloads are asan-clean",
+            "official and generated workloads are ubsan-clean",
+            "repeated sanitized stress remained clean"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "765a100d2975d77aa6b3669ec5366469d7838ea86ccf87401586399e75c0c3e5",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+        "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+      },
+      "case_id": "reference_repeat",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "1a",
+            "1b",
+            "1c",
+            "1d",
+            "1e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "primary compiler and pinned fixtures are usable",
+            "candidate translation unit compiled",
+            "official and external callers compiled",
+            "official executable linked",
+            "clean CMake test target passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "8adcebf1da4b1a9bdc906e179efc2e89592caea83a78fce152226bb8eb13be59",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "2a",
+            "2b",
+            "2c",
+            "2d"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "candidate and header consumer are Wall clean",
+            "candidate and header consumer are Wextra clean",
+            "candidate and header consumer are Wpedantic clean",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "110318d238a049bc155926b67750dde08f34ff9cb448a2f2cb0099fddd8057b4",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "3a",
+            "3b",
+            "3c",
+            "3d",
+            "3e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "api-enum-type passed",
+            "required lowercase enumerators exist and known wrong aliases are absent",
+            "api-exact-signature passed",
+            "api-braced-calls passed",
+            "api-distinct-smoke passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "c1ef017d29abec27bf00d63b99c480aacfe8e94ec469fc2430919c82ccce94ed",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "4a",
+            "4b",
+            "4c",
+            "4d",
+            "4e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "sublist.h directly owns its vector dependency",
+            "header-self-contained compiled",
+            "candidate dependency graph is isolated",
+            "all fixed dependencies match pinned hashes",
+            "all 18 official tests passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "1bebbcc25da889bd1b6a0a47b6d8c0030da8eb1a339cff8abac13db531733b72",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "5a",
+            "5b",
+            "5c",
+            "5d",
+            "5e",
+            "5f"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "all 18 official tests passed",
+            "functional-equality-empty passed",
+            "functional-sublist-positions passed",
+            "functional-superlist-positions passed",
+            "functional-unequal-values passed",
+            "five fresh official executions passed deterministically"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "7c2a7a6622f61b237ace1863d179a0719d31103d714c027134729a481f77df70",
+          "status": "pass"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "6a",
+            "6b",
+            "6c",
+            "6d",
+            "6e"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "semantic-exhaustive-oracle passed",
+            "semantic-contiguity-order-identity passed",
+            "semantic-false-start-overlap passed",
+            "semantic-swap-relations passed",
+            "semantic-input-preservation passed"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "3b39dd49338183eab27517d8e37dc6f606f65241b2fa355c8350d3485b13d7f8",
+          "status": "pass"
+        },
+        "E09": {
+          "candidate_source_sha256": {
+            "sublist.cpp": "166179f13096071796f5b1b37279ef8427729262d3fdfd2d34dbcc2f8844a6cd",
+            "sublist.h": "7d80cb82eee23060c19f65fc1bfc5be24a110e6b6e8f0f3b5b19d76dea491dd1"
+          },
+          "integrity_error": null,
+          "kernel_ids": [
+            "9a",
+            "9b",
+            "9c"
+          ],
+          "kernel_scores": [
+            1,
+            1,
+            1
+          ],
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "official and generated workloads are asan-clean",
+            "official and generated workloads are ubsan-clean",
+            "repeated sanitized stress remained clean"
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d893e4c15159b8ad37566cc5cb3deeaa8d65310364ffc7347a3f883dbf115cf2",
+          "status": "pass"
+        }
+      },
+      "source_unchanged": true
+    }
+  ],
+  "repeatability": {
+    "E01": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E02": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E03": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E04": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E05": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E06": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    },
+    "E09": {
+      "decision_equal": true,
+      "first_kernel_scores": [
+        1,
+        1,
+        1
+      ],
+      "first_status": "pass",
+      "repeat_kernel_scores": [
+        1,
+        1,
+        1
+      ],
+      "repeat_status": "pass"
+    }
+  },
+  "schema_version": 1,
+  "task_id": "local-aider-cpp/sublist"
+}

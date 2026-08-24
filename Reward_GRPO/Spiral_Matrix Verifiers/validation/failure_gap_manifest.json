@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "task_id": "spiral-matrix",
+  "source_run_id": "execution-bank-RL-v2-think-r2",
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_eval_root": "gs://skypilot-filemounts-ubuntu-f0048940-88p8zkcq/execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "official": {
+    "aider_revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c",
+    "polyglot_revision": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "instructions_sha256": "9d5dff44082c7bac9e5ea721a58723f15d353cf9084885a98f7f00390c92bfb3",
+    "test_sha256": "406cce0e7cf16487fdd12df030bbf5fcfe57aeb36078c8eb13b16c1f8267239e"
+  },
+  "current": {
+    "contract_sha256": "1dbc8222e49c552e095972ea07fee2195288793509803b221830731cb98908e0",
+    "verifier_sha256": {
+      "E01": "07848fca42c398634958a3c798f7f15ce113494243dbaf44770e3ae6c96e75cc",
+      "E02": "79549f9b6ee345057a111c29db4cca028592bf0f9a78da947e54dd45d00efcf7",
+      "E03": "97c24f4bd6e3093df2f0f6e92855c1e0762b1c7fc8ca629d65de772dfd53202e",
+      "E04": "46bb7a4b59f8c2e6e0da20b185d7f981f32672fa0847716102e89bfc10337f10",
+      "E05": "833ae804b04514236801a364d759ec0bce42fdfb05d83282cc6bce5dc853b615"
+    },
+    "kernel_count": 15,
+    "official_terminal_policy": "E03",
+    "reward_decision_rule": "all five policies must pass"
+  },
+  "aggregate": {
+    "trials": 4,
+    "pass_at_1": "2/4",
+    "pass_by_turn_2": "2/4"
+  },
+  "cases": [
+    {
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "source_sample_id": "trial-1/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_1_turn_1",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "header used uint32_t without including cstdint; official test translation unit did not compile",
+      "candidate_sha256": {
+        "spiral_matrix.h": "e9753ab67257e08acde43bde7eb4dff21fa568abc78ca8c880ce633f6f99b66c",
+        "spiral_matrix.cpp": "bb2252126f55d62fd3de7ee48bab9ca685ebbe43253d4f5103fc103c7e7b6fbf"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_1_final",
+      "source_sample_id": "trial-1/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_1_final",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "added cstdint but retained unsigned decrement loops; size 2 SIGSEGV after 2/3 assertions",
+      "candidate_sha256": {
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c",
+        "spiral_matrix.cpp": "bb2252126f55d62fd3de7ee48bab9ca685ebbe43253d4f5103fc103c7e7b6fbf"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_2_final",
+      "source_sample_id": "trial-2/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_2_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "signed traversal bounds; all 6 assertions passed on first evaluated turn",
+      "candidate_sha256": {
+        "spiral_matrix.h": "67e73caff0d8577e224d34e84c3ce1c02444f986d333623fda24d385c9d5ea60",
+        "spiral_matrix.cpp": "e148cc95ab95c6210ce9b51b7e402ffda5693f96a62a302efdbe2a52f6acc6bb"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "source_sample_id": "trial-3/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_3_unchanged",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "unsigned reverse traversal underflow; size 2 SIGSEGV after 2/3 assertions",
+      "candidate_sha256": {
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c",
+        "spiral_matrix.cpp": "c3f05ad9cd2b2fb5dac7b1b17ac66b8b20cfca9cccd432c641d72db12184aa09"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_3_final",
+      "source_sample_id": "trial-3/turn-2",
+      "source_path": "cases/midband_rl_v2_trial_3_unchanged",
+      "source_outcome": "fail",
+      "expected_classification": "agreement_fail",
+      "failure_class": "context exhausted before any repair; identical unsigned-loop SIGSEGV remained",
+      "candidate_sha256": {
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c",
+        "spiral_matrix.cpp": "c3f05ad9cd2b2fb5dac7b1b17ac66b8b20cfca9cccd432c641d72db12184aa09"
+      }
+    },
+    {
+      "case_id": "midband_rl_v2_trial_4_final",
+      "source_sample_id": "trial-4/turn-1",
+      "source_path": "cases/midband_rl_v2_trial_4_final",
+      "source_outcome": "pass",
+      "expected_classification": "agreement_pass",
+      "failure_class": "signed 64-bit bounds; all 6 assertions passed on first evaluated turn",
+      "candidate_sha256": {
+        "spiral_matrix.h": "67e73caff0d8577e224d34e84c3ce1c02444f986d333623fda24d385c9d5ea60",
+        "spiral_matrix.cpp": "34170e18861eab21c30c36cb10ff11ddd9568c0989064018c3a001660831764f"
+      }
+    }
+  ],
+  "source_artifact_sha256": {
+    "trial_1_chat": "c4695d97156527f66e1be708f027da7e53175fe1759c9bb651b15dac2c6f45e1",
+    "trial_1_results": "b6bad862070a7cfea8fb7ddb123d608e4c88201458a52a32e52f1d01f51c56cc",
+    "trial_2_chat": "bd7c0af8dea5e4f3b716eb8bea5e1a9b2127e4a196533438f7a56df327230535",
+    "trial_2_results": "5f6b96f90cd5ce4b1edff20cb8f8535bba252a4f63ad3108c54cbf17be145a29",
+    "trial_3_chat": "011008b24ce13a6080546fd3b5270ad6ea39a49334784261c1f1666544458735",
+    "trial_3_results": "6b3ff01f622403b267f8460674dfaabc2b466266fb74a8f0547b51bf0b609f0f",
+    "trial_4_chat": "44d72148a75d891856162270f6f89706121d0d4d70125a220be024404e8ccc69",
+    "trial_4_results": "224e6d3e0599c3a86a1c4a8d4663e28b59939e9f9842f7f7c9f8fb734923d56f"
+  }
+}

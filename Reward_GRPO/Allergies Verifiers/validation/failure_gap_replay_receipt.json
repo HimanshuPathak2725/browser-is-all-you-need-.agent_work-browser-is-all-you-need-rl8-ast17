@@ -1,0 +1,636 @@
+{
+  "classification_counts": {
+    "agreement_fail": 1,
+    "agreement_pass": 4
+  },
+  "compiler": "13.3.0",
+  "fixture_sha256": {
+    "CMakeLists.txt": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "allergies_test.cpp": "1eb815ad37a6792bba827c994d0db4cc0edaa57c4428271bef002901e43da798",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260"
+  },
+  "manifest_sha256": "d9197ce68a22102f72ee55f258760c749dc39076db58a62833196226a5d4d2e8",
+  "sample_count": 5,
+  "samples": [
+    {
+      "candidate_sha256": {
+        "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+        "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8"
+      },
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "classification": "agreement_fail",
+      "diagnostic_pack_pass": false,
+      "failure_class": "missing-required-header-unordered-map",
+      "official_pass": false,
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "combined": "f6f59bc5cae94a4d1491818b9abd9f7752649036d9da51dadff7e75143c207b5"
+          },
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_verdicts": [
+            "FAIL",
+            "FAIL",
+            "FAIL"
+          ],
+          "overall_status": "FAIL",
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "1a7ef99294acc39df47f095005a4095de8ef8647d885c1645162d852336c2030",
+          "source_unchanged": true,
+          "verifier_sha256": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "combined": "f6f59bc5cae94a4d1491818b9abd9f7752649036d9da51dadff7e75143c207b5"
+          },
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "kernel_verdicts": [
+            "FAIL",
+            "FAIL",
+            "FAIL"
+          ],
+          "overall_status": "FAIL",
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "d08f7199cb32b7d693a2bcc40c0b06d235577b8e4e1f86ad489996d28b9e86dd",
+          "source_unchanged": true,
+          "verifier_sha256": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "combined": "f6f59bc5cae94a4d1491818b9abd9f7752649036d9da51dadff7e75143c207b5"
+          },
+          "kernel_vector": [
+            -1,
+            -1
+          ],
+          "kernel_verdicts": [
+            "FAIL",
+            "FAIL"
+          ],
+          "overall_status": "FAIL",
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "94522cca40e568a288c66d1d56989324fcc4c39eeb83b86d6b3a761229e7e21c",
+          "source_unchanged": true,
+          "verifier_sha256": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "combined": "f6f59bc5cae94a4d1491818b9abd9f7752649036d9da51dadff7e75143c207b5"
+          },
+          "kernel_vector": [
+            -1,
+            -1
+          ],
+          "kernel_verdicts": [
+            "FAIL",
+            "FAIL"
+          ],
+          "overall_status": "FAIL",
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "f1cea7249861fe2e89a841a34f8c0da934c058b86854d6cad0e120b51c6268f7",
+          "source_unchanged": true,
+          "verifier_sha256": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "a65e4346deb087db0a8f107282e7cba61629c1b5d3866a92cf94deb499473fa8",
+            "combined": "f6f59bc5cae94a4d1491818b9abd9f7752649036d9da51dadff7e75143c207b5"
+          },
+          "kernel_vector": [
+            -1
+          ],
+          "kernel_verdicts": [
+            "FAIL"
+          ],
+          "overall_status": "FAIL",
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "9b81a3ea99b295b3b5efa8ad37eb896efa7f410ac94c358a5ff4152297844222",
+          "source_unchanged": true,
+          "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/allergies/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+        "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267"
+      },
+      "case_id": "midband_rl_v2_trial_1_turn_2",
+      "classification": "agreement_pass",
+      "diagnostic_pack_pass": true,
+      "failure_class": null,
+      "official_pass": true,
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "combined": "ebcd29a553ed3c2ea2c607ef96b2c2f407addf59e2215dfd67af793496a1c2d1"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "4b49c5910fc37007d9cfe2632f346bade3d9cf1b850aa515f18b5170bac53d94",
+          "source_unchanged": true,
+          "verifier_sha256": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "combined": "ebcd29a553ed3c2ea2c607ef96b2c2f407addf59e2215dfd67af793496a1c2d1"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "a461175bdf1b8a441978dbf2bf8300277121a2b2d2c44c52fd768c8e902f9a6e",
+          "source_unchanged": true,
+          "verifier_sha256": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "combined": "ebcd29a553ed3c2ea2c607ef96b2c2f407addf59e2215dfd67af793496a1c2d1"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "bfdbade79e55df0a148f30caaf58ce82b5f6c2fc4de95bc91764d5b2b18cf978",
+          "source_unchanged": true,
+          "verifier_sha256": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "combined": "ebcd29a553ed3c2ea2c607ef96b2c2f407addf59e2215dfd67af793496a1c2d1"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "8f1f1322641cad1a50fd562e4d9b46df9e2d6158484e99f696d779bba5db948e",
+          "source_unchanged": true,
+          "verifier_sha256": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "e835c419ef611bde38076d088d14c56e80380f64c231ab3ba28b8e5713f0ca01",
+            "allergies.h": "2874423d6a2e683f4be6fbb9489f446160b60765c1e96e5fe21e913f42846267",
+            "combined": "ebcd29a553ed3c2ea2c607ef96b2c2f407addf59e2215dfd67af793496a1c2d1"
+          },
+          "kernel_vector": [
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "f1abf7dbe64c8dd3c57741f64518fce3def90f4b345fd186da6519e5cf230695",
+          "source_unchanged": true,
+          "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-1/allergies/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97"
+      },
+      "case_id": "midband_rl_v2_trial_2_turn_1",
+      "classification": "agreement_pass",
+      "diagnostic_pack_pass": true,
+      "failure_class": null,
+      "official_pass": true,
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "7809664e96eca93f435c100019d93c299378b815707a754cf9493929633b317f"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "dac7a294f3778b3dc7ee50e2ff8bdb3149062cc3f13b80c209ae59e6e8bec472",
+          "source_unchanged": true,
+          "verifier_sha256": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "7809664e96eca93f435c100019d93c299378b815707a754cf9493929633b317f"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "11a06781f1033bad2d1deaf6082c98fe0094fb01fc78dab13619c47979e40ced",
+          "source_unchanged": true,
+          "verifier_sha256": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "7809664e96eca93f435c100019d93c299378b815707a754cf9493929633b317f"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "5828a14646ca4f6dc9c791887c370d661587b2c5fa2be9e49c8ebb3fc12d57ea",
+          "source_unchanged": true,
+          "verifier_sha256": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "7809664e96eca93f435c100019d93c299378b815707a754cf9493929633b317f"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "dd69c02fb6ca61b57068e62bebd443ae6bce3987fb6d1bc1e6f3ab55aa574686",
+          "source_unchanged": true,
+          "verifier_sha256": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "1957d14d3ee0a03533261dbb00ece81daaeba94ec2a1e7266916f5a934039281",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "7809664e96eca93f435c100019d93c299378b815707a754cf9493929633b317f"
+          },
+          "kernel_vector": [
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ec20c029c1e05ba1f2d813e441660b5c77e663b7363fdd055826e461559eb2ae",
+          "source_unchanged": true,
+          "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-2/allergies/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97"
+      },
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "classification": "agreement_pass",
+      "diagnostic_pack_pass": true,
+      "failure_class": null,
+      "official_pass": true,
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "4e2c4fc7bccdbd116849f6a22038118869b225c13a8963b086c8485ca12adf5e"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "7b7c77e2e1a5d3c2b64905b976a5fa4e1e88234b72eabc0f6f885ed282d1c781",
+          "source_unchanged": true,
+          "verifier_sha256": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "4e2c4fc7bccdbd116849f6a22038118869b225c13a8963b086c8485ca12adf5e"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "3efa833525b282b7f6e965e6733239f339b9176d5239d225da1d1ffca7533bf1",
+          "source_unchanged": true,
+          "verifier_sha256": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "4e2c4fc7bccdbd116849f6a22038118869b225c13a8963b086c8485ca12adf5e"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "444590a8758dd2497921331d8860796c82aeb2d86c905a04f66c147092ee4b60",
+          "source_unchanged": true,
+          "verifier_sha256": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "4e2c4fc7bccdbd116849f6a22038118869b225c13a8963b086c8485ca12adf5e"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "9782ddc3053b1696832940a5bd1ce58a722ed9c82445b2d6908deb04d477dfa6",
+          "source_unchanged": true,
+          "verifier_sha256": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "37b4c982e6f2b0ecfedda2523f5c86f3ab7e02b4f8c3c8e478bd20c48dcc1d3a",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "4e2c4fc7bccdbd116849f6a22038118869b225c13a8963b086c8485ca12adf5e"
+          },
+          "kernel_vector": [
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "0322b4451302659ad9ee0af94fb8c6dcc957dcec665b67fa9384ddf5695cd458",
+          "source_unchanged": true,
+          "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-3/allergies/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+        "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97"
+      },
+      "case_id": "midband_rl_v2_trial_4_turn_1",
+      "classification": "agreement_pass",
+      "diagnostic_pack_pass": true,
+      "failure_class": null,
+      "official_pass": true,
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "143a3a48aea87b1b7ba03af4f2e55be8f605c00a32a6990ae4051160c7134e17"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "ee71e85a2999b70ca61304107acedf916cce149a02aa7c718d72e814d38a89dc",
+          "source_unchanged": true,
+          "verifier_sha256": "f226c6de722c6592886e7d967d9bb99f4dc950500ee9ec7a4d30f4f72162341d"
+        },
+        "E02": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "143a3a48aea87b1b7ba03af4f2e55be8f605c00a32a6990ae4051160c7134e17"
+          },
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "da848bb20ca140a5d4f5e5e43c39fd7d604d77c720a1ae96f992c06ac73ce76f",
+          "source_unchanged": true,
+          "verifier_sha256": "72989ab60da82292affc12eab06247124725dfe55fa1f4d90ca9ea6ce5216a2d"
+        },
+        "E03": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "143a3a48aea87b1b7ba03af4f2e55be8f605c00a32a6990ae4051160c7134e17"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "7852f0ae63aba0f48cd0530be34b5ff99c8e7ecad307114b8bc0676b0a07dde9",
+          "source_unchanged": true,
+          "verifier_sha256": "6a68a676679547678d985151db8e144bf335b50b426f52ec4fc9837509d20769"
+        },
+        "E04": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "143a3a48aea87b1b7ba03af4f2e55be8f605c00a32a6990ae4051160c7134e17"
+          },
+          "kernel_vector": [
+            1,
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS",
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "0485da18e2ca0bbbd3a2435f0c85082b1fa8b4ea282fddd46cdfe448b4cb56f2",
+          "source_unchanged": true,
+          "verifier_sha256": "57fc32dc3e12c10986e9144789774fa2da198f0c34babf8ade76ab589d05063b"
+        },
+        "E06": {
+          "candidate_source_sha256": {
+            "allergies.cpp": "c5e2f4ec7096387b1b137b46a3d7066af02895708ed00c0bd10227e563229e8e",
+            "allergies.h": "2643ad820c8d88cce96db93575267a058105df4f1d52e970ee336102c64b5d97",
+            "combined": "143a3a48aea87b1b7ba03af4f2e55be8f605c00a32a6990ae4051160c7134e17"
+          },
+          "kernel_vector": [
+            1
+          ],
+          "kernel_verdicts": [
+            "PASS"
+          ],
+          "overall_status": "PASS",
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "27ddae9dbb66c8d6398ad9a4d5b4b464e3504f11c5d7ba25e3cd1e99a199396a",
+          "source_unchanged": true,
+          "verifier_sha256": "06e35b4d1c839aa39c3e837d3202de821d0025084f2adf23f2fcd27848b5ddcb"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-4/allergies/turn-1",
+      "source_unchanged": true
+    }
+  ],
+  "schema_version": 1,
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_run_id": "execution-bank-RL-v2-think-r2/fixed26-mt2-4x-20260818",
+  "task_id": "local-aider-cpp/allergies"
+}

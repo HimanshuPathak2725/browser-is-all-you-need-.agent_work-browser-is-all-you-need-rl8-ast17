@@ -1,0 +1,773 @@
+{
+  "classification_counts": {
+    "agreement_fail": 4,
+    "agreement_pass": 2
+  },
+  "compiler": "13.3.0",
+  "conclusion": "all six evaluated Midband source states agree with the complete verifier pack",
+  "decision_rule": "PASS only when all five policy verifiers pass; INVALID dominates FAIL",
+  "manifest_sha256": "78d7432987614cc22b20d66467c45fcf7d8084b71f26fd0f340ab7cc712e7035",
+  "sample_count": 6,
+  "samples": [
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "bb2252126f55d62fd3de7ee48bab9ca685ebbe43253d4f5103fc103c7e7b6fbf",
+        "spiral_matrix.h": "e9753ab67257e08acde43bde7eb4dff21fa568abc78ca8c880ce633f6f99b66c"
+      },
+      "case_id": "midband_rl_v2_trial_1_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "header used uint32_t without including cstdint; official test translation unit did not compile",
+      "official_gate_status": "fail",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "511abb850d3c4ad63d8a594802b927cd332314c8f8aa522b647dedc71258bf7d",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "public_names did not compile",
+            "exact_signatures did not compile",
+            "implementation_link did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "bc8583ea69aaa4ba232ae3e3b6895c139096950ab180f5f71665ac29446dc851",
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": "511abb850d3c4ad63d8a594802b927cd332314c8f8aa522b647dedc71258bf7d",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "small_exact did not compile and link",
+            "shape_permutation did not compile and link",
+            "oracle_extended did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "a923bff0f47707d404c8ebb6467988d0e0ead4c8cfce96ea12ec2bc65791a52f",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "511abb850d3c4ad63d8a594802b927cd332314c8f8aa522b647dedc71258bf7d",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite did not compile and link",
+            "official suite execution was blocked by candidate build failure"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "5201d7f94b4f0367de454df5023336e70aafdad4d6761668377896d321bb0e88",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "511abb850d3c4ad63d8a594802b927cd332314c8f8aa522b647dedc71258bf7d",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "zero_one did not compile and link",
+            "size_two did not compile and link",
+            "sizes_three_to_five did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "d3329ac6b5925bb7df7b723021655f4fdcc6a2644b705a7a9c7449d9d4427478",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "511abb850d3c4ad63d8a594802b927cd332314c8f8aa522b647dedc71258bf7d",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "extended_oracle did not compile and link",
+            "shape_permutation did not compile and link",
+            "sanitized did not compile and link"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "49623c1bf3035b199033e2b65182afa6b55fc52f002d6f9ee2f5fc875f460710",
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "bb2252126f55d62fd3de7ee48bab9ca685ebbe43253d4f5103fc103c7e7b6fbf",
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c"
+      },
+      "case_id": "midband_rl_v2_trial_1_final",
+      "classification": "agreement_fail",
+      "failure_class": "added cstdint but retained unsigned decrement loops; size 2 SIGSEGV after 2/3 assertions",
+      "official_gate_status": "fail",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "c7c4e44976646e44afdae889e54456040d818ce276be8b1888c665b13a093bac",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "fc85c1d2bf89a8c84f1ae13ac714b3e3e74f9d9d2409584c3ee3a2a37440ca5a",
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": "c7c4e44976646e44afdae889e54456040d818ce276be8b1888c665b13a093bac",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "small_exact behavior check failed",
+            "shape_permutation behavior check failed",
+            "oracle_extended behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "e192d7b7cbf0141787333c0b4d3bcddcf5480c9e7e85e2fd6c1e539cd498100b",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "c7c4e44976646e44afdae889e54456040d818ce276be8b1888c665b13a093bac",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "65aa0b2d52318bbc37daecdeaf5a44278cbe7b993692e954c68d055a50f0a7e6",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "c7c4e44976646e44afdae889e54456040d818ce276be8b1888c665b13a093bac",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "zero_one passed",
+            "size_two behavior check failed",
+            "sizes_three_to_five behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "6c7b65832883ac3631e1eb13babe34ad41648e33ba9f97e1274e608fa6f7d654",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "c7c4e44976646e44afdae889e54456040d818ce276be8b1888c665b13a093bac",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "extended_oracle behavior check failed",
+            "shape_permutation behavior check failed",
+            "sanitized behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "7ae989b907f2e8c597e79957b88e4e67be2eb4c87cdbcc9901713e2fc2a99e7e",
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-1/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "e148cc95ab95c6210ce9b51b7e402ffda5693f96a62a302efdbe2a52f6acc6bb",
+        "spiral_matrix.h": "67e73caff0d8577e224d34e84c3ce1c02444f986d333623fda24d385c9d5ea60"
+      },
+      "case_id": "midband_rl_v2_trial_2_final",
+      "classification": "agreement_pass",
+      "failure_class": "signed traversal bounds; all 6 assertions passed on first evaluated turn",
+      "official_gate_status": "pass",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "3314c06e34d518fdb479e8404d522cdc7ec754d1222421b050a00dd2cbb74339",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "08414593cbccb1aad2def4acc1b5021e9b5a5135ca536d777fcc39c4018e59ca",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "3314c06e34d518fdb479e8404d522cdc7ec754d1222421b050a00dd2cbb74339",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "small_exact passed",
+            "shape_permutation passed",
+            "oracle_extended passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "a3f6d3dd3029999f1137bdf32cc1c609b21c485fdecdb0952a70b57e3e055d27",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "3314c06e34d518fdb479e8404d522cdc7ec754d1222421b050a00dd2cbb74339",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "5133c48afb7235a87cb18e13a2de5d95be6258851d7ea59cb01d292092d6421b",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "3314c06e34d518fdb479e8404d522cdc7ec754d1222421b050a00dd2cbb74339",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero_one passed",
+            "size_two passed",
+            "sizes_three_to_five passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "14309dc760d8108dd00a60bb5bdfde4b9259b61a984b252f9ebeb540188220a6",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "3314c06e34d518fdb479e8404d522cdc7ec754d1222421b050a00dd2cbb74339",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "extended_oracle passed",
+            "shape_permutation passed",
+            "sanitized passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "d2ad07fc052eee2b0465c1412d94c510d1ef5605ddffce0838da92d6ec17048f",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-2/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "c3f05ad9cd2b2fb5dac7b1b17ac66b8b20cfca9cccd432c641d72db12184aa09",
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c"
+      },
+      "case_id": "midband_rl_v2_trial_3_turn_1",
+      "classification": "agreement_fail",
+      "failure_class": "unsigned reverse traversal underflow; size 2 SIGSEGV after 2/3 assertions",
+      "official_gate_status": "fail",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "7a88b83752625ed76531a23784d34addf61d16112e4a95388d7cf0c0c5312cfc",
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "small_exact behavior check failed",
+            "shape_permutation behavior check failed",
+            "oracle_extended behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "7f5275e56f7e31a6a3044d3fde428f66cd7ba809c83df45b1449a0700169d832",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "a89cd9bb13bca33537df76613aec4940fb62a4f433326a63bc37d9af68f0c020",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "zero_one passed",
+            "size_two behavior check failed",
+            "sizes_three_to_five behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "02082cebd61456be6e1600270045e9d86a5dbd9ca19fda09c9f8fa80a781f463",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "extended_oracle behavior check failed",
+            "shape_permutation behavior check failed",
+            "sanitized behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "463729ae17c5e24a70ed6fff24b447fee5891fda146ca6d879adb05a86be0586",
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-3/turn-1",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "c3f05ad9cd2b2fb5dac7b1b17ac66b8b20cfca9cccd432c641d72db12184aa09",
+        "spiral_matrix.h": "3849640a2f67b0d1c37ba8c94de52969a9920b3e7e5c5c91a67e46e08e75fd1c"
+      },
+      "case_id": "midband_rl_v2_trial_3_final",
+      "classification": "agreement_fail",
+      "failure_class": "context exhausted before any repair; identical unsigned-loop SIGSEGV remained",
+      "official_gate_status": "fail",
+      "pack_status": "fail",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "79df10c5d62761aa66f2a29b37812b19e54df89eebd100140c2b93ff8f42399f",
+          "status": "fail"
+        },
+        "E02": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "small_exact behavior check failed",
+            "shape_permutation behavior check failed",
+            "oracle_extended behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "ac98e91ffb1acb94814cf8a04d57de22721c1867360d2469c1843e7328235e5c",
+          "status": "fail"
+        },
+        "E03": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "one or more official tests failed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "1a03f1983905f4386f5f96423cd01c35612d3532d7e964fa880cc6b6b140ee0c",
+          "status": "fail"
+        },
+        "E04": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "pass",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "zero_one passed",
+            "size_two behavior check failed",
+            "sizes_three_to_five behavior check failed"
+          ],
+          "kernel_vector": [
+            1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "16e02b20fae0534963ffd293262955f64f75386e9866281ab7fff35d0a981834",
+          "status": "fail"
+        },
+        "E05": {
+          "candidate_source_sha256": "233b0faadd79eff911b7870199df7b70e82d92081c741d34e2470bfdd6f61324",
+          "kernel_statuses": [
+            "fail",
+            "fail",
+            "fail"
+          ],
+          "kernel_summaries": [
+            "extended_oracle behavior check failed",
+            "shape_permutation behavior check failed",
+            "sanitized behavior check failed"
+          ],
+          "kernel_vector": [
+            -1,
+            -1,
+            -1
+          ],
+          "preflight_error": null,
+          "process_returncode": 1,
+          "receipt_sha256": "a26882f4c55cf3556eb6a74ac5b8a4c38d28fe57dd2f9cfc88d73518b14df0c9",
+          "status": "fail"
+        }
+      },
+      "source_outcome": "fail",
+      "source_sample_id": "trial-3/turn-2",
+      "source_unchanged": true
+    },
+    {
+      "candidate_sha256": {
+        "spiral_matrix.cpp": "34170e18861eab21c30c36cb10ff11ddd9568c0989064018c3a001660831764f",
+        "spiral_matrix.h": "67e73caff0d8577e224d34e84c3ce1c02444f986d333623fda24d385c9d5ea60"
+      },
+      "case_id": "midband_rl_v2_trial_4_final",
+      "classification": "agreement_pass",
+      "failure_class": "signed 64-bit bounds; all 6 assertions passed on first evaluated turn",
+      "official_gate_status": "pass",
+      "pack_status": "pass",
+      "policies": {
+        "E01": {
+          "candidate_source_sha256": "b6c3402ab200939560eebb48ca1c70c4caa7d1e756e4f1189d77863231f5dc21",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "public_names compiled",
+            "exact_signatures compiled",
+            "implementation_link passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "6e2e17494db2e1c2a10bbaaf274d0bb669844356db86b90af63f48e6f864c435",
+          "status": "pass"
+        },
+        "E02": {
+          "candidate_source_sha256": "b6c3402ab200939560eebb48ca1c70c4caa7d1e756e4f1189d77863231f5dc21",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "small_exact passed",
+            "shape_permutation passed",
+            "oracle_extended passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "280af5379291e7891b1532794b97c615c883ffb25857ca23eebc21cf3ddcf2c3",
+          "status": "pass"
+        },
+        "E03": {
+          "candidate_source_sha256": "b6c3402ab200939560eebb48ca1c70c4caa7d1e756e4f1189d77863231f5dc21",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "the pinned official suite and build assets are authenticated",
+            "official suite compiled and linked",
+            "every selected official test passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "9d6c327e14b322e3a174b14860206e95df794d207933f438ca7054082863f47e",
+          "status": "pass"
+        },
+        "E04": {
+          "candidate_source_sha256": "b6c3402ab200939560eebb48ca1c70c4caa7d1e756e4f1189d77863231f5dc21",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "zero_one passed",
+            "size_two passed",
+            "sizes_three_to_five passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "32566228fb19dfad51042052f7a01caac816ce3b44c046b750813eac7e774e43",
+          "status": "pass"
+        },
+        "E05": {
+          "candidate_source_sha256": "b6c3402ab200939560eebb48ca1c70c4caa7d1e756e4f1189d77863231f5dc21",
+          "kernel_statuses": [
+            "pass",
+            "pass",
+            "pass"
+          ],
+          "kernel_summaries": [
+            "extended_oracle passed",
+            "shape_permutation passed",
+            "sanitized passed"
+          ],
+          "kernel_vector": [
+            1,
+            1,
+            1
+          ],
+          "preflight_error": null,
+          "process_returncode": 0,
+          "receipt_sha256": "b680416540f058d6034599d931f9914ac85aae3b0078f205714e066f45278771",
+          "status": "pass"
+        }
+      },
+      "source_outcome": "pass",
+      "source_sample_id": "trial-4/turn-1",
+      "source_unchanged": true
+    }
+  ],
+  "schema_version": 1,
+  "source_checkpoint": "execution-bank-RL-v2-think-r2/checkpoints/grpo_lora_r16/iter_0000019/adapter",
+  "source_run_id": "execution-bank-RL-v2-think-r2",
+  "task_id": "spiral-matrix"
+}

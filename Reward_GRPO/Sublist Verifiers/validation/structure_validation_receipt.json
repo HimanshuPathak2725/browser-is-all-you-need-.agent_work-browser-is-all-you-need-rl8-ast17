@@ -1,0 +1,273 @@
+{
+  "applicable_kernel_count_by_policy": {
+    "E01": 5,
+    "E02": 4,
+    "E03": 5,
+    "E04": 5,
+    "E05": 6,
+    "E06": 5,
+    "E07": 5,
+    "E08": 5,
+    "E09": 3,
+    "E10": 3
+  },
+  "candidate_source_kernel_count": 36,
+  "complete_campaign_kernel_count": 46,
+  "gcc_replay_kernel_count": 33,
+  "policies": {
+    "E01": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_01_build_stage_link_completion.py",
+      "path": "Verifier implementation policy/policy_01_build_stage_link_completion.md",
+      "sha256": "355c4e6879755c3abf8c53ba36cd34e176aa687b4aa14cede3e55745dd832b60"
+    },
+    "E02": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_02_warning_clean_candidate_build.py",
+      "path": "Verifier implementation policy/policy_02_warning_clean_candidate_build.md",
+      "sha256": "f36686a79cf9bf6b45f9b6c71677aab1206422f29e2b51ae92a42ee799c40143"
+    },
+    "E03": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_03_exact_public_api_caller_contract.py",
+      "path": "Verifier implementation policy/policy_03_exact_public_api_caller_contract.md",
+      "sha256": "2eda684806cda7922fab9c3ba3b9c73cb94efaa9ca547ccdae7ebbabfead9269"
+    },
+    "E04": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_04_header_include_dependency_ownership.py",
+      "path": "Verifier implementation policy/policy_04_header_include_dependency_ownership.md",
+      "sha256": "d1333b81709d1332e7e9ba648e5c21f49894eb853514fc0c775adabcba43683f"
+    },
+    "E05": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_05_official_functional_classification.py",
+      "path": "Verifier implementation policy/policy_05_official_functional_classification.md",
+      "sha256": "ff418191b9f69a2b8c97793035e0d13bc995cdab7067943960707e1fccdd1b40"
+    },
+    "E06": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_06_contiguous_sublist_relational_semantics.py",
+      "path": "Verifier implementation policy/policy_06_contiguous_sublist_relational_semantics.md",
+      "sha256": "19a4abf590bd001c070128abe5f2340ead5019314d5b86fb37d560a43c44137e"
+    },
+    "E07": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_07_feedback_repair_two_turn_convergence.py",
+      "path": "Verifier implementation policy/policy_07_feedback_repair_two_turn_convergence.md",
+      "sha256": "0fa8fe1395bb8fce62f09a42902408312799d8b07e979da875b4c74605c90727"
+    },
+    "E08": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_08_response_context_harness_integrity.py",
+      "path": "Verifier implementation policy/policy_08_response_context_harness_integrity.md",
+      "sha256": "7bbe8080ca393bf99c7e2969276c7071bd4040603c4f04f71247b5fc52b18c5b"
+    },
+    "E09": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_09_memory_undefined_behavior_safety.py",
+      "path": "Verifier implementation policy/policy_09_memory_undefined_behavior_safety.md",
+      "sha256": "a0d5cc1b30e552afd8324bd75b3dbe37de03992bd78b0648aef9fb5e59262304"
+    },
+    "E10": {
+      "nonempty": true,
+      "paired_verifier": "verifiers/verifier_10_cross_compiler_portability.py",
+      "path": "Verifier implementation policy/policy_10_cross_compiler_portability.md",
+      "sha256": "1e8d17a216d3c5cfc8081fdb5890adf97c9e5fb81dbbb305dc1aaa700fd5de35"
+    }
+  },
+  "policy_count": 10,
+  "schema_version": 1,
+  "shared_runtime_sha256": "2abd93bfa7f00f47ea506ef92c3ed366cf038d67ad8e56ae72a06d66b813a51c",
+  "status": "PASS",
+  "task_id": "local-aider-cpp/sublist",
+  "verifier_count": 10,
+  "verifiers": {
+    "E01": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 1,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_01_build_stage_link_completion.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "b7685ce8c2532dbe39320b847e0748d269ae4bfa58499b1e33986cd33e3453a8",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_1a_primary_toolchain_and_fixture",
+        "verify_1b_candidate_translation_unit",
+        "verify_1c_official_and_external_callers",
+        "verify_1d_link_completion",
+        "verify_1e_clean_cmake_build"
+      ]
+    },
+    "E02": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 2,
+      "expected_kernel_count": 4,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_02_warning_clean_candidate_build.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "d6868be630fc5ad80767a4774abb3aebf11c480f1e4dd932050769747a471dd5",
+      "verify_function_count": 4,
+      "verify_function_names": [
+        "verify_2a_wall",
+        "verify_2b_wextra",
+        "verify_2c_wpedantic",
+        "verify_2d_complete_werror_build"
+      ]
+    },
+    "E03": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 3,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_03_exact_public_api_caller_contract.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "2690937fa015585dae441542bf02e722e2dad234e8fa2ceaf3401343fe7493d9",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_3a_namespace_enum_type",
+        "verify_3b_lowercase_enumerators",
+        "verify_3c_exact_non_template_signature",
+        "verify_3d_braced_call_compatibility",
+        "verify_3e_enum_distinctness_and_smoke"
+      ]
+    },
+    "E04": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 4,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_04_header_include_dependency_ownership.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "289e11b66f1845537579b9df1be08899967f66262ad5a6705d12294c99b259b3",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_4a_direct_vector_include_ownership",
+        "verify_4b_header_self_contained",
+        "verify_4c_implementation_dependency_graph",
+        "verify_4d_pinned_fixed_dependencies",
+        "verify_4e_empty_workspace_rebuild"
+      ]
+    },
+    "E05": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 5,
+      "expected_kernel_count": 6,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_05_official_functional_classification.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "e4d5db5c7e556a8fda421dbce1c49cfd7a2055861c28478bbba637ca907ed2b5",
+      "verify_function_count": 6,
+      "verify_function_names": [
+        "verify_5a_authenticated_official_suite",
+        "verify_5b_equality_and_empty_boundaries",
+        "verify_5c_sublist_positions_and_recovery",
+        "verify_5d_superlist_positions",
+        "verify_5e_unequal_order_and_value_cases",
+        "verify_5f_deterministic_official_repetition"
+      ]
+    },
+    "E06": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 6,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_06_contiguous_sublist_relational_semantics.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "a96024bcf74bfe1474ee4730de142c8a8a6bc70673226d9008d87978d8d04116",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_6a_exhaustive_independent_oracle",
+        "verify_6b_contiguity_order_and_identity",
+        "verify_6c_false_start_and_repeated_values",
+        "verify_6d_swap_relations",
+        "verify_6e_input_preservation_and_repeatability"
+      ]
+    },
+    "E07": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 7,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_07_feedback_repair_two_turn_convergence.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "f6203a5d846842785b39fb82e7334fb785717a1d01bba4d3b5dc79f1a26955f6",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_7a_first_response_health",
+        "verify_7b_exact_feedback_delivery",
+        "verify_7c_targeted_repair",
+        "verify_7d_diagnostic_reduction",
+        "verify_7e_pass_within_two_turns"
+      ]
+    },
+    "E08": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 8,
+      "expected_kernel_count": 5,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_08_response_context_harness_integrity.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "dd32e6ad89a0d87dabb4dd2d9df6d2d7f6f675b36d78618070e62e3ceef921e9",
+      "verify_function_count": 5,
+      "verify_function_names": [
+        "verify_8a_pinned_aider_parse",
+        "verify_8b_authorized_changed_file_scope",
+        "verify_8c_response_context_counters",
+        "verify_8d_evaluation_completion",
+        "verify_8e_hash_bound_receipt_integrity"
+      ]
+    },
+    "E09": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 9,
+      "expected_kernel_count": 3,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_09_memory_undefined_behavior_safety.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "82c12f47e761a88c19d74908f49caa4dfae647347943eef2e41fb4207b78b9a4",
+      "verify_function_count": 3,
+      "verify_function_names": [
+        "verify_9a_address_sanitizer",
+        "verify_9b_undefined_behavior_sanitizer",
+        "verify_9c_repeated_sanitized_stress"
+      ]
+    },
+    "E10": {
+      "ast_parse": "PASS",
+      "declared_policy_number": 10,
+      "expected_kernel_count": 3,
+      "kernel_count_match": true,
+      "one_source_comment": true,
+      "path": "verifiers/verifier_10_cross_compiler_portability.py",
+      "policy_id_match": true,
+      "python_comment_count": 1,
+      "sha256": "419e4e4282208a82c5b9305258ac1e2de64873f85261a0397d165bf1a74eca20",
+      "verify_function_count": 3,
+      "verify_function_names": [
+        "verify_10a_clang_warning_clean_compile",
+        "verify_10b_clang_link_and_official_tests",
+        "verify_10c_clean_secondary_reproduction"
+      ]
+    }
+  }
+}

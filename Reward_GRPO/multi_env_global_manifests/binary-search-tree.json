@@ -1,0 +1,104 @@
+{
+  "candidate_files": [
+    "binary_search_tree.cpp",
+    "binary_search_tree.h"
+  ],
+  "policies": {
+    "G02": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "strict-build",
+          "--task",
+          "binary-search-tree",
+          "--candidate-dir",
+          "/workspace/candidate/binary-search-tree"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G03": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "api-link",
+          "--task",
+          "binary-search-tree",
+          "--candidate-dir",
+          "/workspace/candidate/binary-search-tree"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G04": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "official-functional",
+          "--task",
+          "binary-search-tree",
+          "--candidate-dir",
+          "/workspace/candidate/binary-search-tree"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G05": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "safety",
+          "--task",
+          "binary-search-tree",
+          "--candidate-dir",
+          "/workspace/candidate/binary-search-tree"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G07": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "portability",
+          "--task",
+          "binary-search-tree",
+          "--candidate-dir",
+          "/workspace/candidate/binary-search-tree"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ]
+  },
+  "protected_files": {
+    ".docs/instructions.md": "103ea444961a5ecd8c0afec176ece97d006e05574725a41dd284b266a09531ad",
+    ".meta/config.json": "d220b238dd194ef5f26c06a1e19198eff3094417cd80b9a475116942e574c8d2",
+    ".meta/example.h": "8b6b2e7228912896cd76fae4908a7408f09349fc1ccbe12631af3d9d8460b6a7",
+    ".meta/tests.toml": "8329f10dba94388543526a9ba56af74385871c5f77598aaf3374ebe9c2bcb19d",
+    "CMakeLists.txt": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "binary_search_tree_test.cpp": "79ff6a886a42d7691ec0240f9ea08191016f1042a752da9c2809a3da24c361e5",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260"
+  },
+  "schema_version": 1,
+  "source": {
+    "commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "repository": "Aider-AI/polyglot-benchmark"
+  },
+  "task_id": "binary-search-tree"
+}

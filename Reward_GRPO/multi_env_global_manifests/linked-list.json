@@ -1,0 +1,107 @@
+{
+  "candidate_files": [
+    "linked_list.cpp",
+    "linked_list.h"
+  ],
+  "policies": {
+    "G02": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "strict-build",
+          "--task",
+          "linked-list",
+          "--candidate-dir",
+          "/workspace/candidate/linked-list"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G03": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "api-link",
+          "--task",
+          "linked-list",
+          "--candidate-dir",
+          "/workspace/candidate/linked-list"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G04": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "official-functional",
+          "--task",
+          "linked-list",
+          "--candidate-dir",
+          "/workspace/candidate/linked-list"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G05": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "safety",
+          "--task",
+          "linked-list",
+          "--candidate-dir",
+          "/workspace/candidate/linked-list"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ],
+    "G07": [
+      {
+        "command": [
+          "python3",
+          "/workspace/Reward_GRPO/multi_env_global_command.py",
+          "--mode",
+          "portability",
+          "--task",
+          "linked-list",
+          "--candidate-dir",
+          "/workspace/candidate/linked-list"
+        ],
+        "expected_exit": 0,
+        "timeout_s": 300
+      }
+    ]
+  },
+  "protected_files": {
+    ".docs/instructions.append.md": "832bac7001779afc0eeaa72d9a30e9b2fbfdef2a51a103df9011342ff7e39da0",
+    ".docs/instructions.md": "97b802c9c2f4dc8505d7b0051694ec747c250c72ad62ac13786c15049f6c95c6",
+    ".docs/introduction.md": "1fcba453203749183a858d5204da1230188e652fc641e6124f5da93d9255a28e",
+    ".meta/config.json": "b191104a611c81f95e6f09b79eebcd8f345807a2b001f52c51273f90c8dfb4b0",
+    ".meta/example.cpp": "177a389c4d9adaeeba281bfe3fa7265b8aee4ce9576246a0b29d8063e88ba7f6",
+    ".meta/example.h": "f1b16f8b0593e41a965a502eb5ba796ec61a23e2516e045b79e01924566137a5",
+    ".meta/tests.toml": "dd19653a9b915d68ac6c9c3e33b7f5179d898d0589a5e5c46421a3e25e7535cd",
+    "CMakeLists.txt": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "linked_list_test.cpp": "c63f3a714e7796868842f74e48aa2d4bc9e6ba9ddfbe2eaba4aa55cf6fc46633",
+    "test/catch.hpp": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "test/tests-main.cpp": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260"
+  },
+  "schema_version": 1,
+  "source": {
+    "commit": "7e0611e77b54e2dea774cdc0aa00cf9f7ed6144f",
+    "repository": "Aider-AI/polyglot-benchmark"
+  },
+  "task_id": "linked-list"
+}

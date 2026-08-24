@@ -1,0 +1,91 @@
+{
+  "fixed_hashes": {
+    "catch": "681e7505a50887c9085539e5135794fc8f66d8e5de28eadf13a30978627b0f47",
+    "cmake": "53d531120e650972adf19a2a42aa2d5bc716c93700ffac74c1c2868fdce633ff",
+    "config": "79cfa6b0c085e798d07b42c7732d39d637045c35016a34f4f8db1784b35d4cef",
+    "example_cpp": "d2ee6f02fdd89facc7e0645cbc8d61ef81fc142b59eaab04c88893bebbf9a597",
+    "example_h": "9a2a6a058c9e15453d895854ffade6e516f7a4f110e2c90bb0a4423b0e1f567f",
+    "instructions": "9d5dff44082c7bac9e5ea721a58723f15d353cf9084885a98f7f00390c92bfb3",
+    "official_test": "406cce0e7cf16487fdd12df030bbf5fcfe57aeb36078c8eb13b16c1f8267239e",
+    "tests_main": "5847fda35c1320d94f8d088aaf34229d689f66f1da235f885cbb28c8f17e4260",
+    "tests_toml": "a337f0493549c13b2a27d96924e742a9f99371da4235a25f5644cbcdb645b708"
+  },
+  "official_terminal_policy": "E03",
+  "policy_checks": [
+    {
+      "path": "Verifier implementation policy/policy_01_exact_api_compile_link.md",
+      "policy_id": "E01",
+      "sha256": "95bedca4c4b3f0f8023a3e991506fbfc94a12f1935326a5f53d8b1423291c110",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_02_semantic_boundaries.md",
+      "policy_id": "E02",
+      "sha256": "90853bff2f1db5df9f2de3d2864d4e05e01ab568b7cb271ed0854277c48570cb",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_03_official_functional_behavior.md",
+      "policy_id": "E03",
+      "sha256": "3028ea28cfdf02c47509e6237df19ee2bfde3918f9e9dabb3865c112f26a404e",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_04_minimal_size_bounds.md",
+      "policy_id": "E04",
+      "sha256": "04bcd0f9218319dec5c640083a44c564f926dc71266552f192395f09d1b66e61",
+      "template_check": "pass"
+    },
+    {
+      "path": "Verifier implementation policy/policy_05_sanitized_extended_oracle.md",
+      "policy_id": "E05",
+      "sha256": "698d0d80a5ce2e647dfc8dd1b6d231a8df1c4853d9553928dac73d7b1b71e22f",
+      "template_check": "pass"
+    }
+  ],
+  "policy_count": 5,
+  "reward_decision_rule": "all five policies must pass",
+  "schema_version": 1,
+  "source_kernel_count": 15,
+  "status": "pass",
+  "task_id": "spiral-matrix",
+  "total_kernel_count": 15,
+  "verifier_checks": [
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_01_exact_api_compile_link.py",
+      "policy_id": "E01",
+      "sha256": "07848fca42c398634958a3c798f7f15ce113494243dbaf44770e3ae6c96e75cc",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_02_semantic_boundaries.py",
+      "policy_id": "E02",
+      "sha256": "79549f9b6ee345057a111c29db4cca028592bf0f9a78da947e54dd45d00efcf7",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_03_official_functional_behavior.py",
+      "policy_id": "E03",
+      "sha256": "97c24f4bd6e3093df2f0f6e92855c1e0762b1c7fc8ca629d65de772dfd53202e",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_04_minimal_size_bounds.py",
+      "policy_id": "E04",
+      "sha256": "46bb7a4b59f8c2e6e0da20b185d7f981f32672fa0847716102e89bfc10337f10",
+      "source_comment_count": 1
+    },
+    {
+      "ast_parse": "pass",
+      "path": "verifiers/verifier_05_sanitized_extended_oracle.py",
+      "policy_id": "E05",
+      "sha256": "833ae804b04514236801a364d759ec0bce42fdfb05d83282cc6bce5dc853b615",
+      "source_comment_count": 1
+    }
+  ],
+  "verifier_count": 5
+}

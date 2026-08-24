@@ -175,14 +175,30 @@ def _receipt_status(receipt: dict[str, Any]) -> str:
     raise InvalidEvidence("score receipt does not contain a status")
 
 
-def _diagnostic_present(output: str) -> bool:
+SUPPORTED_REPAIR_CLASSES = {
+    "api.is_allergic_to.parameter_type",
+    "build.missing_unordered_map_include",
+}
+
+
+def _diagnostic_class(output: str) -> str | None:
     lowered = output.lower()
     parameter_error = re.search(
         r"cannot initialize (?:a )?parameter of type.+(?:char\s*\[|const char|basic_string)",
         lowered,
         flags=re.DOTALL,
     )
-    return "is_allergic_to" in lowered and parameter_error is not None
+    if "is_allergic_to" in lowered and parameter_error is not None:
+        return "api.is_allergic_to.parameter_type"
+    missing_map = (
+        "allergies.h" in lowered
+        and "unordered_map" in lowered
+        and "does not name a template type" in lowered
+        and "<unordered_map>" in lowered
+    )
+    if missing_map:
+        return "build.missing_unordered_map_include"
+    return None
 
 
 def _kernel_invalid(kernel: str, reason: str) -> KernelResult:
@@ -258,22 +274,31 @@ def verify_5b_feedback_binding(context: dict[str, Any]) -> KernelResult:
 def verify_5c_reported_diagnostic_removed(context: dict[str, Any]) -> KernelResult:
     turn_1_output = _receipt_output(context["turn_1_receipt"])
     turn_2_output = _receipt_output(context["turn_2_receipt"])
-    if not _diagnostic_present(turn_1_output):
-        raise InvalidEvidence("turn-one receipt lacks the policy's authenticated parameter-type diagnostic")
-    if _diagnostic_present(turn_2_output):
+    observed_class = _diagnostic_class(turn_1_output)
+    declared_class = context["manifest"].get("repair_class", observed_class)
+    if declared_class not in SUPPORTED_REPAIR_CLASSES:
+        raise InvalidEvidence("manifest repair_class is not an authenticated Allergies repair class")
+    if observed_class != declared_class:
+        raise InvalidEvidence("turn-one receipt does not match the declared repair_class")
+    turn_2_class = _diagnostic_class(turn_2_output)
+    if turn_2_class == declared_class:
         return KernelResult(
             "5C",
             "FAIL",
             -1,
-            {"diagnostic": "api.is_allergic_to.parameter_type", "present_in_turn_2": True},
-            "the reported string-parameter diagnostic remains after feedback",
+            {"diagnostic": declared_class, "present_in_turn_2": True},
+            "the reported Allergies diagnostic remains after feedback",
         )
     return KernelResult(
         "5C",
         "PASS",
         1,
-        {"diagnostic": "api.is_allergic_to.parameter_type", "present_in_turn_2": False},
-        "the reported string-parameter diagnostic is absent from turn two",
+        {
+            "diagnostic": declared_class,
+            "present_in_turn_2": False,
+            "turn_2_diagnostic_class": turn_2_class,
+        },
+        "the authenticated turn-one diagnostic is absent from turn two",
     )
 
 
