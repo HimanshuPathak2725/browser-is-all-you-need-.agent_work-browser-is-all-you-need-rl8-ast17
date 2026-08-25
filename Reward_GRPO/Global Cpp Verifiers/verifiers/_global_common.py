@@ -15,6 +15,42 @@ from typing import Any
 
 
 SHA256 = re.compile(r"[0-9a-f]{64}")
+PROBE_ID = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+CHARACTERISTIC_CONTRACTS: dict[str, tuple[str, frozenset[str]]] = {
+    "G08": (
+        "C4",
+        frozenset(
+            {
+                "header-self-contained",
+                "repeated-include",
+                "protected-dependency",
+                "multi-tu-odr",
+            }
+        ),
+    ),
+    "G09": (
+        "C6",
+        frozenset(
+            {
+                "edge-partition",
+                "relational-property",
+                "independent-oracle",
+                "metamorphic-property",
+            }
+        ),
+    ),
+    "G10": (
+        "C7",
+        frozenset(
+            {
+                "lifecycle-transition",
+                "state-isolation",
+                "reset-behavior",
+                "repeatability",
+            }
+        ),
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -151,6 +187,34 @@ def invalid(kernel_id: str, summary: str, facts: dict[str, Any] | None = None) -
     return Kernel(kernel_id, None, "invalid", summary, facts or {})
 
 
+def characteristic_facts(
+    entry: dict[str, Any], policy_id: str, seen_probe_ids: set[str]
+) -> dict[str, str]:
+    contract = CHARACTERISTIC_CONTRACTS.get(policy_id)
+    if contract is None:
+        return {}
+    expected_characteristic, allowed_kinds = contract
+    characteristic = entry.get("characteristic_id")
+    if characteristic != expected_characteristic:
+        raise EvidenceError(
+            f"{policy_id} command must declare characteristic_id {expected_characteristic}"
+        )
+    probe_id = entry.get("probe_id")
+    if not isinstance(probe_id, str) or PROBE_ID.fullmatch(probe_id) is None:
+        raise EvidenceError(f"{policy_id} command probe_id is invalid")
+    if probe_id in seen_probe_ids:
+        raise EvidenceError(f"{policy_id} command probe_id is duplicated")
+    evidence_kind = entry.get("evidence_kind")
+    if evidence_kind not in allowed_kinds:
+        raise EvidenceError(f"{policy_id} command evidence_kind is invalid")
+    seen_probe_ids.add(probe_id)
+    return {
+        "characteristic_id": expected_characteristic,
+        "probe_id": probe_id,
+        "evidence_kind": evidence_kind,
+    }
+
+
 def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
     policies = ctx.manifest.get("policies")
     if not isinstance(policies, dict) or not isinstance(policies.get(policy_id), list):
@@ -161,10 +225,16 @@ def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
     logs = ctx.output_dir / "logs"
     logs.mkdir(exist_ok=True)
     results: list[Kernel] = []
+    seen_probe_ids: set[str] = set()
     for index, entry in enumerate(commands, start=1):
         kernel_id = f"{policy_id}-{chr(64 + index)}"
         if not isinstance(entry, dict) or not isinstance(entry.get("command"), list) or not entry["command"] or not all(isinstance(item, str) and item for item in entry["command"]):
             results.append(invalid(kernel_id, "trusted command schema is invalid"))
+            continue
+        try:
+            characteristic = characteristic_facts(entry, policy_id, seen_probe_ids)
+        except EvidenceError as error:
+            results.append(invalid(kernel_id, str(error)))
             continue
         timeout = entry.get("timeout_s", 120)
         if not isinstance(timeout, int) or not 1 <= timeout <= 900:
@@ -178,16 +248,16 @@ def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
         try:
             completed = subprocess.run(entry["command"], cwd=ctx.candidate_dir, text=True, capture_output=True, timeout=timeout, env={**os.environ, "LC_ALL": "C", "LANG": "C"})
         except FileNotFoundError as error:
-            results.append(invalid(kernel_id, "verifier dependency is unavailable", {"error": str(error)}))
+            results.append(invalid(kernel_id, "verifier dependency is unavailable", {"error": str(error), **characteristic}))
             continue
         except subprocess.TimeoutExpired as error:
-            results.append(failed(kernel_id, "candidate command timed out", {"timeout_s": timeout, "stdout": str(error.stdout or ""), "stderr": str(error.stderr or "")}))
+            results.append(failed(kernel_id, "candidate command timed out", {"timeout_s": timeout, "stdout": str(error.stdout or ""), "stderr": str(error.stderr or ""), **characteristic}))
             continue
         stdout = logs / f"{policy_id.lower()}_{index}.stdout.log"
         stderr = logs / f"{policy_id.lower()}_{index}.stderr.log"
         stdout.write_text(completed.stdout, encoding="utf-8")
         stderr.write_text(completed.stderr, encoding="utf-8")
-        facts = {"expected_exit": expected_exit, "observed_exit": completed.returncode, "stdout_sha256": digest(stdout), "stderr_sha256": digest(stderr)}
+        facts = {"expected_exit": expected_exit, "observed_exit": completed.returncode, "stdout_sha256": digest(stdout), "stderr_sha256": digest(stderr), **characteristic}
         if completed.returncode == expected_exit:
             results.append(Kernel(kernel_id, 1, "pass", "trusted candidate check passed", facts, entry["command"], round(time.monotonic() - started, 6), str(stdout), str(stderr)))
         else:

@@ -10,7 +10,10 @@
     "G03": [{"command": ["./trusted-api-probe"], "timeout_s": 120, "expected_exit": 0}],
     "G04": [{"command": ["./trusted-official-suite"], "timeout_s": 120, "expected_exit": 0}],
     "G05": [{"command": ["./trusted-sanitizer-probe"], "timeout_s": 120, "expected_exit": 0}],
-    "G07": [{"command": ["./trusted-clang-build-and-test"], "timeout_s": 120, "expected_exit": 0}]
+    "G07": [{"command": ["./trusted-clang-build-and-test"], "timeout_s": 120, "expected_exit": 0}],
+    "G08": [{"characteristic_id": "C4", "probe_id": "header-self-contained", "evidence_kind": "header-self-contained", "command": ["./trusted-header-dependency-odr-probe"], "timeout_s": 120, "expected_exit": 0}],
+    "G09": [{"characteristic_id": "C6", "probe_id": "edge-partitions", "evidence_kind": "edge-partition", "command": ["./trusted-contract-partition-property-probe"], "timeout_s": 120, "expected_exit": 0}],
+    "G10": [{"characteristic_id": "C7", "probe_id": "lifecycle-transitions", "evidence_kind": "lifecycle-transition", "command": ["./trusted-lifecycle-state-repeatability-probe"], "timeout_s": 120, "expected_exit": 0}]
   },
   "trajectory": {
     "turn_limit": 2,
