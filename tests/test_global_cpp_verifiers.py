@@ -36,6 +36,7 @@ def _run_policy(
     characteristic_id: str | None = None,
     evidence_kind: str | None = None,
     duplicate_probe: bool = False,
+    invalid_exit_codes: object | None = None,
 ) -> tuple[subprocess.CompletedProcess[str], dict[str, object]]:
     candidate = tmp_path / "candidate"
     candidate.mkdir()
@@ -55,6 +56,8 @@ def _run_policy(
         "timeout_s": 30,
         "expected_exit": expected_exit,
     }
+    if invalid_exit_codes is not None:
+        command_entry["invalid_exit_codes"] = invalid_exit_codes
     policy_commands = [command_entry]
     if duplicate_probe:
         policy_commands.append(dict(command_entry))
@@ -133,6 +136,44 @@ def test_new_global_policy_honors_nonzero_expected_exit(tmp_path: Path) -> None:
         "stderr_sha256": hashlib.sha256(b"").hexdigest(),
         "stdout_sha256": hashlib.sha256(b"").hexdigest(),
     }
+
+
+def test_new_global_policy_preserves_trusted_infrastructure_failure(
+    tmp_path: Path,
+) -> None:
+    completed, receipt = _run_policy(
+        tmp_path, "G08", observed_exit=2, invalid_exit_codes=[2]
+    )
+
+    assert completed.returncode == 2
+    assert receipt["status"] == "invalid"
+    assert receipt["kernel_sum"] is None
+    assert receipt["kernel_results"][0]["kernel"] is None
+    assert receipt["kernel_results"][0]["summary"] == (
+        "trusted verifier infrastructure failed"
+    )
+    assert receipt["kernel_results"][0]["facts"]["invalid_exit_codes"] == [2]
+
+
+@pytest.mark.parametrize(
+    "invalid_exit_codes",
+    [[0], [2, 2], [True], "2"],
+)
+def test_new_global_policy_rejects_invalid_infrastructure_exit_contract(
+    tmp_path: Path, invalid_exit_codes: object
+) -> None:
+    completed, receipt = _run_policy(
+        tmp_path,
+        "G08",
+        invalid_exit_codes=invalid_exit_codes,
+    )
+
+    assert completed.returncode == 2
+    assert receipt["status"] == "invalid"
+    assert receipt["kernel_sum"] is None
+    assert receipt["kernel_results"][0]["summary"] == (
+        "trusted invalid_exit_codes is invalid"
+    )
 
 
 def test_new_global_policy_rejects_mislabeled_characteristic(tmp_path: Path) -> None:

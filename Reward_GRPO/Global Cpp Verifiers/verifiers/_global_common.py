@@ -5,7 +5,6 @@ import hashlib
 import json
 import os
 import re
-import shutil
 import subprocess
 import time
 from dataclasses import asdict, dataclass
@@ -215,6 +214,18 @@ def characteristic_facts(
     }
 
 
+def command_invalid_exit_codes(entry: dict[str, Any], expected_exit: int) -> set[int]:
+    values = entry.get("invalid_exit_codes", [])
+    if (
+        not isinstance(values, list)
+        or any(not isinstance(value, int) or isinstance(value, bool) for value in values)
+        or len(values) != len(set(values))
+        or expected_exit in values
+    ):
+        raise EvidenceError("trusted invalid_exit_codes is invalid")
+    return set(values)
+
+
 def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
     policies = ctx.manifest.get("policies")
     if not isinstance(policies, dict) or not isinstance(policies.get(policy_id), list):
@@ -241,8 +252,13 @@ def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
             results.append(invalid(kernel_id, "trusted command timeout is invalid"))
             continue
         expected_exit = entry.get("expected_exit", 0)
-        if not isinstance(expected_exit, int):
+        if not isinstance(expected_exit, int) or isinstance(expected_exit, bool):
             results.append(invalid(kernel_id, "trusted expected_exit is invalid"))
+            continue
+        try:
+            invalid_exit_codes = command_invalid_exit_codes(entry, expected_exit)
+        except EvidenceError as error:
+            results.append(invalid(kernel_id, str(error), characteristic))
             continue
         started = time.monotonic()
         try:
@@ -258,8 +274,12 @@ def command_kernels(ctx: Context, policy_id: str) -> list[Kernel]:
         stdout.write_text(completed.stdout, encoding="utf-8")
         stderr.write_text(completed.stderr, encoding="utf-8")
         facts = {"expected_exit": expected_exit, "observed_exit": completed.returncode, "stdout_sha256": digest(stdout), "stderr_sha256": digest(stderr), **characteristic}
+        if invalid_exit_codes:
+            facts["invalid_exit_codes"] = sorted(invalid_exit_codes)
         if completed.returncode == expected_exit:
             results.append(Kernel(kernel_id, 1, "pass", "trusted candidate check passed", facts, entry["command"], round(time.monotonic() - started, 6), str(stdout), str(stderr)))
+        elif completed.returncode in invalid_exit_codes:
+            results.append(Kernel(kernel_id, None, "invalid", "trusted verifier infrastructure failed", facts, entry["command"], round(time.monotonic() - started, 6), str(stdout), str(stderr)))
         else:
             results.append(Kernel(kernel_id, -1, "fail", "trusted candidate check failed", facts, entry["command"], round(time.monotonic() - started, 6), str(stdout), str(stderr)))
     return results

@@ -14,6 +14,8 @@ The authenticated task manifest owns the candidate header list and probe command
 
 Every G08 command must declare `characteristic_id: C4`, a unique lowercase-hyphenated `probe_id`, and one of these `evidence_kind` values: `header-self-contained`, `repeated-include`, `protected-dependency`, or `multi-tu-odr`. Missing or mismatched metadata makes the policy `INVALID` before the command runs.
 
+Trusted probe wrappers reserve exit code `2` for evaluator or dependency failures and declare it through `invalid_exit_codes: [2]`. Exit code `1` remains a candidate structural failure. This keeps missing compilers and malformed probe evidence out of candidate reward.
+
 ## Aggregation
 
 Applicable commands are equal binary kernels. A task with no candidate header excludes G08 rather than receiving an invented structural requirement.
