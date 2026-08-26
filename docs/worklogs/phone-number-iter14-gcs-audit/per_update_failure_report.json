@@ -1,0 +1,4178 @@
+{
+  "critical_anomalies": [
+    {
+      "count": 130,
+      "kind": "compile_error",
+      "severity": "critical",
+      "stage": "train"
+    },
+    {
+      "count": 140,
+      "kind": "format_invalid",
+      "severity": "model_failure",
+      "stage": "train"
+    },
+    {
+      "count": 62,
+      "kind": "generation_truncated",
+      "note": "Native sample_status=truncated; no explicit context_exhaustion field exists.",
+      "severity": "critical_context_risk",
+      "stage": "train"
+    },
+    {
+      "count": 33,
+      "kind": "passed_with_format_valid_false",
+      "note": "These rows have all_tests_pass=true despite format_valid=false; treat as a verifier-field inconsistency/partial-reward nuance, not failed outputs.",
+      "severity": "integrity_nuance",
+      "stage": "train"
+    },
+    {
+      "count": 1,
+      "kind": "passed_with_truncated_status",
+      "note": "Excluded from the failed-truncation count because all_tests_pass=true.",
+      "severity": "integrity_nuance",
+      "stage": "train"
+    },
+    {
+      "count": 9,
+      "kind": "compile_error",
+      "severity": "critical",
+      "stage": "eval"
+    },
+    {
+      "count": 3,
+      "kind": "format_invalid",
+      "severity": "model_failure",
+      "stage": "eval"
+    },
+    {
+      "count": 1,
+      "kind": "generation_truncated",
+      "note": "Native sample_status=truncated; no explicit context_exhaustion field exists.",
+      "severity": "critical_context_risk",
+      "stage": "eval"
+    },
+    {
+      "count": 1,
+      "kind": "passed_with_format_valid_false",
+      "note": "These rows have all_tests_pass=true despite format_valid=false; treat as a verifier-field inconsistency/partial-reward nuance, not failed outputs.",
+      "severity": "integrity_nuance",
+      "stage": "eval"
+    }
+  ],
+  "identifier_semantics": {
+    "checkpoint_iteration": "separate checkpoint directories iter_0000004, iter_0000009, iter_0000014, iter_0000019",
+    "derived_jsonl_iteration": "copied verbatim from native rollout_id; this does not assert a native epoch field",
+    "native_epoch_field": false,
+    "native_iteration_field": false,
+    "native_rollout_id": "payload rollout_id and grpo[_eval]_<id>.pt filename suffix, zero-based 0..19"
+  },
+  "run_id": "phone-number-kernel12-grpo20-spot-20260822-102653",
+  "schema_version": 1,
+  "stages": {
+    "eval": {
+      "records_path": "/tmp/phone_iter14_gcs_audit/extracted/eval_records.jsonl",
+      "task_scope": "8-task Phone Number training monitor (not Fixed26)",
+      "totals": {
+        "compile_error": 9,
+        "dominant_failed_kernel_ids": [
+          {
+            "count": 67,
+            "value": "PH-E03-C"
+          },
+          {
+            "count": 26,
+            "value": "PH-E04-C"
+          },
+          {
+            "count": 22,
+            "value": "PH-E02-C"
+          },
+          {
+            "count": 15,
+            "value": "PH-E02-B"
+          },
+          {
+            "count": 14,
+            "value": "PH-E01-A"
+          },
+          {
+            "count": 14,
+            "value": "PH-E01-C"
+          },
+          {
+            "count": 14,
+            "value": "PH-E02-A"
+          },
+          {
+            "count": 14,
+            "value": "PH-E03-A"
+          },
+          {
+            "count": 14,
+            "value": "PH-E03-B"
+          },
+          {
+            "count": 14,
+            "value": "PH-E04-A"
+          },
+          {
+            "count": 14,
+            "value": "PH-E04-B"
+          },
+          {
+            "count": 12,
+            "value": "PH-E01-B"
+          }
+        ],
+        "dominant_failed_tasks": [
+          {
+            "count": 20,
+            "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+          },
+          {
+            "count": 18,
+            "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+          },
+          {
+            "count": 15,
+            "value": "aider-shadow-cpp/phone-number--full-solve"
+          },
+          {
+            "count": 5,
+            "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+          },
+          {
+            "count": 4,
+            "value": "aider-shadow-cpp/phone-number--country-code-repair"
+          },
+          {
+            "count": 4,
+            "value": "aider-shadow-cpp/phone-number--formatting-repair"
+          },
+          {
+            "count": 1,
+            "value": "aider-shadow-cpp/phone-number--nanp-prefix-repair"
+          },
+          {
+            "count": 1,
+            "value": "aider-shadow-cpp/phone-number--length-partition-repair"
+          }
+        ],
+        "dominant_failure_signatures": [
+          {
+            "count": 20,
+            "value": "declared-members-not-defined"
+          },
+          {
+            "count": 18,
+            "value": "observed-member-function-name-collision"
+          },
+          {
+            "count": 15,
+            "value": "missing-public-api"
+          },
+          {
+            "count": 5,
+            "value": "letters-and-forbidden-punctuation-ignored"
+          },
+          {
+            "count": 4,
+            "value": "any-eleven-digit-country-code-accepted"
+          },
+          {
+            "count": 4,
+            "value": "string-conversion-returns-bare-digits"
+          },
+          {
+            "count": 1,
+            "value": "area-and-exchange-prefixes-not-validated"
+          },
+          {
+            "count": 1,
+            "value": "overlong-input-silently-truncated"
+          }
+        ],
+        "failure_rate": 0.425,
+        "failures": 68,
+        "format_invalid": 3,
+        "infrastructure_error": 0,
+        "native_failed_reason_counts": {
+          "kernel_tests_failed": 68
+        },
+        "native_reason_counts": {
+          "kernel_tests_failed": 68,
+          "passed": 92
+        },
+        "pass_rate": 0.575,
+        "passed_format_invalid": 1,
+        "passed_truncated": 0,
+        "passes": 92,
+        "records": 160,
+        "response_at_limit": 1,
+        "timeout": 0,
+        "truncated": 1
+      },
+      "trend": {
+        "best_pass_rate": 0.75,
+        "best_updates": [
+          5,
+          11,
+          14
+        ],
+        "first_five_updates_pass_rate": 0.475,
+        "last_five_updates_pass_rate": 0.575,
+        "last_minus_first_percentage_points": 10.0,
+        "worst_pass_rate": 0.25,
+        "worst_updates": [
+          0
+        ]
+      },
+      "updates": [
+        {
+          "compile_error": 2,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 6,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 3,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 3,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--formatting-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 1,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "string-conversion-returns-bare-digits"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            }
+          ],
+          "failure_rate": 0.75,
+          "failures": 6,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 6
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 6,
+            "passed": 2
+          },
+          "pass_rate": 0.25,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 2,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 0,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 4,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 3,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 3,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 3,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 3,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 3,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 3,
+              "value": "PH-E04-A"
+            },
+            {
+              "count": 3,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.5,
+          "failures": 4,
+          "format_invalid": 1,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 4
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 4,
+            "passed": 4
+          },
+          "pass_rate": 0.5,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 4,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 1,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 2,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 2,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 5,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 3,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 3,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 2,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 2,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 2,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--nanp-prefix-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 1,
+              "value": "area-and-exchange-prefixes-not-validated"
+            }
+          ],
+          "failure_rate": 0.625,
+          "failures": 5,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 5
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 5,
+            "passed": 3
+          },
+          "pass_rate": 0.375,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 3,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 3,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 1,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 1,
+          "rollout_id": 4,
+          "timeout": 0,
+          "truncated": 1
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 2,
+              "value": "PH-E03-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.25,
+          "failures": 2,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 2
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 2,
+            "passed": 6
+          },
+          "pass_rate": 0.75,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 6,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 5,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 4,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--formatting-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "string-conversion-returns-bare-digits"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.5,
+          "failures": 4,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 4
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 4,
+            "passed": 4
+          },
+          "pass_rate": 0.5,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 4,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 6,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 2,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 7,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 8,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 9,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 5,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--formatting-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "string-conversion-returns-bare-digits"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.625,
+          "failures": 5,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 5
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 5,
+            "passed": 3
+          },
+          "pass_rate": 0.375,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 3,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 10,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 2,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.25,
+          "failures": 2,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 2
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 2,
+            "passed": 6
+          },
+          "pass_rate": 0.75,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 6,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 11,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--formatting-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "string-conversion-returns-bare-digits"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 12,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 13,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 2,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.25,
+          "failures": 2,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 2
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 2,
+            "passed": 6
+          },
+          "pass_rate": 0.75,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 6,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 14,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 4,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.5,
+          "failures": 4,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 4
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 4,
+            "passed": 4
+          },
+          "pass_rate": 0.5,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 4,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 15,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 16,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 17,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 3,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.375,
+          "failures": 3,
+          "format_invalid": 0,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 3
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 3,
+            "passed": 5
+          },
+          "pass_rate": 0.625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 5,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 18,
+          "timeout": 0,
+          "truncated": 0
+        },
+        {
+          "compile_error": 0,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 4,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 2,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 1,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--length-partition-repair"
+            },
+            {
+              "count": 1,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 1,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 1,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 1,
+              "value": "overlong-input-silently-truncated"
+            },
+            {
+              "count": 1,
+              "value": "declared-members-not-defined"
+            }
+          ],
+          "failure_rate": 0.5,
+          "failures": 4,
+          "format_invalid": 1,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 4
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 4,
+            "passed": 4
+          },
+          "pass_rate": 0.5,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 4,
+          "records": 8,
+          "response_at_limit": 0,
+          "rollout_id": 19,
+          "timeout": 0,
+          "truncated": 0
+        }
+      ]
+    },
+    "train": {
+      "records_path": "/tmp/phone_iter14_gcs_audit/extracted/train_records.jsonl",
+      "task_scope": "8 Phone Number shadow-training tasks",
+      "totals": {
+        "compile_error": 130,
+        "dominant_failed_kernel_ids": [
+          {
+            "count": 2067,
+            "value": "PH-E03-C"
+          },
+          {
+            "count": 737,
+            "value": "PH-E04-C"
+          },
+          {
+            "count": 545,
+            "value": "PH-E02-C"
+          },
+          {
+            "count": 468,
+            "value": "PH-E02-A"
+          },
+          {
+            "count": 468,
+            "value": "PH-E03-A"
+          },
+          {
+            "count": 468,
+            "value": "PH-E04-B"
+          },
+          {
+            "count": 467,
+            "value": "PH-E01-C"
+          },
+          {
+            "count": 448,
+            "value": "PH-E02-B"
+          },
+          {
+            "count": 392,
+            "value": "PH-E01-A"
+          },
+          {
+            "count": 392,
+            "value": "PH-E04-A"
+          },
+          {
+            "count": 387,
+            "value": "PH-E03-B"
+          },
+          {
+            "count": 280,
+            "value": "PH-E01-B"
+          }
+        ],
+        "dominant_failed_tasks": [
+          {
+            "count": 594,
+            "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+          },
+          {
+            "count": 558,
+            "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+          },
+          {
+            "count": 498,
+            "value": "aider-shadow-cpp/phone-number--full-solve"
+          },
+          {
+            "count": 212,
+            "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+          },
+          {
+            "count": 191,
+            "value": "aider-shadow-cpp/phone-number--country-code-repair"
+          },
+          {
+            "count": 96,
+            "value": "aider-shadow-cpp/phone-number--length-partition-repair"
+          },
+          {
+            "count": 49,
+            "value": "aider-shadow-cpp/phone-number--formatting-repair"
+          },
+          {
+            "count": 37,
+            "value": "aider-shadow-cpp/phone-number--nanp-prefix-repair"
+          }
+        ],
+        "dominant_failure_signatures": [
+          {
+            "count": 594,
+            "value": "observed-member-function-name-collision"
+          },
+          {
+            "count": 558,
+            "value": "declared-members-not-defined"
+          },
+          {
+            "count": 498,
+            "value": "missing-public-api"
+          },
+          {
+            "count": 212,
+            "value": "letters-and-forbidden-punctuation-ignored"
+          },
+          {
+            "count": 191,
+            "value": "any-eleven-digit-country-code-accepted"
+          },
+          {
+            "count": 96,
+            "value": "overlong-input-silently-truncated"
+          },
+          {
+            "count": 49,
+            "value": "string-conversion-returns-bare-digits"
+          },
+          {
+            "count": 37,
+            "value": "area-and-exchange-prefixes-not-validated"
+          }
+        ],
+        "failure_rate": 0.436523,
+        "failures": 2235,
+        "format_invalid": 140,
+        "infrastructure_error": 0,
+        "native_failed_reason_counts": {
+          "kernel_tests_failed": 2235
+        },
+        "native_reason_counts": {
+          "kernel_tests_failed": 2235,
+          "passed": 2885
+        },
+        "pass_rate": 0.563477,
+        "passed_format_invalid": 33,
+        "passed_truncated": 1,
+        "passes": 2885,
+        "records": 5120,
+        "response_at_limit": 62,
+        "timeout": 0,
+        "truncated": 62
+      },
+      "trend": {
+        "best_pass_rate": 0.613281,
+        "best_updates": [
+          9
+        ],
+        "first_five_updates_pass_rate": 0.522656,
+        "last_five_updates_pass_rate": 0.575781,
+        "last_minus_first_percentage_points": 5.312,
+        "worst_pass_rate": 0.492188,
+        "worst_updates": [
+          0
+        ]
+      },
+      "updates": [
+        {
+          "compile_error": 12,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 119,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 44,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 44,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 44,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 44,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 41,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 38,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 38,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 38,
+              "value": "PH-E04-A"
+            },
+            {
+              "count": 34,
+              "value": "PH-E02-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 17,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--formatting-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 28,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 28,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 17,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 7,
+              "value": "string-conversion-returns-bare-digits"
+            }
+          ],
+          "failure_rate": 0.507812,
+          "failures": 130,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 130
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 130,
+            "passed": 126
+          },
+          "pass_rate": 0.492188,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 126,
+          "records": 256,
+          "response_at_limit": 1,
+          "rollout_id": 0,
+          "timeout": 0,
+          "truncated": 1
+        },
+        {
+          "compile_error": 7,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 117,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 45,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 45,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 45,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 45,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 41,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 41,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 41,
+              "value": "PH-E04-A"
+            },
+            {
+              "count": 37,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 31,
+              "value": "PH-E02-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 15,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 14,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 28,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 15,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 14,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.5,
+          "failures": 128,
+          "format_invalid": 10,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 128
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 128,
+            "passed": 128
+          },
+          "pass_rate": 0.5,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 128,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 1,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 8,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 108,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 43,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 43,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 43,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 43,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 43,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 39,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 39,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 39,
+              "value": "PH-E04-A"
+            },
+            {
+              "count": 34,
+              "value": "PH-E02-C"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 32,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 11,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 8,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 32,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 28,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 11,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 8,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.476562,
+          "failures": 122,
+          "format_invalid": 8,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 122
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 122,
+            "passed": 134
+          },
+          "pass_rate": 0.523438,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 134,
+          "records": 256,
+          "response_at_limit": 3,
+          "rollout_id": 2,
+          "timeout": 0,
+          "truncated": 3
+        },
+        {
+          "compile_error": 10,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 109,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 40,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 31,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 31,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 31,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 31,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 31,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 28,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 28,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 28,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 27,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 27,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 16,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 9,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 27,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 27,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 16,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 9,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.449219,
+          "failures": 115,
+          "format_invalid": 5,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 115
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 115,
+            "passed": 141
+          },
+          "pass_rate": 0.550781,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 141,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 3,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 8,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 110,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 35,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 24,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 23,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 23,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 19,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 19,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 26,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 9,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 30,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 26,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 10,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 9,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.453125,
+          "failures": 116,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 116
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 116,
+            "passed": 140
+          },
+          "pass_rate": 0.546875,
+          "passed_format_invalid": 3,
+          "passed_truncated": 0,
+          "passes": 140,
+          "records": 256,
+          "response_at_limit": 3,
+          "rollout_id": 4,
+          "timeout": 0,
+          "truncated": 3
+        },
+        {
+          "compile_error": 7,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 94,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 33,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 20,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 20,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 20,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 20,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 20,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 18,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 18,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 24,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 9,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 5,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 28,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 24,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 9,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 5,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.40625,
+          "failures": 104,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 104
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 104,
+            "passed": 152
+          },
+          "pass_rate": 0.59375,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 152,
+          "records": 256,
+          "response_at_limit": 1,
+          "rollout_id": 5,
+          "timeout": 0,
+          "truncated": 1
+        },
+        {
+          "compile_error": 8,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 116,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 43,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 30,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 28,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 23,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 22,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 18,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 18,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 25,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 13,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 11,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 25,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 13,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 11,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.476562,
+          "failures": 122,
+          "format_invalid": 9,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 122
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 122,
+            "passed": 134
+          },
+          "pass_rate": 0.523438,
+          "passed_format_invalid": 3,
+          "passed_truncated": 0,
+          "passes": 134,
+          "records": 256,
+          "response_at_limit": 3,
+          "rollout_id": 6,
+          "timeout": 0,
+          "truncated": 3
+        },
+        {
+          "compile_error": 8,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 104,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 38,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 32,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 26,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 26,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 26,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 26,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 22,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 20,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 20,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 28,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 10,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 7,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.449219,
+          "failures": 115,
+          "format_invalid": 9,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 115
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 115,
+            "passed": 141
+          },
+          "pass_rate": 0.550781,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 141,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 7,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 4,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 96,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 29,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 19,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 19,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 14,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 14,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 9,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 9,
+              "value": "PH-E01-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 25,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 24,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 12,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 25,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 24,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 12,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 10,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.417969,
+          "failures": 107,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 107
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 107,
+            "passed": 149
+          },
+          "pass_rate": 0.582031,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 149,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 8,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 2,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 85,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 33,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 23,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 15,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 15,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 15,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 15,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 13,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 8,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 8,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 27,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 25,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 23,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 8,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 27,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 25,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 23,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 10,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 8,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.386719,
+          "failures": 99,
+          "format_invalid": 2,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 99
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 99,
+            "passed": 157
+          },
+          "pass_rate": 0.613281,
+          "passed_format_invalid": 3,
+          "passed_truncated": 1,
+          "passes": 157,
+          "records": 256,
+          "response_at_limit": 1,
+          "rollout_id": 9,
+          "timeout": 0,
+          "truncated": 1
+        },
+        {
+          "compile_error": 6,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 103,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 32,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 25,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 25,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 20,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 18,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 18,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 26,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 8,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 30,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 26,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 8,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 7,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.4375,
+          "failures": 112,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 112
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 112,
+            "passed": 144
+          },
+          "pass_rate": 0.5625,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 144,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 10,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 8,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 109,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 39,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 28,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 21,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 15,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 15,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 15,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 15,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 14,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 24,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 16,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 24,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 16,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 7,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.445312,
+          "failures": 114,
+          "format_invalid": 3,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 114
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 114,
+            "passed": 142
+          },
+          "pass_rate": 0.554688,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 142,
+          "records": 256,
+          "response_at_limit": 1,
+          "rollout_id": 11,
+          "timeout": 0,
+          "truncated": 1
+        },
+        {
+          "compile_error": 9,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 97,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 43,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 33,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 26,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 23,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 23,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 23,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 19,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 19,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 30,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 20,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 8,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 30,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 29,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 20,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 10,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 8,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.402344,
+          "failures": 103,
+          "format_invalid": 7,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 103
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 103,
+            "passed": 153
+          },
+          "pass_rate": 0.597656,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 153,
+          "records": 256,
+          "response_at_limit": 4,
+          "rollout_id": 12,
+          "timeout": 0,
+          "truncated": 4
+        },
+        {
+          "compile_error": 7,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 96,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 30,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 23,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 18,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 17,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 17,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 17,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 17,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 15,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 15,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 23,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 5,
+              "value": "aider-shadow-cpp/phone-number--length-partition-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 29,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 23,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 7,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 5,
+              "value": "overlong-input-silently-truncated"
+            }
+          ],
+          "failure_rate": 0.390625,
+          "failures": 100,
+          "format_invalid": 5,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 100
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 100,
+            "passed": 156
+          },
+          "pass_rate": 0.609375,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 156,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 13,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 9,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 102,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 32,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 21,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 21,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 21,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 21,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 20,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 16,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 16,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 31,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 25,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 24,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 11,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 6,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 31,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 25,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 24,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 11,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 6,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.410156,
+          "failures": 105,
+          "format_invalid": 6,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 105
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 105,
+            "passed": 151
+          },
+          "pass_rate": 0.589844,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 151,
+          "records": 256,
+          "response_at_limit": 2,
+          "rollout_id": 14,
+          "timeout": 0,
+          "truncated": 2
+        },
+        {
+          "compile_error": 4,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 99,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 37,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 31,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 18,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 14,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 14,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 12,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 12,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 7,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 29,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 28,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 10,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 7,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.421875,
+          "failures": 108,
+          "format_invalid": 7,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 108
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 108,
+            "passed": 148
+          },
+          "pass_rate": 0.578125,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 148,
+          "records": 256,
+          "response_at_limit": 5,
+          "rollout_id": 15,
+          "timeout": 0,
+          "truncated": 5
+        },
+        {
+          "compile_error": 4,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 99,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 35,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 25,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 22,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 14,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 14,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 12,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 12,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 26,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 21,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 14,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            },
+            {
+              "count": 13,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 29,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 26,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 21,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 14,
+              "value": "any-eleven-digit-country-code-accepted"
+            },
+            {
+              "count": 13,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            }
+          ],
+          "failure_rate": 0.425781,
+          "failures": 109,
+          "format_invalid": 8,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 109
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 109,
+            "passed": 147
+          },
+          "pass_rate": 0.574219,
+          "passed_format_invalid": 2,
+          "passed_truncated": 0,
+          "passes": 147,
+          "records": 256,
+          "response_at_limit": 5,
+          "rollout_id": 16,
+          "timeout": 0,
+          "truncated": 5
+        },
+        {
+          "compile_error": 1,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 101,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 29,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 22,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 20,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 20,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 20,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 20,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 16,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 14,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 14,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 28,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 22,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 13,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 29,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 28,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 22,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 13,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 10,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.425781,
+          "failures": 109,
+          "format_invalid": 11,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 109
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 109,
+            "passed": 147
+          },
+          "pass_rate": 0.574219,
+          "passed_format_invalid": 1,
+          "passed_truncated": 0,
+          "passes": 147,
+          "records": 256,
+          "response_at_limit": 9,
+          "rollout_id": 17,
+          "timeout": 0,
+          "truncated": 9
+        },
+        {
+          "compile_error": 6,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 98,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 37,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 30,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 21,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 19,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 19,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 19,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 19,
+              "value": "PH-E04-B"
+            },
+            {
+              "count": 18,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 18,
+              "value": "PH-E03-B"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 27,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 26,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 25,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 10,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 8,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 27,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 26,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 25,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 10,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 8,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.410156,
+          "failures": 105,
+          "format_invalid": 8,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 105
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 105,
+            "passed": 151
+          },
+          "pass_rate": 0.589844,
+          "passed_format_invalid": 3,
+          "passed_truncated": 0,
+          "passes": 151,
+          "records": 256,
+          "response_at_limit": 5,
+          "rollout_id": 18,
+          "timeout": 0,
+          "truncated": 5
+        },
+        {
+          "compile_error": 2,
+          "dominant_failed_kernel_ids": [
+            {
+              "count": 105,
+              "value": "PH-E03-C"
+            },
+            {
+              "count": 51,
+              "value": "PH-E04-C"
+            },
+            {
+              "count": 38,
+              "value": "PH-E02-C"
+            },
+            {
+              "count": 24,
+              "value": "PH-E02-B"
+            },
+            {
+              "count": 16,
+              "value": "PH-E01-A"
+            },
+            {
+              "count": 16,
+              "value": "PH-E01-C"
+            },
+            {
+              "count": 16,
+              "value": "PH-E02-A"
+            },
+            {
+              "count": 16,
+              "value": "PH-E03-A"
+            },
+            {
+              "count": 16,
+              "value": "PH-E03-B"
+            },
+            {
+              "count": 16,
+              "value": "PH-E04-A"
+            }
+          ],
+          "dominant_failed_tasks": [
+            {
+              "count": 29,
+              "value": "aider-shadow-cpp/phone-number--eval-feedback-repair"
+            },
+            {
+              "count": 27,
+              "value": "aider-shadow-cpp/phone-number--missing-definitions-repair"
+            },
+            {
+              "count": 22,
+              "value": "aider-shadow-cpp/phone-number--full-solve"
+            },
+            {
+              "count": 12,
+              "value": "aider-shadow-cpp/phone-number--character-validation-repair"
+            },
+            {
+              "count": 11,
+              "value": "aider-shadow-cpp/phone-number--country-code-repair"
+            }
+          ],
+          "dominant_failure_signatures": [
+            {
+              "count": 29,
+              "value": "observed-member-function-name-collision"
+            },
+            {
+              "count": 27,
+              "value": "declared-members-not-defined"
+            },
+            {
+              "count": 22,
+              "value": "missing-public-api"
+            },
+            {
+              "count": 12,
+              "value": "letters-and-forbidden-punctuation-ignored"
+            },
+            {
+              "count": 11,
+              "value": "any-eleven-digit-country-code-accepted"
+            }
+          ],
+          "failure_rate": 0.4375,
+          "failures": 112,
+          "format_invalid": 12,
+          "infrastructure_error": 0,
+          "native_failed_reason_counts": {
+            "kernel_tests_failed": 112
+          },
+          "native_reason_counts": {
+            "kernel_tests_failed": 112,
+            "passed": 144
+          },
+          "pass_rate": 0.5625,
+          "passed_format_invalid": 0,
+          "passed_truncated": 0,
+          "passes": 144,
+          "records": 256,
+          "response_at_limit": 7,
+          "rollout_id": 19,
+          "timeout": 0,
+          "truncated": 7
+        }
+      ]
+    }
+  }
+}

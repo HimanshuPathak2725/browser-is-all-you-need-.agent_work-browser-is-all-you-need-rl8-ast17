@@ -1,0 +1,763 @@
+{
+  "dumps": [
+    {
+      "all_tests_pass": 126,
+      "bytes": 11308583,
+      "file": "grpo_0.pt",
+      "reasons": {
+        "kernel_tests_failed": 130,
+        "passed": 126
+      },
+      "rollout_id": 0,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 255,
+        "truncated": 1
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 128,
+      "bytes": 11732135,
+      "file": "grpo_1.pt",
+      "reasons": {
+        "kernel_tests_failed": 128,
+        "passed": 128
+      },
+      "rollout_id": 1,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 134,
+      "bytes": 11347879,
+      "file": "grpo_2.pt",
+      "reasons": {
+        "kernel_tests_failed": 122,
+        "passed": 134
+      },
+      "rollout_id": 2,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 253,
+        "truncated": 3
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 141,
+      "bytes": 11231591,
+      "file": "grpo_3.pt",
+      "reasons": {
+        "kernel_tests_failed": 115,
+        "passed": 141
+      },
+      "rollout_id": 3,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 140,
+      "bytes": 11175719,
+      "file": "grpo_4.pt",
+      "reasons": {
+        "kernel_tests_failed": 116,
+        "passed": 140
+      },
+      "rollout_id": 4,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 253,
+        "truncated": 3
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 152,
+      "bytes": 10944295,
+      "file": "grpo_5.pt",
+      "reasons": {
+        "kernel_tests_failed": 104,
+        "passed": 152
+      },
+      "rollout_id": 5,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 255,
+        "truncated": 1
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 134,
+      "bytes": 11059303,
+      "file": "grpo_6.pt",
+      "reasons": {
+        "kernel_tests_failed": 122,
+        "passed": 134
+      },
+      "rollout_id": 6,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 253,
+        "truncated": 3
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 141,
+      "bytes": 11242407,
+      "file": "grpo_7.pt",
+      "reasons": {
+        "kernel_tests_failed": 115,
+        "passed": 141
+      },
+      "rollout_id": 7,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 149,
+      "bytes": 11020391,
+      "file": "grpo_8.pt",
+      "reasons": {
+        "kernel_tests_failed": 107,
+        "passed": 149
+      },
+      "rollout_id": 8,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 157,
+      "bytes": 11278119,
+      "file": "grpo_9.pt",
+      "reasons": {
+        "kernel_tests_failed": 99,
+        "passed": 157
+      },
+      "rollout_id": 9,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 144,
+      "bytes": 10912173,
+      "file": "grpo_10.pt",
+      "reasons": {
+        "kernel_tests_failed": 112,
+        "passed": 144
+      },
+      "rollout_id": 10,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 142,
+      "bytes": 10835437,
+      "file": "grpo_11.pt",
+      "reasons": {
+        "kernel_tests_failed": 114,
+        "passed": 142
+      },
+      "rollout_id": 11,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 255,
+        "truncated": 1
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 153,
+      "bytes": 11305901,
+      "file": "grpo_12.pt",
+      "reasons": {
+        "kernel_tests_failed": 103,
+        "passed": 153
+      },
+      "rollout_id": 12,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 252,
+        "truncated": 4
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 156,
+      "bytes": 11336045,
+      "file": "grpo_13.pt",
+      "reasons": {
+        "kernel_tests_failed": 100,
+        "passed": 156
+      },
+      "rollout_id": 13,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 151,
+      "bytes": 10916141,
+      "file": "grpo_14.pt",
+      "reasons": {
+        "kernel_tests_failed": 105,
+        "passed": 151
+      },
+      "rollout_id": 14,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 254,
+        "truncated": 2
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 148,
+      "bytes": 11326893,
+      "file": "grpo_15.pt",
+      "reasons": {
+        "kernel_tests_failed": 108,
+        "passed": 148
+      },
+      "rollout_id": 15,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 251,
+        "truncated": 5
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 147,
+      "bytes": 11465709,
+      "file": "grpo_16.pt",
+      "reasons": {
+        "kernel_tests_failed": 109,
+        "passed": 147
+      },
+      "rollout_id": 16,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 251,
+        "truncated": 5
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 147,
+      "bytes": 11606317,
+      "file": "grpo_17.pt",
+      "reasons": {
+        "kernel_tests_failed": 109,
+        "passed": 147
+      },
+      "rollout_id": 17,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 247,
+        "truncated": 9
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 151,
+      "bytes": 10950445,
+      "file": "grpo_18.pt",
+      "reasons": {
+        "kernel_tests_failed": 105,
+        "passed": 151
+      },
+      "rollout_id": 18,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 251,
+        "truncated": 5
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 144,
+      "bytes": 11373805,
+      "file": "grpo_19.pt",
+      "reasons": {
+        "kernel_tests_failed": 112,
+        "passed": 144
+      },
+      "rollout_id": 19,
+      "samples": 256,
+      "stage": "train",
+      "statuses": {
+        "completed": 249,
+        "truncated": 7
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 2,
+      "bytes": 447557,
+      "file": "grpo_eval_0.pt",
+      "reasons": {
+        "kernel_tests_failed": 6,
+        "passed": 2
+      },
+      "rollout_id": 0,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 4,
+      "bytes": 386821,
+      "file": "grpo_eval_1.pt",
+      "reasons": {
+        "kernel_tests_failed": 4,
+        "passed": 4
+      },
+      "rollout_id": 1,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 401925,
+      "file": "grpo_eval_2.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 2,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 3,
+      "bytes": 440005,
+      "file": "grpo_eval_3.pt",
+      "reasons": {
+        "kernel_tests_failed": 5,
+        "passed": 3
+      },
+      "rollout_id": 3,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 453637,
+      "file": "grpo_eval_4.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 4,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 7,
+        "truncated": 1
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 6,
+      "bytes": 389573,
+      "file": "grpo_eval_5.pt",
+      "reasons": {
+        "kernel_tests_failed": 2,
+        "passed": 6
+      },
+      "rollout_id": 5,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 4,
+      "bytes": 403717,
+      "file": "grpo_eval_6.pt",
+      "reasons": {
+        "kernel_tests_failed": 4,
+        "passed": 4
+      },
+      "rollout_id": 6,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 430149,
+      "file": "grpo_eval_7.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 7,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 421701,
+      "file": "grpo_eval_8.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 8,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 467077,
+      "file": "grpo_eval_9.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 9,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 3,
+      "bytes": 412875,
+      "file": "grpo_eval_10.pt",
+      "reasons": {
+        "kernel_tests_failed": 5,
+        "passed": 3
+      },
+      "rollout_id": 10,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 6,
+      "bytes": 417931,
+      "file": "grpo_eval_11.pt",
+      "reasons": {
+        "kernel_tests_failed": 2,
+        "passed": 6
+      },
+      "rollout_id": 11,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 391819,
+      "file": "grpo_eval_12.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 12,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 421131,
+      "file": "grpo_eval_13.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 13,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 6,
+      "bytes": 382219,
+      "file": "grpo_eval_14.pt",
+      "reasons": {
+        "kernel_tests_failed": 2,
+        "passed": 6
+      },
+      "rollout_id": 14,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 4,
+      "bytes": 367307,
+      "file": "grpo_eval_15.pt",
+      "reasons": {
+        "kernel_tests_failed": 4,
+        "passed": 4
+      },
+      "rollout_id": 15,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 373451,
+      "file": "grpo_eval_16.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 16,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 356299,
+      "file": "grpo_eval_17.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 17,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 5,
+      "bytes": 376523,
+      "file": "grpo_eval_18.pt",
+      "reasons": {
+        "kernel_tests_failed": 3,
+        "passed": 5
+      },
+      "rollout_id": 18,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    },
+    {
+      "all_tests_pass": 4,
+      "bytes": 414219,
+      "file": "grpo_eval_19.pt",
+      "reasons": {
+        "kernel_tests_failed": 4,
+        "passed": 4
+      },
+      "rollout_id": 19,
+      "samples": 8,
+      "stage": "eval",
+      "statuses": {
+        "completed": 8
+      },
+      "unique_tasks": 8
+    }
+  ],
+  "encoding_note": "No native epoch field exists. Filename suffix and payload rollout_id are the zero-based rollout/update identifier; derived JSONL copies it to iteration for analyzer compatibility.",
+  "payload_keys": [
+    "metadata",
+    "rollout_id",
+    "samples"
+  ],
+  "reward_keys": [
+    "all_tests_pass",
+    "candidate_returncode",
+    "compile_error",
+    "failure_signature",
+    "format_valid",
+    "hidden_test_sha256",
+    "infrastructure_error",
+    "kernel_bits",
+    "kernel_failed",
+    "kernel_passed",
+    "kernel_results",
+    "kernel_status",
+    "kernel_sum",
+    "kernel_total",
+    "logs",
+    "modified_files",
+    "objective_group",
+    "policy_results",
+    "problem_id",
+    "reason",
+    "response",
+    "reward",
+    "reward_worker_load",
+    "rollout_id",
+    "sample_index",
+    "score",
+    "split",
+    "strict_binary_reward",
+    "task_id",
+    "tests_passed",
+    "tests_total",
+    "timeout",
+    "verification_gate",
+    "verifier_pack",
+    "verifier_policy_ids"
+  ],
+  "sample_keys": [
+    "generate_function_path",
+    "group_index",
+    "index",
+    "label",
+    "loss_mask",
+    "metadata",
+    "multimodal_inputs",
+    "multimodal_train_inputs",
+    "non_generation_time",
+    "opd_reverse_kl",
+    "prefix_cache_info",
+    "prompt",
+    "remove_sample",
+    "response",
+    "response_length",
+    "reward",
+    "rollout_indexer_topk",
+    "rollout_log_probs",
+    "rollout_routed_experts",
+    "session_id",
+    "spec_info",
+    "status",
+    "teacher_log_probs",
+    "tokens",
+    "train_metadata",
+    "weight_versions"
+  ],
+  "sample_metadata_keys": [
+    "category",
+    "data_source",
+    "editable_files",
+    "episode_kind",
+    "failure_signature",
+    "family",
+    "harness_kind",
+    "hidden_test_sha256",
+    "lineage_id",
+    "objective_group",
+    "problem_id",
+    "source_prompt_sha256",
+    "split",
+    "tags",
+    "task_id",
+    "task_path",
+    "verification_gate"
+  ],
+  "totals": {
+    "bytes": 232525224,
+    "eval_passes": 92,
+    "eval_samples": 160,
+    "files": 40,
+    "train_passes": 2885,
+    "train_samples": 5120
+  }
+}
